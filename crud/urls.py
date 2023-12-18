@@ -29,7 +29,7 @@ urlpatterns = [
     path('appDisabled', appDisabled, name='appDisabled'), 
     
     # Admin
-    path('adminLogin', adminLogin, name='adminLogin'), 
+    # path('adminLogin', adminLogin, name='adminLogin'), 
     re_path(r'^adminDashboard$', CalendarView.as_view(), name='adminDashboard'), 
     re_path(r'^event/new$', event ,name='event_new'),
     re_path(r'^event/delete/(?P<event_id>\d+)/$', delete_event, name='event_delete'),

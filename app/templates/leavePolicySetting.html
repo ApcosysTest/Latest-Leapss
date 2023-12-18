@@ -186,7 +186,8 @@
                         </div>
                     </div><br>
                     <div class="container">
-                        {{form.leavepolicy}}
+                        {% comment %} {{form.leavepolicy}} {% endcomment %}
+                        <textarea name="leavepolicy" cols="40" rows="10" id="tarea" placeholder="Fill in your leave policy" required></textarea>
                     </div>
                     <div class=" row justify-content-center addEmp">
                         <button class="btn " type="submit">Done</button>
