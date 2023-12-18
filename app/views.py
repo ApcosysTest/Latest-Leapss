@@ -102,6 +102,7 @@ def ApproveClient(request, client_id):
     company.telephone1 = client.telephone1
     company.city = client.city
     company.state = client.state
+    company.country = client.country
     company.address = client.address
     company.pincode = client.pincode
     company.username = client.username
@@ -154,9 +155,15 @@ def companyLogin(request):
                 company = Company.objects.get(username=username,password=password)
                 request.session['company_id'] = company.id
                 if company.setup_completed == True:
-                    response = redirect('homepage')
-                    response.set_cookie('company_id', company.id)
-                    return response
+                    user = authenticate(username=username, password=password)
+                    if user:
+                        if user.groups.filter(name='ADMIN'):
+                            auth_login(request,user)
+                            return redirect('adminDashboard')
+                        else:
+                            messages.success(request, 'Your account is not found')
+                    else:
+                        messages.success(request, 'Check your username and password')
                 else:
                     return redirect('newCompanySetup', username=username)
             else:
@@ -246,28 +253,28 @@ def changeAdminPassword(request, otp, email):
     return render(request, 'newCompanySetup.html')
 
 # Admin Login Page 
-def adminLogin(request):
-    if request.method == 'POST':
-        form = AdminLoginForm(request.POST)
-        if form.is_valid():
-            username = request.POST['username']
-            password = request.POST['password']
-            user = authenticate(username=username, password=password)
-            if user:
-                if user.groups.filter(name='ADMIN'):
-                    auth_login(request,user)
-                    return redirect('adminDashboard')
-                else:
-                    messages.success(request, 'Your account is not found')
-            else:
-                messages.success(request, 'Check your username and password')
-    else:
-         form = AdminLoginForm()
+# def adminLogin(request):
+#     if request.method == 'POST':
+#         form = AdminLoginForm(request.POST)
+#         if form.is_valid():
+#             username = request.POST['username']
+#             password = request.POST['password']
+#             user = authenticate(username=username, password=password)
+#             if user:
+#                 if user.groups.filter(name='ADMIN'):
+#                     auth_login(request,user)
+#                     return redirect('adminDashboard')
+#                 else:
+#                     messages.success(request, 'Your account is not found')
+#             else:
+#                 messages.success(request, 'Check your username and password')
+#     else:
+#          form = AdminLoginForm()
 
-    context ={
-        'form':form
-    }
-    return render(request, 'adminLogin.html', context)
+#     context ={
+#         'form':form
+#     }
+#     return render(request, 'adminLogin.html', context)
 
 # Admin logout
 def logout_view(request):
@@ -609,10 +616,15 @@ def changePassword(request, id):
 
 # Company setup
 @login_required(login_url='adminLogin')
-@user_passes_test(is_admin)
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def companySetup(request):
     form = CompanySetupForm()
     com = Company.objects.filter(username=request.user.username).first()
+    is_employee = False
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+        is_employee = True
     if request.method == "POST": 
         form = CompanySetupForm(request.POST)
         if form.is_valid():
@@ -621,7 +633,7 @@ def companySetup(request):
             return redirect('addDepartment')   
     else:
         form = CompanySetupForm()
-    context = {'form':form, 'com':com}
+    context = {'form':form, 'com':com, 'is_employee':is_employee}
     return render(request,'companySetup.html', context)
 
 # Edit company

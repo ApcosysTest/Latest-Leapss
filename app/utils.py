@@ -1,4 +1,4 @@
-from calendar import HTMLCalendar
+from .calendar import HTMLCalendar
 from .models import Event
 
 class Calendar(HTMLCalendar):

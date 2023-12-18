@@ -42,7 +42,7 @@
 
             <div class="container" style="padding-top: 25px;">
                 <div class="login">
-                    <h3>Login to Your Company</h3>
+                    <h3>Company Admin Login</h3>
                     <center>  
                         <div class="container" >
                         {% if messages %}
@@ -70,6 +70,9 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg btn-block loginButton">Login</button>
                     </form>
+                    <div class="text-center">
+                        <a href="{% url 'adminForgotPassword' %}">Forgot Password</a>
+                    </div>
                 </div>
             </div>
             <div class="container">

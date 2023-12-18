@@ -12,57 +12,12 @@ class AdminLoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Username'}), required=True)
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Password'}), required=True)
 
-# State
-STATE =(
-    ("","Select State"),
-    ("Andaman and Nicobar","Andaman and Nicobar"),
-    ("Andhra Pradesh","Andhra Pradesh"),
-    ("Arunachal Pradesh","Arunachal Pradesh"),
-    ("Assam","Assam"),
-    ("Bihar","Bihar"),
-    ("Chandigarh","Chandigarh"),
-    ("Chhattisgarh","Chhattisgarh"),
-    ("Dadra and Nagar Haveli","Dadra and Nagar Haveli"),
-    ("Daman and Diu","Daman and Diu"),
-    ("Delhi","Delhi"),
-    ("Goa","Goa"),
-    ("Gujarat","Gujarat"),
-    ("Haryana","Haryana"),
-    ("Himachal Pradesh","Himachal Pradesh"),
-    ("Jammu and Kashmir","Jammu and Kashmir"),
-    ("Jharkhand","Jharkhand"),
-    ("Karnataka","Karnataka"),
-    ("Kerala","Kerala"),
-    ("Ladakh","Ladakh"),
-    ("Lakshadweep","Lakshadweep"),
-    ("Madhya Pradesh","Madhya Pradesh"),
-    ("Maharashtra","Maharashtra"),
-    ("Manipur","Manipur"),
-    ("Meghalaya","Meghalaya"),
-    ("Mizoram","Mizoram"),
-    ("Nagaland","Nagaland"),
-    ("Odisha","Odisha"),
-    ("Puducherry","Puducherry"),
-    ("Punjab","Punjab"),
-    ("Rajasthan","Rajasthan"),
-    ("Sikkim","Sikkim"),
-    ("Tamil Nadu","Tamil Nadu"),
-    ("Telangana","Telangana"),
-    ("Tripura","Tripura"),
-    ("Uttar Pradesh","Uttar Pradesh"),
-    ("Uttarakhand","Uttarakhand"),
-    ("West Bengal","West Bengal"),
-)
-countries = [(country.alpha_2, country.name) for country in pycountry.countries]
-
 class AppRequestForm(forms.ModelForm):  
     company_name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Company Name'}))
     website = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Company Website'}), required=False)
     email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder':'Email ID'}))
     telephone = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Phone Number'}))
     telephone1 = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Alternate Number'}), required=False)
-    # state = forms.ChoiceField(choices=STATE,widget=forms.Select())
-    # country = forms.ChoiceField(choices=countries,widget=forms.Select())
     country = forms.CharField(widget=forms.TextInput())
     state = forms.CharField(widget=forms.TextInput())
     city = forms.CharField(widget=forms.TextInput())
@@ -83,10 +38,9 @@ class CompanySetupForm(forms.ModelForm):
     telephone2 = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Phone Number'}), required=False)
     address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Address'}))
     pincode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Pincode'}))
-    city = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'City'}))
-    state = forms.ChoiceField(choices=STATE,widget=forms.Select())
-    country = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Country'}))
-    branch = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Branch'}))
+    country = forms.CharField(widget=forms.TextInput())
+    state = forms.CharField(widget=forms.TextInput())
+    city = forms.CharField(widget=forms.TextInput())
 
     class Meta:
         model = Company 
@@ -102,14 +56,13 @@ class CompanyUpdateForm(forms.ModelForm):
     telephone2 = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Telephone 2'}), required=False)
     address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Address'}))
     pincode = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Pincode'}))
-    city = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'City'}))
-    state = forms.ChoiceField(choices=STATE,widget=forms.Select())
-    country = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Country'}))
-    branch = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Branch'}))
+    country = forms.CharField(widget=forms.TextInput())
+    state = forms.CharField(widget=forms.TextInput())
+    city = forms.CharField(widget=forms.TextInput())
 
     class Meta:
         model = Company 
-        fields = ['name', 'email', 'website', 'telephone', 'telephone1', 'telephone2', 'address', 'pincode', 'city', 'state', 'country', 'branch']
+        fields = ['name', 'email', 'website', 'telephone', 'telephone1', 'telephone2', 'address', 'pincode', 'city', 'state', 'country']
 
 # Company Department Form
 class CompanyDepForm(forms.ModelForm):
@@ -309,7 +262,8 @@ class LeavePolicyForm(forms.ModelForm):
 
 # Leave Policy Update Form
 class LeavePolicyUpdateForm(forms.ModelForm):
-    leavepolicy = forms.CharField(widget=forms.Textarea(attrs=({'id':'tarea'})))
+    leavepolicy = forms.CharField(widget=forms.Textarea(attrs=({'id':'tarea', 'placeholder': 'Fill in your leave policy'})))
+    # deactivate = forms.CharField(widget=forms.Textarea(attrs=({'id':'quoted','placeholder':'Reason',})))
 
     class Meta:  
         model = LeavePolicy

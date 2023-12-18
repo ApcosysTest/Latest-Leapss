@@ -38,7 +38,6 @@ class Company(models.Model):
     city = models.CharField(max_length=500)
     state = models.CharField(max_length=500)
     country = models.CharField(max_length=500)
-    branch = models.CharField(max_length=500)
     username = models.CharField(max_length=500,unique=True,default='admin')
     password = models.CharField(max_length=500, default='12345678')
     setup_completed = models.BooleanField(default=True) 
