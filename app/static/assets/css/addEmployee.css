@@ -1,0 +1,239 @@
+ 
+/*--------------------------------------------------------------
+# Header Nav
+--------------------------------------------------------------*/
+.greeting{
+  color: #009eff;
+  margin-left: -900px;
+  font-size: 1.5rem;
+
+}
+@media (max-width: 360px) {
+.greeting {
+  display: none;
+}
+ 
+  .details .lr .left .card{
+   width: 97%;
+  }
+  .details .lr .left .addButton{
+    width: 100%;
+   }
+  .details .lr .left .cancelButton{
+    width: 100%;
+   } 
+} 
+
+#fileUp{
+display: none;
+}
+ 
+.cards{ 
+  width: 80%;
+  height: 18%;
+  margin: 15px 8px;
+  margin-bottom: 4%;
+}
+.card{
+  border-radius: 4px;
+}
+.card-title{
+  text-align: center;
+  color: #ffffff;
+}
+.card-text{
+  font-size: 18px;
+  text-align: center;
+  color: #ffffff;
+}
+.calendar{
+  padding: 0%;
+  width: 60%;
+  margin: 0%;
+  margin: 1%;
+} 
+
+.inputField {
+  position: relative;
+
+}
+select{
+text-align: left;
+  width: 80%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin: 2% 2% 2% 2% !important;
+}
+textarea{
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin-top: 10%;
+} 
+input[type="text"],input[type='tel'],input[type='email'],input[type='password'] {
+  width: 80%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin: 2%;
+}
+input[type='date']{
+  width: 80%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 12px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin: 2%;
+}
+
+.saveButton{
+margin: 0%;
+margin-bottom: 2%;
+background-color: #009eff;
+padding: 5px 30px 5px 20px;
+}
+.closeButton{
+margin: 0%;
+padding: 5px 30px 5px 20px;
+border-color: #009eff;
+}
+
+
+
+
+form .add { 
+background-color: #009eff;
+margin-left: 3%;
+padding: 10px 42px 10px 50px;
+}
+
+form .uploadButton{ 
+  position: relative;
+  top: -10px;
+  background-color: #009eff; 
+  padding: 8px 50px 8px 50px ;
+}
+
+form .cancel { 
+margin-right: 25%;   
+border-color: #009eff;
+padding: 10px 35px 10px 35px;
+}
+
+form .add:hover{
+background-color: #ffffff;
+border-color: #009eff;
+color: #009eff;
+}
+
+form .cancel:hover{
+background-color: #009eff;
+color: #ffffff;
+}
+
+.details form .saveButton:hover{
+background-color: #ffffff;
+border-color: #009eff;
+color: #009eff;
+}
+
+.details form .closeButton:hover{
+background-color: #009eff;
+color: #ffffff;
+}
+.userDetails{
+margin-left: 10%;
+padding-top: 6%;
+}
+
+@media (max-width: 576px) {
+  form .add {  
+    margin-left: 8%;
+    padding: 12px 40px 12px 40px;
+  }
+.userDetails{
+margin-left: 0%;
+padding-top: 6%;
+}
+select{
+text-align: left;
+  width: 100%;
+}
+textarea{
+  width: 100%;
+} 
+.cards .preview img{
+  margin-left: 33%;
+}
+form .upup a{ 
+   text-align: center;
+   margin-left: 9%;
+}
+input[type="text"], input[type='date'],input[type='tel'],input[type='email'],input[type='password'] {
+  width: 90%; 
+}
+form .cancel{ 
+  margin-right: 6%; 
+  }
+.cards{ 
+  width: 90%;
+  height: 27%;
+  margin: 10px 8px;
+  margin-bottom: 4%;
+}
+}
+
+
+.leave a{
+border-color: #52D89C;
+border-radius: 4px;
+background-color: #52D89C;
+font-size: 18px;
+width: 100%;
+padding: 15px 30px 15px 30px;
+}
+.leave a:hover{
+border-color: #52D89C;
+background-color: #ffffff;
+color: #52D89C;
+padding: 15px 30px 15px 30px;
+font-size: 18px;
+}
+.basket a{
+border-color: #60C2FF;
+border-radius: 4px;
+background-color: #60C2FF;
+font-size: 18px;
+width: 100%;
+padding: 15px 30px 15px 30px;
+}
+.basket a:hover{
+border-color: #60C2FF;
+background-color: #ffffff;
+color: #60C2FF;
+padding: 15px 30px 15px 30px;
+font-size: 18px;
+}.approve a{
+border-color: #FFC14E;
+border-radius: 4px;
+background-color: #FFC14E;
+font-size: 18px;
+width: 100%;
+padding: 15px 30px 15px 30px;
+}
+.approve a:hover{
+border-color: #FFC14E;
+background-color: #ffffff;
+color: #FFC14E;
+padding: 15px 30px 15px 30px;
+font-size: 18px;
+}

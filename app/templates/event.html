@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Event</title>
+        
+    {% load static %} 
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <style>
+            body{
+                display: flex;
+                align-items: center;
+                font-family: 'Segoe UI', sans-serif;
+                justify-content: center;
+            }
+            .clearfix{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 5%;
+                font-size: 22px;
+                font-weight: 600;
+            }
+            .clearfix a{
+                color: #fff;
+                text-decoration: none;
+            }
+            .clearfix{
+                background-color: #009eff;
+                border-radius: 4px;
+                color: #fff;
+                text-align: center;
+                padding: 5%;
+                font-weight: 600;border: 1px solid #009eff;
+            }
+            .container{ 
+                box-shadow: 0 5px 30px 0 rgba(82, 63, 105, 0.2);
+            }
+            form{
+                padding: 0% 10%;
+                text-align: left;
+                color: #009eff;
+            }
+            .form-table input, .form-table select {
+                border: 1px solid #aaa;
+                outline: none;
+                padding: 8px;
+                box-sizing: border-box;
+                border-radius: 2px;
+                margin: 2%;
+                width: 100%;
+            }
+            .form-table textarea {
+                border: 1px solid #aaa;
+                outline: none;
+                padding: 8px;
+                box-sizing: border-box;
+                border-radius: 2px;
+                margin: 2%;
+                width: 100%;
+            }
+            button{
+                background-color: #009eff;
+                margin: 2%;
+                padding: 2.2%;
+                width: 46%;
+                border-radius: 4px;
+                border: none;
+                color: #fff;
+            }
+            td a{
+                background-color: #009eff;
+                text-decoration: none;
+                padding: 1.9% 18%;
+                width: 100%;
+                font-size: 14px;
+                border-radius: 4px;
+                border: none;
+                color: #fff;
+            }
+            button:hover{
+                background-color: #fff;
+                border: 1px solid #009eff;
+                color: #009eff;
+            }
+            #id_visibility_0{
+                position: relative;
+                top: 23px;
+            }
+            #id_visibility_1{
+                position: relative;
+                top: 21px;
+            }
+            #id_visibility{
+                padding-top: 5%;
+                padding-left: 3%;
+            }
+        </style>
+    </head>
+    <body> 
+        <div class="container">
+            <div class="clearfix">
+                <a class="btn btn-info left" href="javascript:void(0);">Add Events</a>
+            </div>
+              <hr width="80%">  
+            <form method="post">
+                {% csrf_token %}
+                <table class="form form-table">
+                    {{ form }}
+                    
+                    <tr><td style="text-align: center;" colspan="4"><hr><button type="submit" class="btn btn-info right"> Submit </button><a class="btn btn-info left" href="/adminDashboard">Cancel</a></td></tr>
+                    
+                </table>
+            </form>
+        </div>
+        
+        <script >
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+    
+            today = yyyy + '-' + mm + '-' + dd;
+            $('#id_date').attr('min',today);
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    </body>
+</html>
