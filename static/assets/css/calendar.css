@@ -1,0 +1,138 @@
+
+.calendar {
+    width: 100%;
+    height: auto;
+    margin: auto;
+    font-size: 13px;
+    border-radius:4px;
+  }
+  
+   .calendar td {
+    border: 1px solid rgb(165, 161, 161);
+    text-align: center;
+    vertical-align: center  ;
+  }
+  
+  .calendar th {
+    padding: 3%;
+    color: #fff;
+    background-color: #009eff;
+    text-align: center;
+    font-size: 16px;
+  }
+.calendar .month{
+    padding: 5%;
+    margin-bottom: 10px;
+    margin: 20px 0px;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+}
+.calendar .weeks{
+    text-align: center;
+    width: 3%;
+    height: 80px;
+    padding: 10px 0px 0px 5px;
+    transition: all 0.4s;
+}
+  .calendar td{
+    padding: 2%;
+    cursor: pointer;
+    width: 40px;
+  }
+
+  .calendar td:hover{
+  background-color: rgba(0, 158, 255, 0.4) ;
+  cursor: pointer;
+  }
+.month{
+    border-radius: 0px;
+    margin-top: 2%;
+}
+  .date {
+    font-size: 16px;
+  }
+  .calendar ul {
+    height: 30px;
+    width: 40px;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0%;
+    margin-left: 30%;
+    text-align: center;
+    color: #009eff;
+  }
+  .calendar .activee{
+    background-color: rgba(0, 158, 255, 0.4);
+  }
+  .clearfix .left{
+    color: #fff;
+    background-color: #009eff;
+    border-radius: 4px;
+    margin: 2%;
+    margin-left: 0%;
+  }
+  .event{
+    border-left: 5px solid #009eff;
+  }
+  .eva{
+    height: 100%;
+    border-left: 5px solid #009eff;
+  }
+  .event ul{
+    list-style : none;
+    text-align: left;
+    margin: auto 2%;
+    padding-left: 0%;
+    border-left: 5px solid #009eff;
+
+  }
+  .event ul li{
+    display: block;
+    padding: 2%;
+    font-size: 14px;
+    border: 1px solid #009eff;
+    margin: 2%;
+    border-radius: 4px;
+  }
+  .event .evenrHeader{
+    border: 1px solid #009eff;
+    background-color: #009eff;
+    border-radius: 4px;
+    color: #fff;
+    text-align: center;
+    padding: 5%;
+    font-weight: 600;
+  }
+  .clearfix{
+    display: flex;
+    justify-content: space-between;
+  }
+  .clearfix .right{
+    color: #fff;
+    background-color: #009eff;
+    margin: 2%;
+    border-radius: 4px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .event .right{
+    color: #fff;
+    background-color: #009eff;
+    margin: 2%;
+    border-radius: 4px;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .clearfix .left:hover{
+    color: #009eff;
+    background-color: #fff;
+  }
+  .clearfix .right:hover{
+    color: #009eff;
+    background-color: #fff;
+  }
+  
+  a {
+    color: #17a2b8;
+  }

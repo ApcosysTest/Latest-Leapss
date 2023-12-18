@@ -1,0 +1,225 @@
+
+:root {
+  scroll-behavior: smooth;
+}
+ 
+
+/*--------------------------------------------------------------
+# Dashboard
+--------------------------------------------------------------*/
+ 
+.card{
+  padding: 0%;
+  border: none;
+  border-radius: 4px;
+}
+.card-body{
+  padding: none;
+}
+.card-title{
+  text-align: center;
+  color: #ffffff;
+  font-size: 16px;
+}
+.card-text{
+  font-size: 16px;
+  text-align: center;
+  color: #ffffff;
+}
+.calendar{
+  padding: 0%;
+  width: 60%;
+  margin: 0%;
+  margin: 1%;
+}
+.nav-menu * {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 16px;
+  text-align: center;
+}
+
+.nav-menu > ul > li {
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 10px 0px 20px rgba(1, 41, 112, 0.1);
+}
+.nav-menu > ul > li > a> span{
+  margin-left: 5%;
+}
+
+.nav-menu a {
+  text-align: center;
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+  color: #a8a9b4;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  transition: 0.3s;
+  font-size: 15px;
+}
+.active{
+  border-right: 5px solid #009eff;
+  background-color: #DBF1FF;
+}
+ 
+
+
+
+
+/* Inputs */
+.inputField {
+  position: relative;
+
+}
+select{
+text-align: center;
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 2px;
+}
+textarea{
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin-top: 10%;
+} 
+input[type="text"], input[type='date'],input[type='tel'],input[type='email'] {
+  width: 80%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin: 2%;
+}
+.details form .saveButton{
+margin: 2%;
+background-color: #009eff;
+padding: 5px 30px 5px 20px;
+}
+.details form .closeButton{
+margin: 2%;
+padding: 5px 30px 5px 20px;
+border-color: #009eff;
+}
+.details form .saveButton:hover{
+background-color: #ffffff;
+border-color: #009eff;
+color: #009eff;
+}
+.details form .closeButton:hover{
+background-color: #009eff;
+color: #ffffff;
+}
+.userDetails{
+margin-left: 10%;
+padding-top: 6%;
+}
+
+
+/* Admin's Employee Section */
+
+.dashboard .btns{ 
+  margin-top: 10%;
+  margin-left: 5%;
+}
+
+.dashboard .btns .leave a{
+  border-color: #009EFF;
+  border-radius: 4px;
+  background-color: #009EFF; 
+  font-size: 18px;
+  width: 100%;
+  margin-top: 25%;
+  padding: 15px 30px 15px 30px;
+}
+.dashboard .btns .leaved a{
+  border-color: #52D89C;
+  border-radius: 4px;
+  background-color: #52D89C; 
+  font-size: 18px;
+  width: 100%; 
+  padding: 15px 30px 15px 30px;
+}
+
+.dashboard .btns.leave a:hover{
+  border-color: #009EFF;
+  background-color: #ffffff;
+  color: #009EFF; 
+}
+.dashboard .btns.leaved a:hover{
+  border-color: #52D89C;
+  background-color: #ffffff;
+  color: #52D89C; 
+}
+
+.dashboard .btns .basket a{
+  border-color: #52D89C;
+  border-radius: 4px;
+  background-color: #52D89C;
+  margin-top: 15%;
+  font-size: 18px;
+  width: 100%;
+  padding: 15px 10px 15px 10px;
+}
+.dashboard .btns .basketd a{
+  border-color: #60C2FF;
+  border-radius: 4px;
+  background-color: #60C2FF;
+  margin-top: 15%;
+  font-size: 18px;
+  width: 100%;
+  padding: 15px 10px 15px 10px;
+}
+
+.dashboard .btns .basket a:hover{
+  border-color: #52D89C;
+  background-color: #ffffff;
+  color: #52D89C; 
+}
+.dashboard .btns .basketd a:hover{
+  border-color: #60C2FF;
+  background-color: #ffffff;
+  color: #60C2FF; 
+}
+
+.dashboard .btns .approve a{
+  border-color: #FF7B5D;
+  border-radius: 4px;
+  background-color: #FF7B5D;
+  margin-top: 15%;
+  font-size: 18px;
+  width: 100%;
+  margin-bottom: 25%;
+  padding: 15px 30px 15px 30px;
+}
+.dashboard .btns .approvd a{
+  border-color: #FFC14E;
+  border-radius: 4px;
+  background-color: #FFC14E;
+  margin-top: 15%;
+  font-size: 18px;
+  width: 100%;
+  margin-bottom: 25%;
+  padding: 15px 30px 15px 30px;
+}
+
+.dashboard .btns .approve a:hover{
+  border-color: #FF7B5D;
+  background-color: #ffffff;
+  color: #FF7B5D; 
+}
+.dashboard .btns .approvd a:hover{
+  border-color: #FFC14E;
+  background-color: #ffffff;
+  color: #FFC14E; 
+}

@@ -1,0 +1,179 @@
+ 
+/*--------------------------------------------------------------
+# Dashboard
+--------------------------------------------------------------*/
+ 
+
+.inputField {
+position: relative;
+}
+select{ 
+  margin: 2% auto !important;
+ text-align: center;
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);
+  
+}
+input[type="date"]{ 
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin: auto auto 2% auto;
+  box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);
+
+}
+ input[type="number"]{ 
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin: auto auto 2% auto;
+  box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);
+
+}
+.rightDetails input,.rightDetails .select{
+  margin-left: 10%;
+}
+textarea{
+  width: 100%;
+  border: 1px solid #aaa;
+  outline: none;
+  padding: 8px;
+  padding-left: 15px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin-top: 10%;
+  box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);
+
+}
+#the-count {
+  float: right;
+  padding: 0.1rem 1rem 0 0;
+  font-size: 0.875rem;
+} 
+#fileUp{
+display: none;
+}
+input[type="text"]{
+width: 90%;
+border: 1px solid #aaa;
+outline: none;
+padding: 10px;
+padding-left: 15px;
+box-sizing: border-box;
+border-radius: 2px;
+box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);
+
+}
+.select{
+  width: 90%;
+  margin-bottom: 8%;
+  margin-top: 8%;
+} 
+.dashboard form .buttons .card{ 
+margin-top: 8%;
+margin-left: 5%;
+box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);
+padding: 0%;
+}
+.leftLeaves{
+  width: 90%;
+  display: block;
+  background-color: #fff; 
+  border: 1px solid #a7a7a7;
+  font-size: 14px;
+  color: #707070;
+  padding: 4% 8%;
+  margin: 2%;
+  border-radius: 5px;
+}
+.dashboard form   .cancelButton{
+border-color: #009eff;
+border-radius: 3px;
+color: #009eff;
+margin: 2%;
+background-color: #ffffff;
+box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2); 
+}
+.dashboard form .submitButton{
+border-color: #009eff;
+border-radius: 3px;
+color: #ffffff;
+margin: 2% 2% 2% 32%;
+background-color: #009eff;
+box-shadow: 3px 5px 3px rgba(82, 63, 105, 0.2);   
+}
+.dashboard form  .cancelButton:hover{
+
+border-color: #009eff;
+border-radius: 3px;
+color: #ffffff;
+background-color: #009eff;
+}
+.dashboard form .submitButton:hover{
+
+border-color: #009eff;
+border-radius: 3px;
+color: #009eff;
+background-color: #ffffff;
+}
+.card-text i{
+
+margin-left: 50%;
+}
+@media (max-width: 576px) {
+  .rightDetails input,.rightDetails .select{
+    margin-left: 0%;
+  }
+ 
+.header-nav .logout{
+  font-size: 12px;
+  text-align: center;
+  margin-left: -120px;
+  margin-top: 15px;
+}
+.navbar-toggler{
+  margin-left: -200px;
+  margin-top: -5px;
+}
+input[type="date"]{ 
+  width: 100%; 
+
+}
+.dashboard form .buttons .cancelButton{
+padding: 5% 29% 5% 29%;
+margin-bottom: 10%;
+}
+.dashboard form .buttons .submitButton{
+padding: 5% 15% 5% 15%;
+margin-left: 0%;  
+width: 88%;
+}
+.select{
+  width: 100%;
+  margin-bottom: 8%;
+  margin-top: 8%;
+}
+input[type="text"]{
+width: 100%;
+
+}
+.dashboard form .buttons .card{
+width: 114%;
+text-align: center;
+}
+.card-text i{
+
+margin-left: 10%;
+}
+}

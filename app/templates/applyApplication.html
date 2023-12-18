@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="{% static 'assets/img/favicon.ico'%}">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>Leapss - Leave Management System</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <!-- Stylesheet  -->
+    <link rel="stylesheet" href="{% static 'assets/css/style.css'%}">
+
+    <!-- Bootstrap core CSS     -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .request select{
+            width: 100%;
+            border: 1px solid #aaa;
+            outline: none;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px; 
+        }
+        .request input[type='email']{
+            width: 100%;
+            border: 1px solid #aaa;
+            outline: none;
+            padding: 8px;
+            box-sizing: border-box;
+            border-radius: 4px; 
+        }
+        .request{
+            width:80%;
+        }
+        .request h3{
+            padding-top:15px;
+        }
+        .request button{
+            margin:0px;
+        }
+        .login .loginButton{
+            margin:5% 2% 2%;
+            width:96%;
+        }
+    </style>
+</head>
+<body>
+    <section class="content">
+            <!-- Navigation -->
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">
+                <div class="container">
+                      <!-- <span class="sub-title"><a class="navbar-brand" href="#"><img src="./assets/img/Apcosys.png" alt="Logo"><h2>Apcosys Private Limited</h2></span></a> -->
+                       
+                              <div class="logt">
+                                  <a href="/" class="  d-flex align-items-center">
+                                      <img width="200px" src="{% static 'assets/img/logo.png'%}" alt="Apcosys Logo"> 
+                                  </a>
+                              </div>    
+                      </div>
+                </div><!-- /.container-fluid -->
+          </nav>
+            <!-- /Naivagtion -->
+
+            <div class="container" style="padding-top: 5px;">
+                <div class="login request">
+                    <h3>Register Your Company</h3><br>
+                    <center>  
+                        <div class="container" >
+                        {% if messages %}
+                                <div class ="messages" style="width: 300px;">
+                    
+                            {% for message in messages  %}
+                                    <div class="alert alert-danger" role="alert">
+                                        <strong style="font-size: 15px;">! {{message}}</strong> 
+                                    </div>
+                    
+                            {% endfor %}
+                    
+                                </div>
+                                
+                        {% endif %}
+                        </div> 
+                    </center> 
+                    <form action="" method="POST" class="row">
+                        {% csrf_token %}
+                        {% comment %} {{form}} {% endcomment %}
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="quRl9yQ4Da5ufbyGhCAbeOJeO2qJbUcFoqn8aRGEPeh7MyFqjJ3734XtCA2SshvV">                     {% endcomment %}
+                        <label for="id_company_name">Company name:</label>    
+                        <input type="text" name="company_name" placeholder="Company Name" required="" id="id_company_name">
+                        <label for="id_website">Website:</label>   
+                        {{ form.website }}
+                        <label for="id_email">Email:</label>   
+                        <input type="email" name="email" placeholder="Email ID" required="" id="id_email">
+                        <label for="id_telephone">Telephone:</label>  
+                        <input type="text" name="telephone" placeholder="Phone Number" required="" id="id_telephone">
+                        <label for="id_telephone">Alternate Telephone:</label>  
+                        <input type="text" name="telephone1" placeholder="Alternate Number" required="" id="id_telephone1">
+                        {% comment %} <label for="id_username">Username:</label>
+                        <input type="text" name="username" placeholder="Select a Username" required="" id="id_username"> {% endcomment %}
+                       </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <label for="id_country">Country:</label>  
+                        <select name="country" id="countySel" size="1">
+                            <option  value="" selected="selected">Please select Country</option>
+                        </select>
+                        {% comment %} {{form.country}}   {% endcomment %}
+                        <label for="id_state">State:</label>
+                        <select name="state" id="stateSel" size="1">
+                            <option value="" selected="selected">Please select state</option>
+                        </select>
+                        {% comment %} {{form.state}}  {% endcomment %}
+                        <label for="id_city">City:</label>
+                        <select name="city" id="districtSel" size="1">
+                            <option value="" selected="selected">Please select district/city</option>
+                        </select>
+                        {% comment %} <input type="text" name="city" placeholder="City" required="" id="id_city"> {% endcomment %}
+                        <label for="id_address">Address:</label>
+                        <input type="text" name="address" placeholder="Address" required="" id="id_address">
+                        <label for="id_pincode">Pincode:</label>
+                        <input type="text" name="pincode" placeholder="Pincode" required="" id="id_pincode">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block loginButton">Submit</button>
+                    </form>
+                </div><br><br><br>
+            </div>
+            <div class="container">
+                <div class="modal">
+                    <div id="totalEmployeemodal">
+                        
+                    </div>
+                </div>
+            </div>
+     </section>
+     <div id="footer" class="justify-content-between">
+        <div class="row">
+            <p>From the house of <b> &nbsp;APCOSYS</b></p> 
+        </div>
+    </div>
+</body>
+    <!--   Core JS Files   -->
+    <script src="{% static 'assets/js/main.js'%}"></script>
+    <script src="{% static 'assets/js/CountryStateDistrictCityData.js'%}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+	
+	
+</html>
