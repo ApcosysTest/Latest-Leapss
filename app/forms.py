@@ -4,7 +4,6 @@ from django.forms import ModelForm, DateInput, ModelChoiceField
 from datetime import datetime, date
 from django.db.models.functions import Concat
 from django.db.models import Value 
-import pycountry
 
 
 # Admin Login Form
@@ -260,14 +259,48 @@ class LeavePolicyForm(forms.ModelForm):
             'com_id': forms.HiddenInput(),
         }
 
+# Privacy Policy Form
+class PrivacyPolicyForm(forms.ModelForm):
+    privacypolicy = forms.CharField(widget=forms.Textarea())
+
+    class Meta:  
+        model = PrivacyPolicy
+        fields = ['privacypolicy'] 
+        widgets = {
+            'com_id': forms.HiddenInput(),
+        }
+
+# T&C Form
+class TermsForm(forms.ModelForm):
+    terms = forms.CharField(widget=forms.Textarea())
+
+    class Meta:  
+        model = Terms
+        fields = ['terms'] 
+        widgets = {
+            'com_id': forms.HiddenInput(),
+        }
+
 # Leave Policy Update Form
 class LeavePolicyUpdateForm(forms.ModelForm):
     leavepolicy = forms.CharField(widget=forms.Textarea(attrs=({'id':'tarea', 'placeholder': 'Fill in your leave policy'})))
-    # deactivate = forms.CharField(widget=forms.Textarea(attrs=({'id':'quoted','placeholder':'Reason',})))
-
     class Meta:  
         model = LeavePolicy
         fields = '__all__'
+
+# Privacy Policy Update Form
+class PrivacyPolicyUpdateForm(forms.ModelForm):
+    privacypolicy = forms.CharField(widget=forms.Textarea(attrs=({'id':'tarea', 'placeholder': 'Fill in your privacy policy'})))
+    class Meta:  
+        model = PrivacyPolicy
+        fields = ['privacypolicy']
+
+# T&C Update Form
+class TermsUpdateForm(forms.ModelForm):
+    terms = forms.CharField(widget=forms.Textarea(attrs=({'id':'tarea', 'placeholder': 'Fill in your Terms And Conditions'})))
+    class Meta:  
+        model = Terms
+        fields = ['terms']
  
 # Add Leave Form
 class AddLeaveForm(forms.ModelForm):

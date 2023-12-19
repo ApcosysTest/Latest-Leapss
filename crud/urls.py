@@ -43,6 +43,8 @@ urlpatterns = [
     path('inactiveEmployee', inactiveEmployee, name='inactiveEmployee'),
     path('<int:id>/activateDetail',activateDetail, name='activateDetail'),
     path('addEmployee',addEmployee, name='addEmployee'),
+    path('addEmployeebyExcel',addEmployeebyExcel, name='addEmployeebyExcel'),
+    path('download_employees/', download_employees_as_excel, name='download_employees'),
     path('<int:id>/viewEmployee',viewEmployee, name='viewEmployee'),
     path('<int:id>/editEmployee',editEmployee, name='editEmployee'),
     path('<int:id>/changePassword',changePassword, name='changePassword'),
@@ -58,6 +60,9 @@ urlpatterns = [
     path("<int:id>/rejectLeaveAdmin", rejectLeaveAdmin, name='rejectLeaveAdmin'),
     path("adminForgotPassword", adminForgotPassword, name='adminForgotPassword'),
     path('changeAdminPassword/<str:otp>/<str:email>/', changeAdminPassword, name='changeAdminPassword'),
+    path('setupPrivacyPolicy', setupPrivacyPolicy, name='setupPrivacyPolicy'),
+    path('setupTandC', setupTandC, name='setupTandC'),
+
 
 
 # Employee
