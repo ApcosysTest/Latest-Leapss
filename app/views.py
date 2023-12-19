@@ -4,8 +4,11 @@ from .models import *
 from .forms import *
 from datetime import datetime, date, timedelta
 import calendar, math
-import string, random
+import string, random, time
+import pandas as pd
+from openpyxl import Workbook
 from django.urls import reverse
+from django.http import HttpResponse
 from .utils import Calendar, Eventcal 
 from django.utils.safestring import mark_safe 
 from django.views import generic
@@ -376,9 +379,12 @@ class CalendarView(generic.ListView):
 
 # Total Employee
 @login_required(login_url='adminLogin')
-@user_passes_test(is_admin)
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def totalEmployees(request): 
     com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+            emp = Employee.objects.filter(email=request.user.username).first()
+            com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     today = datetime.today().strftime("%Y-%m-%d")
     total_emp = Employee.objects.filter(status=True, com_id = com).count()
@@ -393,9 +399,12 @@ def totalEmployees(request):
 
 # Total Employee Detail
 @login_required(login_url='adminLogin')
-@user_passes_test(is_admin)
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def totalEmployeeDetails(request, id):
     com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+            emp = Employee.objects.filter(email=request.user.username).first()
+            com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     total_emp = Employee.objects.filter(status=True, com_id = com).count()
     dep = Department.objects.get(id=id)
@@ -413,9 +422,12 @@ def totalEmployeeDetails(request, id):
 
 # Prest employee Page
 @login_required(login_url='adminLogin')
-@user_passes_test(is_admin)
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def presentEmployees(request):
     com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+            emp = Employee.objects.filter(email=request.user.username).first()
+            com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     today = datetime.today().strftime("%Y-%m-%d")
     total_emp = Employee.objects.filter(status=True, com_id = com).count()
@@ -435,9 +447,12 @@ def presentEmployees(request):
 
 # On leave page
 @login_required(login_url='adminLogin')
-@user_passes_test(is_admin)
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def onLeave(request):
     com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     today = datetime.today().strftime("%Y-%m-%d")
     total_emp = Employee.objects.filter(status=True, com_id = com).count()
@@ -565,6 +580,111 @@ def addEmployee(request):
         form1 = AddEmployeeForm(com_id=com.id)
     context={'form':form, 'form1':form1, 'emp':emp,'com':com}
     return render(request, 'addEmployee.html', context)
+
+# Upload Employee Detail through Excell
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def addEmployeebyExcel(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+    if request.method == 'POST':
+        file = request.FILES['file']  # Assuming you have a form field named 'file' for file upload
+        if file.name.endswith('.xlsx'):
+            df = pd.read_excel(file)
+            
+            for index, row in df.iterrows():
+                print(row)
+                # Extract data from the Excel columns
+                emp_id = row['emp_id']
+                name = row['name']
+                company_contact = row['company_contact']
+                personal_contact = row['personal_contact']
+                present_address = row['present_address']
+                permanent_address = row['permanent_address']
+                dob = row['dob']
+                doj = row['doj']
+                gender = row['gender']
+                email = row['email']
+                office_email = row['office_email']
+                designation = row['designation']
+                level = row['level']
+                department =  Department.objects.get(department=row['department'],com_id = com)
+                password = "12345678"
+                # image = row['image']
+                # Create a User instance
+                user_instance = User.objects.create_user(username=office_email, password=password)
+                
+                # Create an Employee instance and link it to the User instance
+                employee = Employee.objects.create(
+                    user=user_instance,
+                    emp_id=emp_id,
+                    com_id=com,
+                    name=name,
+                    company_contact=company_contact,
+                    personal_contact=personal_contact,
+                    present_address=present_address,
+                    permanent_address=permanent_address,
+                    dob=dob,
+                    doj=doj,
+                    gender=gender,
+                    email=email,
+                    office_email=office_email,
+                    # image=image,
+                    status=True,
+                    designation=designation,
+                    level=level,
+                    department=department
+                )
+                send_account_creation_mail(office_email, name, com, office_email, password)
+                group=Group.objects.get_or_create(name='EMPLOYEE')
+                group[0].user_set.add(user_instance)
+                if level == "Level 0":
+                    group=Group.objects.get_or_create(name='HR')
+                    group[0].user_set.add(user_instance)
+            return redirect("activeEmployee")
+        else:
+            return render(request, 'addEmployee.html')
+        
+# Download Employee Detail in Excell
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def download_employees_as_excel(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="employees.xlsx"'
+
+    # Create a workbook and add a worksheet
+    wb = Workbook()
+    ws = wb.active
+    ws.title = 'Employees'
+
+    # Define column headers
+    headers = [
+        'Employee ID', 'Name', 'Company Contact', 'Personal Contact', 'Present Address',
+        'Permanent Address', 'DOB', 'DOJ', 'Gender', 'Email', 'Office Email',
+        'Status', 'Designation', 'Level', 'Department'
+    ]
+    ws.append(headers)
+
+    # Retrieve data from Employee model and add it to the worksheet
+    employees = Employee.objects.filter(com_id = com).all()
+    for employee in employees:
+        row = [
+            employee.emp_id, employee.name, employee.company_contact, employee.personal_contact,
+            employee.present_address, employee.permanent_address, employee.dob, employee.doj,
+            employee.gender, employee.email, employee.office_email, employee.status,
+            employee.designation, employee.level, employee.department.department
+        ]
+        ws.append(row)
+
+    # Save the workbook to the response
+    wb.save(response)
+    return response
 
 # View Employee Details
 @login_required(login_url='adminLogin')
@@ -759,6 +879,80 @@ def leavePolicySetting(request):
     context = {'leave': leave, 'form': form, 'lea1': lea1, 'lea2': lea2, 'com': com}
     return render(request, "leavePolicySetting.html", context)
 
+
+# Privacy Policy Setting
+@login_required(login_url='adminLogin')
+@user_passes_test(is_admin)
+def setupPrivacyPolicy(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    privacy_details = PrivacyPolicy.objects.filter(com_id=com).first()
+    if privacy_details is None:
+        if request.method == "POST":
+            form = PrivacyPolicyForm(request.POST, initial={'com_id': com.id})
+            if form.is_valid():
+                data = form.save(commit=False)
+                data.com_id = com
+                data.save()
+                time.sleep(2)
+                return redirect('companySetup')
+            else:
+                print(form.errors)
+        else:
+            form = PrivacyPolicyForm(initial={'com_id': com.id})
+    else:
+        instance = PrivacyPolicy.objects.get(com_id=com)
+        form = PrivacyPolicyUpdateForm(request.POST or None, instance=instance, initial={'com_id': com.id})
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+                time.sleep(2)
+                return redirect('companySetup')
+            else:
+                print(form.errors)
+
+    context = {'leave': leave, 'form': form, 'privacy_details': privacy_details, 'com': com}
+    return render(request, "setupPrivacyPolicy.html", context)
+
+# Terms & Conditions Setting
+@login_required(login_url='adminLogin')
+@user_passes_test(is_admin)
+def setupTandC(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    terms_details = Terms.objects.filter(com_id=com).first()
+    if terms_details is None:
+        if request.method == "POST":
+            form = TermsForm(request.POST, initial={'com_id': com.id})
+            if form.is_valid():
+                data = form.save(commit=False)
+                data.com_id = com
+                data.save()
+                time.sleep(2)
+                return redirect('companySetup')
+            else:
+                print(form.errors)
+        else:
+            form = TermsForm(initial={'com_id': com.id})
+    else:
+        instance = Terms.objects.get(com_id=com)
+        form = TermsUpdateForm(request.POST or None, instance=instance, initial={'com_id': com.id})
+        if request.method == "POST":
+            if form.is_valid():
+                form.save()
+                time.sleep(2)
+                return redirect('companySetup')
+            else:
+                print(form.errors)
+
+    context = {'leave': leave, 'form': form, 'terms_details': terms_details, 'com': com}
+    return render(request, "setupTermsAndConditions.html", context)
 
 # Add Leave
 def addLeave(request):
