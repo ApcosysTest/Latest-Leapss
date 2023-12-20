@@ -42,9 +42,7 @@ def homepage(request):
 
 # Request LEAPSS app
 def requestApplication(request):
-    print('hii')
     if request.method == 'POST':
-        print('hello')
         form = AppRequestForm(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)            
@@ -53,7 +51,6 @@ def requestApplication(request):
             instance.save()
             return render(request, 'successfullyApply.html')
         else:
-            print(form.errors)
             messages.success(request, 'Check your data')
     else:
         form = AppRequestForm()
@@ -96,7 +93,6 @@ def ApproveClient(request, client_id):
     client.save()
     characters = string.ascii_letters + string.digits + string.punctuation
     custom_password = ''.join(random.choice(characters) for _ in range(10))
-    print(custom_password)
     company = Company()
     company.name = client.company_name
     company.website = client.website
@@ -236,7 +232,6 @@ def changeAdminPassword(request, otp, email):
         if new_password == confirm_password:
             if otp == user_otp:
                 try:                                                                                            
-                    print(email)
                     company = Company.objects.get(email=email)
                     superuser = User.objects.get(username=email)
                     company.password = new_password
@@ -317,8 +312,6 @@ class CalendarView(generic.ListView):
             emp = Employee.objects.filter(email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         quote = Quote.objects.all().last() 
-        quote_history = Quote.objects.filter(com_id = com).all()
-        print(quote_history)
         form = QuoteForm()
         # if quote is None:
         if self.request.method == "GET": 
@@ -335,7 +328,7 @@ class CalendarView(generic.ListView):
         #     form = QuoteUpdateForm(self.request.GET or None, instance=instance)
         #     if form.is_valid():
         #         form.save()
-        quotes = {'quote':quote,'form':form,'quote_history':quote_history}
+        quotes = {'quote':quote,'form':form}
         return quotes
 
     def quote(self):    
@@ -380,6 +373,7 @@ class CalendarView(generic.ListView):
         context['dic']=self.dash()
         context['quotes'] = self.quotesub()  
         context['quote'] = self.quote()
+        context['quote_history'] = Quote.objects.filter(com_id = com).order_by('-id').all()
         return context
 
 # Total Employee
@@ -445,7 +439,6 @@ def presentEmployees(request):
     leave = LeaveApplication.objects.filter(status_approve=True, date_from__lte=today, date_to__gte=today).values('user__id')
     absent = Absent.objects.filter(absent_on=today, user__user__username__in=emails).values('user__user__id')
     present = Employee.objects.filter(user__username__in=emails).exclude(Q(user__id__in = absent) | Q(user__id__in = leave))
-    print(present)
     context = {'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav, 'present':present, 'com':com}
     return render(request,'presentEmployees.html', context)
 
@@ -1225,7 +1218,6 @@ def leaveBasket(request):
             cat_count = 0
         dic3[l]= [l.days-cat_count, l.days]
     context = {'leave':leave, 'dic1':dic1, 'dic2':dic2, 'dic3':dic3, 'com':com}
-    print(dic3,dic2,dic1,"dic")
     return render(request, 'leaveBasket.html', context)
 # Employee Approval Status
 @login_required(login_url='employeeLogin')
@@ -1326,8 +1318,6 @@ def rejectLeave(request, id):
             leave.level1_reject = True
             leave.save()
             return redirect('leaveStatus')
-        else:
-            print('None')
         return redirect('reviewLeaveApplication', leave.id)
     elif request.user.employee.level == 'Level 2':
         leave=get_object_or_404(LeaveApplication, pk=id)
@@ -1336,8 +1326,6 @@ def rejectLeave(request, id):
             leave.level2_reject = True
             leave.save()
             return redirect('leaveStatus')
-        else:
-            print('None')
         return redirect('reviewLeaveApplication', leave.id)
     else:
         return redirect('sidebar')
