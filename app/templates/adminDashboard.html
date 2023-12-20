@@ -135,29 +135,55 @@
                       </div>
 
                       <div class="col-md-2">
-                        <button id="quotebutton" class="new-quote-btn btn btn-primary" style="height:35px;margin-bottom:10px;padding:0px;" type="submit" >Submit  </button> 
-                        <button id="quotebutton" class="new-quote-btn btn btn-primary" style="height:35px;padding:0px;" type="submit" >History</button> 
+                        <button id="quotebutton" class="new-quote-btn btn btn-primary" style="height:35px;margin-bottom:10px;padding:0px;" type="submit" >Submit</button> 
+                        <button id="quotebutton" class="new-quote-btn btn btn-primary" style="height:35px;padding:0px;" type="submit" data-toggle="modal" data-target="#HistoryModal">History</button> 
                       </div>
                     </div> 
                   </form>  
+                  
                   {% else %}  
                   <form action="" method="get">
                     {% csrf_token %}
                     <div class="row">
                       <div class="col-md-10 quotes"> 
-                          <textarea name="quotes" cols="40"  id="quote" placeholder="Information of the day" oninput="auto_grow(this)" maxlength="200"  disabled >{{quotes.form.instance.quotes}}</textarea>
+                          <textarea name="quotes" cols="40"  id="quote" placeholder="Information of the day" oninput="auto_grow(this)" maxlength="200"  disabled >{{quote}}</textarea>
                        
                       </div>
                       
                       <div class="col-md-2">
-                        <a id="editButton"  class="new-quote-btn btn btn-primary" style="height:35px;margin-bottom:10px;padding:4px;" onclick="editQuote()">Edit  </a> 
-                        <button id="updateButton" hidden class="new-quote-btn btn btn-primary" style="height:35px;margin-bottom:10px;padding:0px;" onclick="updateQuote()" type="submit" >Update</button> 
-                        <button id="quotebutton" class="new-quote-btn btn btn-primary" style="height:35px;padding:0px;" type="submit" >History</button> 
+                        <a id="editButton"  class="new-quote-btn btn btn-primary" style="height:35px;margin-bottom:10px;padding:4px;" onclick="editQuote('')">Add New</a> 
+                        <button id="updateButton" hidden class="new-quote-btn btn btn-success" style="height:35px;margin-bottom:10px;padding:0px;" onclick="updateQuote()" type="submit" >Update</button> 
+                        <button id="quotebutton" class="new-quote-btn btn btn-primary" style="height:35px;padding:0px;" type="button" data-toggle="modal" data-target="#HistoryModal">History</button> 
                       </div>
                     </div>
                   </form>
-                  {% endif %}
-                  
+                  {% endif %}                  
+                </div>
+
+
+                {% comment %} Pop-ups {% endcomment %}
+                <div class="modal fade" id="HistoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Information History</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="padding:5px;">
+                          {% for q in quotes.quote_history %}
+                            <div class="quote-history">
+                              <div class="d-flex justify-content-between">
+                                <div class="date">{{q.tod_date}}</div>
+                                <a onclick="editQuote('{{q.quotes}}')" data-dismiss="modal"><div>Recall</div></a>
+                              </div>
+                              <div>{{q.quotes}}</div>
+                            </div>
+                          {% endfor %}
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class=" cal empInfo" style="padding:0px 25px;"> 
                     <div class="clear justify-content-around row">
@@ -230,10 +256,11 @@
       </div>
     </div>
     <script> 
-      function editQuote(){ 
+      function editQuote(e){ 
         $('#quote').removeAttr('disabled'); 
         $('#updateButton').removeAttr('hidden');  
-        $('#editButton').attr('hidden',true);   
+        $('#editButton').attr('hidden',true);  
+        $('#quote').val(e);
       }
     </script>
     <script>

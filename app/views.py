@@ -34,7 +34,7 @@ def is_employee(user):
 
 # Index Page
 def landingpage(request):
-    return render(request,"landingpage.html")
+    return render(request,"landingPage.html")
 
 # Home Page
 def homepage(request):
@@ -317,23 +317,25 @@ class CalendarView(generic.ListView):
             emp = Employee.objects.filter(email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         quote = Quote.objects.all().last() 
+        quote_history = Quote.objects.filter(com_id = com).all()
+        print(quote_history)
         form = QuoteForm()
-        if quote is None:
-            if self.request.method == "GET": 
-                form = QuoteForm(self.request.GET)
-                if form.is_valid():
-                    data = form.save(commit=False)
-                    data.com_id=com
-                    data.save()
-                    return redirect('adminDashboard')   
-            else:
-                form = QuoteForm()
-        else:
-            instance = Quote.objects.filter(com_id = com).last()
-            form = QuoteUpdateForm(self.request.GET or None, instance=instance)
+        # if quote is None:
+        if self.request.method == "GET": 
+            form = QuoteForm(self.request.GET)
             if form.is_valid():
-                form.save()
-        quotes = {'quote':quote,'form':form}
+                data = form.save(commit=False)
+                data.com_id=com
+                data.save()
+                return redirect('adminDashboard')   
+        else:
+            form = QuoteForm()
+        # else:
+        #     instance = Quote.objects.filter(com_id = com).last()
+        #     form = QuoteUpdateForm(self.request.GET or None, instance=instance)
+        #     if form.is_valid():
+        #         form.save()
+        quotes = {'quote':quote,'form':form,'quote_history':quote_history}
         return quotes
 
     def quote(self):    
@@ -345,8 +347,11 @@ class CalendarView(generic.ListView):
             current_date = 0 
             current_date = datetime.now().strftime('%Y-%m-%d')  
             try:
-                quotedd = Quote.objects.get(tod_date = current_date, com_id = com)
-                quoted = quotedd.quotes
+                quotedd = Quote.objects.filter(tod_date=current_date, com_id=com).order_by('-id').first()
+                if quotedd is None:
+                    quoted = None
+                else:
+                    quoted = quotedd.quotes
             except Quote.DoesNotExist:
                 quoted = None
 
