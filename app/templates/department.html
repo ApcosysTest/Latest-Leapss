@@ -67,7 +67,7 @@
         <!-- Page content wrapper-->
         <div id="page-content-wrapper">
             <!-- Top navigation-->
-            <nav class="navbar navbar-expand-lg  align-items-center justify-content-around border-bottom">
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">
                 <!-- <div class="container">
                     <button class="btn" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>
                 </div> -->
@@ -81,15 +81,20 @@
                      
                   </div> 
                 <ul class="d-flex align-items-center header-nav">
-                     
+                    <li style="list-style: none;"class="addEmp">
+                        <a type="button" href="{% url 'addDepartment' %}" class="btn ">
+                          Add Department
+                        </a>
+                    </li>
                   </ul>
             </nav>
             <section class = "pageClass"> 
                 <div class="empInfoo " style="margin-top:2%; height: 450px ;"> 
                     <div class="row justify-content-between"style="margin:auto 2%;" >
-                        <p >Department</p>
-                    <a type="btn btn-primary" id="depBtn" href="{% url 'addDepartment' %}">Add Department</a>
+                        <div class="col-md-6"><h5 style="color: #009eff;padding: 1% 0%;">Departments</h5>
+                    
                     </div>
+                </div>
                     <center>  
                         <div class="container-fluid" style='padding:0px'>
                         {% if messages %}
@@ -106,17 +111,19 @@
                         {% endif %}
                         </div> 
                     </center>
-                    <div> 
-                    {% for dep in  dep %}
-                      <div class="listt">
-                          <div class="row">
-                              <div class="col-md-6"><p class="dept" style="padding:2% 0%;">{{dep.department}}</p></div>
-                              <div class="col-md-2"style="text-align:left"><p class="total"style="padding:6% 0%;">{{dep.dep_code}}</p></div>
-                              <div class="col-md-2"style="padding:0.8% 0%;"><a href="{% url 'editDepartment' dep.id %}" class="view" style="padding: 2% 20%;">Edit</a></div>
-                              <div class="col-md-2"style="padding:0.5% 0%;"><a id="confirm" style="padding: 1% 9%;"class="btn btn-danger" href="{% url 'deleteDepartment' dep.id %}" onclick="return confirm('Are You Sure?')" >Delete</a></div> 
-                          </div>
-                      </div>  
-                    {% endfor %} 
+                    <div class="d-flex justify-content-center"> 
+                        <div>
+                            {% for dep in  dep %}
+                        <div class="listt ">
+                            <div class="row">
+                                <div class="col-md-6"><p class="dept" style="padding:2% 0%;">{{dep.department}}</p></div>
+                                <div class="col-md-2"style="text-align:left"><p class="total"style="padding:6% 0%;">{{dep.dep_code}}</p></div>
+                                <div class="col-md-2"style="padding:0.8% 0%;"><a href="{% url 'editDepartment' dep.id %}" class="view" style="padding: 2% 20%;">Edit</a></div>
+                                <div class="col-md-2"style="padding:0.5% 0%;"><a id="confirm" style="padding: 1% 9%;"class="btn btn-danger" href="{% url 'deleteDepartment' dep.id %}" onclick="return confirm('Are You Sure?')" >Delete</a></div> 
+                            </div>
+                        </div>  
+                        {% endfor %} 
+                        </div>
                     </div> 
                 </div> 
             </section>

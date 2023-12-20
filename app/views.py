@@ -497,6 +497,10 @@ def activeEmployee(request):
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def deactivateDetail(request, id):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.get(id=id)
     form = DeactivateForm()
     if request.method == 'POST':
@@ -508,7 +512,7 @@ def deactivateDetail(request, id):
             return redirect(reverse('activeEmployee'))
     else:
         form=DeactivateForm()
-    context = {'form':form}
+    context = {'form':form, 'com':com}
     return render(request, 'deactivate.html', context)
 
 # Inactive Employee Detail
@@ -527,6 +531,10 @@ def inactiveEmployee(request):
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def activateDetail(request, id):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.get(id=id)
     form = ActivateForm()
     if request.method == 'POST':
@@ -538,7 +546,7 @@ def activateDetail(request, id):
             return redirect(reverse('activeEmployee'))
     else:
         form=ActivateForm()
-    context = {'form':form}
+    context = {'form':form, 'com':com}
     return render(request, 'activate.html', context)
 
 # Add Employee Detail
