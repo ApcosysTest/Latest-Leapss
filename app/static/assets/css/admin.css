@@ -1120,4 +1120,28 @@ select{
 .client-data tr td:nth-child(2) {
   color: royalblue;
 }
-    
+
+/* quote-history */
+.quote-history{
+  background-color: #d8f0fd;
+  margin: 15px 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.quote-history .date{
+  color: rgba(255, 0, 0, 0.588);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.quote-history a div{
+  font-size: 13px;
+  color: white;
+  background-color: green;
+  border-radius: 5px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.quote-history a div:hover{
+  transform: scale(1.1);
+}   
