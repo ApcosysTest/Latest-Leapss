@@ -38,9 +38,8 @@
         <!-- Sidebar-->
         <div class="border-end bg-white border-right position-sticky header" id="sidebar-wrapper">
             <div class="justify-content-center">
-                <div class="leapss">
-                  <img src="{% static 'assets/img/logo.png'%}" alt="">
-                  <button class="btn toggle" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button>
+                <div class="leapss"><img src="{% static 'assets/img/logo.png'%}" alt="">
+                  <button class="btn" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button>
                 </div>
             </div>
             <ul class="sidebar-nav " id="sidebar-nav">
@@ -73,12 +72,18 @@
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
                     <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
-
-                  </div> 
+                  </div>
+                  <ul class="d-flex align-items-center header-nav">
+                    <li style="list-style: none;"class="addEmp">
+                        <a type="button" href="{% url 'addLeave' %}" style="width:200px;" class="btn ">
+                          Add Leave Category
+                        </a>
+                    </li>
+                  </ul> 
             </nav>
             <section class="section container pageClass  bg-white rounded dashboard">
                 <div class="row justify-content-between">
-                <h5 style="color: #009eff; padding: 2%;">Leave Policy</h5><a id = "addLeave"href="{% url 'addLeave' %}">Add Leave Category</a>
+                <h5 style="color: #009eff; padding: 2%;">Leave Policy</h5>
 
                 </div>
                 <center>  
