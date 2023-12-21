@@ -5,6 +5,8 @@ from app.views import *
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
+from django.conf import settings # new
+from  django.conf.urls.static import static #new
 
 urlpatterns = [
     path('admin/', admin.site.urls),
