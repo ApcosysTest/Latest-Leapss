@@ -124,12 +124,7 @@
                                     <div>
                                         <label for="department">Department</label>
                                         {{form.department}}
-                                    </div>
-                                    <div>
-                                        <label for="designation">Designation</label>
-                                        {{form.designation}}
-                                    </div>
-                                    
+                                    </div>                                    
                                 </div>
                                 <div class="col-md-6">  
                                     <div>
@@ -150,12 +145,16 @@
                                         {{form.emp_id}}
                                     </div> 
                                     <div>
-                                        <label for="reporting">Reporting Person</label><br>
-                                        {{form.reporting}}
-                                    </div>
-                                    <div>
                                         <label for="level">Level</label><br>
                                         {{form.level}}  
+                                    </div>
+                                    <div>
+                                        <label for="designation">Designation</label>
+                                        {{form.designation}}
+                                    </div>
+                                    <div>
+                                        <label for="reporting">Reporting Person</label><br>
+                                        {{form.reporting}}
                                     </div>
                                     <div class="card cards">
                                       <div class="card-body"style="text-align: center; padding:2%;">
@@ -166,9 +165,9 @@
                                       </div> 
                                     </div>
                                       
-                                     <div id="change">
+                                     {% comment %} <div id="change">
                                         <a href="{% url 'changePassword' data.id %}"class="btn   btn-primary btn-sm  ">Change Password</a>
-                                     </div>
+                                     </div> {% endcomment %}
                                       <div style="margin-left: 2%;">
                                         <a href="{% url 'activeEmployee' %}"   class="btn  btn-outline-info btn-md cancel"> Cancel</a>
                                         <button type="submit" class="btn   btn-primary btn-sm  add "  onclick="wrong_pass_alert()">Save</button>

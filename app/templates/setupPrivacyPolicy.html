@@ -32,6 +32,8 @@
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
 
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.3.0/classic/ckeditor.js"></script>
+
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -105,8 +107,10 @@
                         <div class="container">
                             {{form.privacypolicy}}
                         </div>
+                        <br>
                         <div class=" row justify-content-center addEmp">
                             <button class="btn " type="submit" data-toggle="modal" data-target="#exampleModalCenter"> Update</button>
+                            {% comment %} <a class="btn btn-warning">Cancel</a> {% endcomment %}
                         </div>
                     </form> 
                     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -127,9 +131,10 @@
                     <div class="container">
                         {% comment %} {{form.leavepolicy}} {% endcomment %}
                         <textarea name="privacypolicy" cols="40" rows="10" id="tarea" placeholder="Fill in your leave policy" required></textarea>
-                    </div>
+                    </div><br>
                     <div class=" row justify-content-center addEmp">
                         <button class="btn " type="submit">Done</button>
+                        {% comment %} <a class="btn ">Cancel</a> {% endcomment %}
                     </div>
                 </form> 
 
@@ -151,6 +156,38 @@
     <script>
         AOS.init();
     </script>
+    {% comment %} <script>
+        ClassicEditor.create(document.querySelector("#tarea"), {
+            toolbar: {
+                items: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    '|',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'link',
+                    'insertTable',
+                    '|',
+                    'undo',
+                    'redo'
+                ],
+                removeItems: 'imageUpload' // Remove the image upload option
+            }
+        })
+        .then((editor) => {
+            window.editor = editor;
+            console.log("CKEditor initialized without image upload option");
+            editor.setData(`{{privacy.privacypolicy}}`);
+            const data = editor.getData();
+            console.log(data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    </script> {% endcomment %}
 
 </body>
 </html>

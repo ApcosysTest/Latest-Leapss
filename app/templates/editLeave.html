@@ -58,7 +58,7 @@
                 <li><a class="list-group-item active" href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
              </div>
              <div class="logout">
-              <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
+              <a class="nav-link" href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
                 logout
                 </span><span style="font-family: 'Segoe UI', sans-serif; position:relative;bottom:3px; ">Log Out</span></a>
             </div>
@@ -85,7 +85,19 @@
                         {% csrf_token %}
                         {{form}}
                         <button type="Submit" id="addLeave">Submit</button>
+                        <a class="btn btn-danger" id="deleteButton" href="{% url 'deleteLeave' dep_id %}" style="margin-top: -4px; height: 40px;">Delete</a>
                     </form>
+                    <script>
+                        document.getElementById('deleteButton').addEventListener('click', function(event) {
+                            event.preventDefault();
+                        
+                            if (confirm('Are you sure you want to delete the Leave Catagory?')) {
+                                window.location.href = event.target.href;
+                            } else {
+
+                            }
+                        });
+                        </script>
                 </div>
             </section>
         </div>

@@ -131,13 +131,13 @@
                       <tbody style="text-align: center;">
                         
                         {% for emp in emp %}  
-                        <tr>  
+                        <tr class='outers'>  
                             <td style="text-align:left; margin-left:10%" class='name'>{{ emp.name}}</td>  
                             <td class='dep'>{{ emp.department }}</td>
                             <td class='emp_id'>{{ emp.emp_id }}</td>  
                             <td>  
                               <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px"  class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
                               </div>
                             </td>
                             <td>  
@@ -160,19 +160,19 @@
     </div>
     <script>
         $(document).ready(function () {
-  $('#dtDynamicVerticalScrollExample').DataTable({
-    "scrollY": "50vh",
-    "scrollCollapse": true,
-  });
-  $('.dataTables_length').addClass('bs-select');
-});
+        $('#dtDynamicVerticalScrollExample').DataTable({
+          "scrollY": "50vh",
+          "scrollCollapse": true,
+        });
+        $('.dataTables_length').addClass('bs-select');
+      });
     </script>
     <script>
       $(document).ready(function() {
       {
           $(".search").addClass("shadow-none");
       }
-  });
+     });
     </script>
 
     <script>

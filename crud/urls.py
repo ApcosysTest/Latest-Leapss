@@ -69,6 +69,7 @@ urlpatterns = [
 
 # Employee
     path('employeeLogin', employeeLogin, name='employeeLogin'),
+    path('employeeSetupInitialization/<str:email>', employeeSetupInitialization, name='employeeSetupInitialization'),
     re_path(r'^sidebar$', CalendarViewEmp.as_view(), name='sidebar'),
     path('profileSetting', profileSetting, name='profileSetting'),
     path('howToUse', howToUse, name='howToUse'),
@@ -101,8 +102,12 @@ urlpatterns = [
     path('leavePolicySetting', leavePolicySetting, name='leavePolicySetting'),
     path('addLeave', addLeave, name='addLeave'),
     path('<int:id>/editLeave',editLeave, name='editLeave'),
+    path('<int:id>/deleteLeave',deleteLeave, name='deleteLeave'),
 
 ]
+ 
+
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
@@ -111,4 +116,3 @@ elif getattr(settings, 'FORCE_SERVE_STATIC', False):
     urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     settings.DEBUG = False
-    
