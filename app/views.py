@@ -73,6 +73,47 @@ def appRequestDashboard(request):
     }
     return render(request, 'appRequestDashboard.html', context)
 
+def homeDashboard(request):
+    client_id = request.GET.get('client_id', None)
+    all_clients = AllRequest.objects.all()
+    total_company = all_clients.count()
+
+    approved_clients = AllRequest.objects.filter(active_status=True).count()
+    inactive_clients = AllRequest.objects.filter(active_status=False).count()
+    rejected_clients = AllRequest.objects.filter(decline_status=True).count()
+
+    
+    all_employee = None
+    total_employee = 0
+    in_activate = 0
+    in_deactivate = 0
+
+    if client_id is not None:
+        
+        all_employee = Employee.objects.filter(com_id=client_id)
+        total_employee = all_employee.count()
+
+        in_activate = Employee.objects.filter(com_id=client_id, status=True).count()
+        in_deactivate = Employee.objects.filter(com_id=client_id, status=False).count()
+
+    context = {
+        'total_company': total_company,
+        'approved_clients': approved_clients,
+        'inactive_clients': inactive_clients,
+        'rejected_clients': rejected_clients,
+        'all_clients': all_clients,
+        'all_employee': all_employee,
+        'total_employee': total_employee,
+        'in_activate': in_activate,
+        'in_deactivate': in_deactivate,
+    }
+    
+    
+
+    return render(request, 'homeDashboard.html', context)
+
+
+
 def approvedClientDashboard(request):
     clients = AllRequest.objects.filter(approve_status=True).all()
     context ={
@@ -206,7 +247,7 @@ def newCompanySetup(request, username):
                 else:
                     messages.warning(request, 'Superuser already exists')
             except Company.DoesNotExist:
-                messages.error(request, 'Company not found or incorrect password')
+                messages.error(request, 'Email not found or incorrect password')
         else:
             messages.error(request, 'Password and confirm password must be the same')
 
@@ -216,11 +257,11 @@ def adminForgotPassword(request):
     if request.method == 'POST':
         email = request.POST['email']
         try:
-            valid_email = Company.objects.get(email=email).email
+            valid_email = User.objects.get(username=email).username
             otp = str(random.randint(100000, 999999))
             send_admin_forgot_password_otp(otp, email)
             return redirect('changeAdminPassword', otp=otp , email=valid_email)
-        except Company.DoesNotExist:
+        except User.DoesNotExist:
             messages.error(request, 'Email was not found')
     return render(request, 'forgotPassword.html')
 
@@ -232,17 +273,11 @@ def changeAdminPassword(request, otp, email):
         if new_password == confirm_password:
             if otp == user_otp:
                 try:                                                                                            
-                    company = Company.objects.get(email=email)
-                    superuser = User.objects.get(username=email)
-                    company.password = new_password
-                    company.save()
-                    superuser.set_password(new_password)
-                    superuser.save()
-                    return redirect('adminLogin')
-                # except Company.DoesNotExist:
-                #     messages.error(request, 'Company not found or incorrect password')
+                    user = User.objects.get(username=email)
+                    user.set_password(new_password)
+                    user.save()
+                    return redirect('homepage')
                 except Exception as e:
-                    # Handle the exception
                     print(f"An exception occurred: {e}")
             else:
                 messages.error(request, 'Invalid OTP')
@@ -560,21 +595,23 @@ def addEmployee(request):
         form = AddEmployeeExtraForm(request.POST)
         form1 = AddEmployeeForm(request.POST, request.FILES, com_id=com.id)
         if form.is_valid() and form1.is_valid():
+            characters = string.ascii_letters + string.digits + string.punctuation
+            custom_password = ''.join(random.choice(characters) for _ in range(10))
             name = request.POST['name']
             office_email = request.POST['office_email']
             username = request.POST['username']
-            password = request.POST['password']
+            password = custom_password
             company = com.name
             user=form.save()
-            user.set_password(user.password)
+            user.set_password(password)
             user.save()
             f2=form1.save(commit=False)
             f2.user=user
             f2.com_id=com
+            f2.employee_setup_completed=False
             user1=f2.save()
             
             send_account_creation_mail(office_email, name, company, username, password)
-            print(f2.level)
             group=Group.objects.get_or_create(name='EMPLOYEE')
             group[0].user_set.add(user)
             if f2.level == "Level 0":
@@ -715,7 +752,7 @@ def editEmployee(request,id):
     data = Employee.objects.get(id=id)
     instance = Employee.objects.get(pk=id)
     instance1=User.objects.get(pk=instance.user.id)
-    form = EmployeeUpdateForm(request.POST or None, request.FILES or None, instance=instance)
+    form = EmployeeUpdateForm(request.POST or None, request.FILES or None, instance=instance, com_id=com.id)
     form1 = EmployeeUpdateExtraForm(request.POST or None, instance=instance1)
     if form.is_valid() and form1.is_valid():
         form.save()
@@ -1004,8 +1041,12 @@ def employeeLogin(request):
             user = authenticate(username=username, password=password)
             if user:
                 if user.groups.filter(name='EMPLOYEE'):
-                    auth_login(request,user)
-                    return redirect('sidebar')
+                    emp = Employee.objects.get(office_email=username)
+                    if emp.employee_setup_completed == True:
+                        auth_login(request,user)
+                        return redirect('sidebar')
+                    else:
+                        return redirect('newCompanySetup', username=username)
                 else:
                     messages.success(request, 'Your account is not found')
             else:
@@ -1017,6 +1058,30 @@ def employeeLogin(request):
         'form':form
     }
     return render(request,"employeeLogin.html", context)
+
+
+def employeeSetupInitialization(request, email):
+    if request.method == 'POST':
+        user_otp = request.POST['oldPassword']
+        new_password = request.POST['newPassword']
+        confirm_password = request.POST['confirmPassword']
+        if new_password == confirm_password:
+            user = User.objects.get(username=email)
+            employee = Employee.objects.get(email=email)
+            if user_otp == user.password:
+                try:                                                                                            
+                    user.set_password(new_password)
+                    user.save()
+                    employee.employee_setup_completed = True
+                    employee.save()
+                    return redirect('homepage')
+                except Exception as e:
+                    print(f"An exception occurred: {e}")
+            else:
+                messages.error(request, 'Invalid One Time Password')
+        else:
+            messages.error(request, 'Password and confirm password must be the same')
+    return render(request, 'newCompanySetup.html')
 
 # Employee Home Page
 class CalendarViewEmp(generic.ListView):

@@ -5,6 +5,8 @@ from app.views import *
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
+from django.conf import settings # new
+from  django.conf.urls.static import static #new
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +29,9 @@ urlpatterns = [
     path('companyLogin', companyLogin, name='companyLogin'), 
     path('newCompanySetup/<str:username>/', newCompanySetup, name='newCompanySetup'), 
     path('appDisabled', appDisabled, name='appDisabled'), 
+    path('homeDashboard', homeDashboard, name='homeDashboard'), 
+    path('homeDashboard/', homeDashboard, name='homeDashboard'), 
+    
     
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
@@ -101,6 +106,14 @@ urlpatterns = [
     path('<int:id>/editLeave',editLeave, name='editLeave'),
 
 ]
+ 
+
+
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+elif getattr(settings, 'FORCE_SERVE_STATIC', False):
+    settings.DEBUG = True
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    settings.DEBUG = False

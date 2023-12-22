@@ -141,36 +141,36 @@ class AddEmployeeForm(forms.ModelForm):
 
 class AddEmployeeExtraForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Must be Company\'s E-mail Id'}), required=True)
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Minimum 8 and 1 special character','id':'Password'}), required=True)
-    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password','id':'Confirm_Password','onkeyup':'validate_password()'}), required=True)
+    # password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Minimum 8 and 1 special character','id':'Password'}), required=True)
+    # confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password','id':'Confirm_Password','onkeyup':'validate_password()'}), required=True)
 
     class Meta:
         model=User
-        fields=['username', 'password', 'confirm_password']
+        fields=['username']
 
-    def clean(self):
-        special_characters = "[~\!@#\$%\^&\*\(\)_\+{}\":;'\[\]]"
-        cleaned_data=super(AddEmployeeExtraForm, self).clean()
-        password=cleaned_data.get("password")
-        confirm_password=cleaned_data.get("confirm_password")
-        username =cleaned_data.get('username')
+    # def clean(self):
+    #     special_characters = "[~\!@#\$%\^&\*\(\)_\+{}\":;'\[\]]"
+    #     cleaned_data=super(AddEmployeeExtraForm, self).clean()
+    #     password=cleaned_data.get("password")
+    #     confirm_password=cleaned_data.get("confirm_password")
+    #     username =cleaned_data.get('username')
 
-        if len(username) < 8:
-            self.add_error('username','Username length must be greater than 8 character.')
-        if not any (char in special_characters for char in password):
-            self.add_error('password','Password must contain at least one special Character.')
+    #     if len(username) < 8:
+    #         self.add_error('username','Username length must be greater than 8 character.')
+    #     if not any (char in special_characters for char in password):
+    #         self.add_error('password','Password must contain at least one special Character.')
 
-        if len(password)  < 8:
-            self.add_error('password','Password length must be greater than 8 character.')
-        if not any (char.isdigit() for char in password):
-            self.add_error('password','Password must contain at least one digit.')
-        if not any (char in special_characters for char in password):
-            self.add_error('password','Password must contain at least one special Character.')
+    #     if len(password)  < 8:
+    #         self.add_error('password','Password length must be greater than 8 character.')
+    #     if not any (char.isdigit() for char in password):
+    #         self.add_error('password','Password must contain at least one digit.')
+    #     if not any (char in special_characters for char in password):
+    #         self.add_error('password','Password must contain at least one special Character.')
 
-        if password != confirm_password:
-            self.add_error('confirm_password', "Password does not Match")
+    #     if password != confirm_password:
+    #         self.add_error('confirm_password', "Password does not Match")
 
-        return cleaned_data
+    #     return cleaned_data
     
 # Employee Update Form
 class EmployeeUpdateForm(forms.ModelForm):
@@ -190,6 +190,14 @@ class EmployeeUpdateForm(forms.ModelForm):
     level = forms.ChoiceField(choices=LEVELS,widget=forms.Select())
     department = forms.ModelChoiceField(queryset=Department.objects.all(),widget=forms.Select(), empty_label="Select Department", required=True)
     reporting = NameChoiceField(queryset=Employee.objects.order_by('name').filter(Q(level='Level 0') | Q(level='Level 1') | Q(level='Level 2')).exclude(status=False),widget=forms.Select(), empty_label="Select Reporting Person", required=False)
+
+    def __init__(self, *args, **kwargs):
+        com = kwargs.pop('com_id', None)
+        super(EmployeeUpdateForm, self).__init__(*args, **kwargs)
+        
+        if com:
+            self.fields['department'] = forms.ModelChoiceField(queryset=Department.objects.filter(com_id = com).all(),widget=forms.Select(), empty_label="Select Department", required=True)
+            self.fields['reporting'] = NameChoiceField(queryset=Employee.objects.order_by('name').filter(Q(level='Level 0') | Q(level='Level 1') | Q(level='Level 2'), com_id = com).exclude(status=False),widget=forms.Select(attrs={ }), empty_label="Select Reporting Person", required=False)
 
     
     class Meta:  

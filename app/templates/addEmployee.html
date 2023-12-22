@@ -219,11 +219,6 @@
                                 <label for="department">Department</label>
                                 {{form1.department}} 
                             </div>
-                            <div>
-                                <label for="designation">Designation</label>
-                                {{form1.designation}}
-                    
-                            </div>
                             
                             </div>
                     
@@ -245,19 +240,23 @@
                                 {{form1.emp_id}}
                             </div>
                             <div> 
-                                <label for="re_person">Reporting Person</label>
-                                {{form1.reporting}}
-                            </div>
-                            <div> 
                                 <label for="level">Level</label><br>
                                 {{form1.level}}
+                            </div>
+                            <div>
+                                <label for="designation">Designation</label>
+                                {{form1.designation}}
+                            </div>
+                            <div> 
+                                <label for="re_person">Reporting Person</label>
+                                {{form1.reporting}}
                             </div>
                             <div>
                                 <label for="username">Username</label>
                                 {{form.username}}
                     
                             </div>
-                            <div>
+                            {% comment %} <div>
                                 <label for="password">Password</label>
                                 {{form.password}}
                     
@@ -266,7 +265,7 @@
                                 <label for="confirm_password">Confirm Password</label>
                                 {{form.confirm_password}}
                                 <span style="margin-left: 2%;" id="wrong_pass_alert"></span>
-                            </div>
+                            </div> {% endcomment %}
                              
                             <div class="card cards "style="margin-bottom:0rem">
                               <div class="card-body" style="padding:1rem">

@@ -70,7 +70,9 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg btn-block loginButton">Login</button>
                     </form>
-                    <p class="contactAdmin" style="text-align: center; font-size: 12px; padding-left: 20px; padding-right: 20px; padding-top: 20px;">Forgot your password<br> <a href="mailto:admn.leapss@gmail.com">Contact Admin</a></p>
+                    <div class="text-center">
+                        <a href="{% url 'adminForgotPassword' %}">Forgot Password</a>
+                    </div>
                 </div>
             </div>
      </section>
