@@ -78,6 +78,7 @@ class Employee(models.Model):
     reporting = models.ForeignKey("self", null=True, blank=True, on_delete=models.CASCADE)
     deactivate = models.CharField(max_length=5000, null=True, blank=True)
     activate = models.CharField(max_length=5000, null=True, blank=True)
+    employee_setup_completed = models.BooleanField(default=True) 
 
     def __str__(self):
         return self.emp_id

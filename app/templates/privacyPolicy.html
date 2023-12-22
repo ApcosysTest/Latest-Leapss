@@ -36,6 +36,7 @@
         display: none;
       }
     </style>
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.3.0/classic/ckeditor.js"></script>
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -87,7 +88,7 @@
                 <h5 style="color: #009eff; padding: 1% ; ">Privacy Policy</h5> 
                 
                 <div class="container">
-                    <textarea name="leavePolicy" id="leavePolicyt" cols="30" rows="15" disabled >{{privacy.privacypolicy}}</textarea>
+                    <div name="leavePolicy" id="leavePolicyt" cols="30" rows="15" disabled >{{privacy.privacypolicy}}</div>
 
                 </div>
               </section>
@@ -106,6 +107,23 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="{% static 'assets\js\main.js' %}"></script>
-
+    {% comment %} <script>
+        ClassicEditor.create(document.querySelector("#leavePolicyt"), {
+            toolbar: null, // Set the toolbar to null to remove it completely
+            isReadOnly: true // Set the editor to read-only mode
+        })
+        .then((editor) => {
+            window.editor = editor;
+            console.log("CKEditor initialized in read-only mode");
+            var privacyPolicyHTML = "{{privacy.privacypolicy}}";
+            privacyPolicyContainer.innerHTML = privacyPolicyHTML;
+            editor.setData(`privacyPolicyHTML`);
+            const data = editor.getData();
+            console.log(data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    </script> {% endcomment %}
 </body>
 </html>

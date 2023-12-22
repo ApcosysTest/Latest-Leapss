@@ -51,6 +51,34 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+.helpertext{
+    font-size:13px;
+    margin:15px 0px;
+    display: none;
+}
+.inputRadio{
+    padding: 4%;
+    position: relative;
+    bottom:-1px;
+    color: green;
+    margin-top: 2px;
+}
+input[type='radio']:checked:after {
+    width: 17px;
+    height: 17px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: green;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+.loginButton{
+    margin-top:10px !important;
+}
     </style>
 </head>
 <body>
@@ -99,13 +127,21 @@
                     <form action="" id="passwordChangeForm" method="POST">
                         {% csrf_token %}
                         <div class="inputField">
-                            <input type="password" placeholder="One Time Password (Check Email)" name="oldPassword" required>
+                            <input type="password" id="id_username" placeholder="One Time Password (Check Email)" name="oldPassword" required>
                         </div>
                         <div>
-                            <input type="password" placeholder="New Password" name="newPassword" required>
+                            <input type="password" id="id_password1" placeholder="New Password" name="newPassword" required onkeyup="validatepass(this)" onfocus="handleFocus()" onblur="handleBlur()">
                         </div>
+                        <ul class="helpertext">
+                            <input class="inputRadio" id="ir1" type="radio" disabled>   At Least 8 Characters Long <br>
+                            <input class="inputRadio" id="ir3" type="radio" disabled>   Must not be similar to Username<br>
+                            <input class="inputRadio" id="ir2" type="radio" disabled>   Must Contain 1 Special a number<br>
+                            <input class="inputRadio" id="ir4" type="radio" disabled>   Must Contain 1 Special Character<br>   
+                            <input class="inputRadio" id="ir5" type="radio" disabled>   Must Contain 1 Special an Uppercase letter
+                        </ul>
                         <div style="margin-top:10px;">
-                            <input type="password" placeholder="Confirm Password" name="confirmPassword" required>
+                            <input type="password" id="id_password2" placeholder="Confirm Password" name="confirmPassword" onkeyup="validate_password()" required>
+                            <span style="margin-left: 2%;" id="wrong_pass_alert">&nbsp;</span>
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg btn-block loginButton">Proceed</button>
                     </form>
@@ -127,6 +163,7 @@
 </body>
     <!--   Core JS Files   -->
     <script src="{% static 'assets/js/main.js'%}"></script>
+    <script src="{% static 'assets/js/passwordValidation.js'%}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 	<script>
         // JavaScript to show loading overlay on form submission

@@ -128,10 +128,10 @@
                             </thead> 
                                 <tbody style=" ">
                                     {% for l in leave %}  
-                                    <tr>  
-                                        <td>{{l.user.employee.name}}</td>
+                                    <tr class='outers'>  
+                                        <td class='name'>{{l.user.employee.name}}</td>
                                         <td>{{l.category}}</td>
-                                        <td>{{l.user.employee.department}}</td> 
+                                        <td class='dep'>{{l.user.employee.department}}</td> 
                                         <td>{{l.date_from }}</td> 
                                         <td>{{l.date_to }}</td>  
                                         <td>{{l.leave_count }}</td>  
