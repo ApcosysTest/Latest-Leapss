@@ -29,7 +29,8 @@ urlpatterns = [
     path('companyLogin', companyLogin, name='companyLogin'), 
     path('newCompanySetup/<str:username>/', newCompanySetup, name='newCompanySetup'), 
     path('appDisabled', appDisabled, name='appDisabled'), 
-    
+    path('homeDashboard/', homeDashboard, name='homeDashboard'), 
+
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
     re_path(r'^adminDashboard$', CalendarView.as_view(), name='adminDashboard'), 

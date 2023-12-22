@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sversity is the online edu. Tech division of Apcosys Private Limited and Apcosys is a software development and consultancy company with headquarter in Bangalore, India. Sversity online learning destination, offering high-quality courses from the world's best universities and institutions to learners everywhere. In the age of internet, do we really need to spend huge amount on getting degrees? One can equally quench his third for knowledge by joining online classes.">
+    <title>Leapss - Leave Management System</title>
+    {% load static %}
+    <link href="{% static 'assets\css\admin.css' %}" rel="stylesheet">
+    <link href="{% static 'assets\css\calendar.css' %}" rel="stylesheet">
+
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <!-- Ionic Icon -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
+ 
+    <!-- bootstrap Icon  -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <!-- Google Icon -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
+     
+    <!-- Ajax -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          ['Total Clients',     {{total_company}}],
+          ['Active Clients',      {{approved_clients}}],
+          ['InActive Clients',  {{inactive_clients}}],
+          ['Clients Request', {{rejected_clients}}]
+        ]);
+
+        var options = {
+          title: 'My Clients Activities',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
+</head>
+<body id="body-pd">
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar-->
+        <div class="border-end bg-white   position-sticky header" id="sidebar-wrapper">
+          <div class="justify-content-center">
+            <div class="leapss"><img src="{% static 'assets/img/logo.png'%}" alt="">
+            <button class="btn" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button></div>
+        </div>
+            <ul class="sidebar-nav " id="sidebar-nav">
+                <li class="profile"data-bs-toggle="collapse">
+                    <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
+                    <h6>{{user.username}}</h6>
+                </li>
+            </ul>
+            <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
+                <li ><a class="list-group-item active" href="{% url 'homeDashboard' %}"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
+                <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
+                <li><a class="list-group-item " href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
+                <li><a class="list-group-item " href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
+             </div>
+             <div class="logout">
+              <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
+                logout
+                </span><span style="font-family: 'Segoe UI', sans-serif; position:relative;bottom:3px; ">Log Out</span></a>
+            </div>
+            
+        </div>
+        <!-- Page content wrapper-->
+        <div id="page-content-wrapper">
+            <!-- Top navigation-->
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
+                  
+                <div class="logo d-flex align-items-center">
+                  <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
+                    <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
+                    <span>{% if dic.com is None %}Leapss{% else %}{{ dic.com }}{% endif %}</span>
+                  </div>
+                  {% comment %} <ul class="d-flex align-items-center header-nav">
+                    <li style="list-style: none; "class="addEmp">
+                        <a type="button" style="margin-right:30px" href="/addEmployee" class="btn ">
+                          Add Employee
+                        </a>
+                    </li>
+                  </ul> {% endcomment %}
+            </nav>
+            <section class="section container pageClass  bg-white rounded dashboard">
+                <div class="row">
+                  <div class="col-md-3">
+                    <a href="/totalEmployees" style="text-decoration: none;">
+                      <div class="card cardd"style = "background-color: #009eff;border:none;">
+                          <div class="card-body">
+                               
+                              <p class="card-text"> <b>{{ total_company }}</b> <br>Total Clients</p>
+                              {% comment %} <h5 class="card-title" style="color: #ffffff;">{{dic.total_emp}}</h5> {% endcomment %}
+                          </div>
+                      </div>
+                    </a> 
+                  </div>
+                    <div class="col-md-3">
+                      <a href="/presentEmployees" style="text-decoration: none;">
+                        <div class="card cardd" style = "background-color: #52D89C; border:none; ">
+                            <div class="card-body">
+                              <p class="card-text"><b>{{ approved_clients }}</b> <br>Active Clients </p>
+                              {% comment %} <h5 class="card-title" style="color: #ffffff;">{{dic.present_today}}</h5> {% endcomment %}
+                            </div>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-3">
+                      <a href="/onLeave" style="text-decoration: none;">
+                        <div class="card cardd"style = "background-color: #FFC14E;border:none;">
+                            <div class="card-body">
+                              <p class="card-text"><b>{{ inactive_clients }}</b> <br>InActive Clients</p>
+                              {% comment %} <h5 class="card-title" style="color: #ffffff;">{{dic.total_leave}}</h5> {% endcomment %}
+                            </div>
+                        </div>
+                      </a>
+                    </div>
+                    <div class="col-md-3 ">
+                      <a href="/leaveApplicationDetails" style="text-decoration: none;">
+                        <div class="card cardd" >
+                            <div class="card-body"style = "background-color: #FF7B5D; border:none; border-radius:4px;">
+                              <p class="card-text"><b>{{ rejected_clients }}</b> <br>Clients Request </p>
+                              {% comment %} <h5 class="card-title" style="color: #ffffff;">{{dic.apply_leav}}</h5> {% endcomment %}
+                            </div>
+                        </div>
+                      </a>
+                    </div>  
+                </div> 
+                
+
+                    <br>
+                <div class="container">
+                    
+                    <div class="row">
+                      <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" >
+                        {% comment %} <h4>My Web Page</h4> {% endcomment %}
+                        <div id="piechart_3d" style="width: 600px; height: 350px;"></div>
+                      </div>
+                      <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" >
+                        <select class="form-control" id="clientDropdown">
+                            <option value="0">Select Client</option>
+                            {% for all_client in all_clients %}
+                             <option value="{{ all_client.pk }}">{{ all_client }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <canvas id="myChart" style="max-width:600px"></canvas>
+
+                      </div>
+                    </div>
+                  </div>
+                 
+            </section>
+
+
+   
+        </div>
+    </div>
+    <div class="d-flex justify-content-between privacy bg-primary">
+      <div class="row">
+          <a href="{% url 'privacyPolicy' %}">Privacy Policy</a>
+          <a href="{% url 'termsAndConditions' %}">Terms & Conditions</a> 
+      </div>
+      <div>
+          <a href="{{ dic.com.website }}" target="_blank">&copy {{dic.com}}</a> 
+      </div>
+    </div>
+
+    <script>
+        
+        jQuery.noConflict();
+        jQuery(document).ready(function($) {
+           
+            $("#clientDropdown").change(function () {
+                var selectedClient = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: '/homeDashboard/', 
+                    data: {'client_id': selectedClient},
+                    success: function (data) {
+                        
+                        $('#calculatedData').html(data);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+    <div id="calculatedData">
+        
+    </div>
+    <script>
+        var xValues = ["Total User", "Active Users", "InActive Users"];
+        var yValues = [{{total_employee}}, {{in_activate}}, {{in_deactivate}}];
+        var barColors = ["red", "green", "blue"];
+    
+        new Chart("myChart", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true, 
+                        min: 0,
+                        max: Math.max.apply(null, yValues) + 10            
+                    }
+                },
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: "World Wine Production 2018"
+                }
+            }
+        });
+    </script>   
+    
+
+
+    <script> 
+      function editQuote(e){ 
+        $('#quote').removeAttr('disabled'); 
+        $('#updateButton').removeAttr('hidden');  
+        $('#editButton').attr('hidden',true);  
+        $('#quote').val(e);
+      }
+    </script>
+    <script>
+
+      function updateQuote(){ 
+        $('.quoteUpdate').attr('disabled',true); 
+         $('#updateButton').attr('hidden',true);  
+         $('#editButton').removeAttr('hidden');   
+      }
+   </script>
+    
+   
+
+</body>
+</html>

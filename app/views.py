@@ -73,6 +73,46 @@ def appRequestDashboard(request):
     }
     return render(request, 'appRequestDashboard.html', context)
 
+def homeDashboard(request):
+    client_id = request.GET.get('client_id', None)
+    all_clients = AllRequest.objects.all()
+    total_company = all_clients.count()
+
+    approved_clients = AllRequest.objects.filter(active_status=True).count()
+    inactive_clients = AllRequest.objects.filter(active_status=False).count()
+    rejected_clients = AllRequest.objects.filter(decline_status=True).count()
+
+    
+    all_employee = None
+    total_employee = 0
+    in_activate = 0
+    in_deactivate = 0
+
+    if client_id is not None:
+        
+        all_employee = Employee.objects.filter(com_id=client_id)
+        total_employee = all_employee.count()
+
+        in_activate = Employee.objects.filter(com_id=client_id, status=True).count()
+        in_deactivate = Employee.objects.filter(com_id=client_id, status=False).count()
+
+    context = {
+        'total_company': total_company,
+        'approved_clients': approved_clients,
+        'inactive_clients': inactive_clients,
+        'rejected_clients': rejected_clients,
+        'all_clients': all_clients,
+        'all_employee': all_employee,
+        'total_employee': total_employee,
+        'in_activate': in_activate,
+        'in_deactivate': in_deactivate,
+    }
+    
+    
+
+    return render(request, 'homeDashboard.html', context)
+
+
 def approvedClientDashboard(request):
     clients = AllRequest.objects.filter(approve_status=True).all()
     context ={

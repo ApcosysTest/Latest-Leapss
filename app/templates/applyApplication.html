@@ -16,12 +16,16 @@
 
     <!-- Bootstrap core CSS     -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+
     <style>
         .request select{
             width: 100%;
@@ -73,7 +77,12 @@
 
             <div class="container" style="padding-top: 5px;">
                 <div class="login request">
-                    <h3>Register Your Company</h3><br>
+                    
+                    <h3>
+                        <button class="btn btn-primary btn-sm" style="float:left" onclick="confirmationBack()">
+                            <span style="color:#fff"><i class="fa fa-arrow-circle-left"></i></span>
+                        </button>
+                         Register Your Company</h3><br>
                     <center>  
                         <div class="container" >
                         {% if messages %}
@@ -91,21 +100,21 @@
                         {% endif %}
                         </div> 
                     </center> 
-                    <form action="" method="POST" class="row">
+                    <form action="" method="POST" class="row" id="yourFormId">
                         {% csrf_token %}
                         {% comment %} {{form}} {% endcomment %}
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="quRl9yQ4Da5ufbyGhCAbeOJeO2qJbUcFoqn8aRGEPeh7MyFqjJ3734XtCA2SshvV">                     {% endcomment %}
                         <label for="id_company_name">Company name:</label>    
-                        <input type="text" name="company_name" placeholder="Company Name" required="" id="id_company_name">
+                        <input type="text" name="company_name" placeholder="Company Name" class="capital" required="" id="id_company_name" autofocus>
                         <label for="id_website">Website:</label>   
                         {{ form.website }}
                         <label for="id_email">Email:</label>   
                         <input type="email" name="email" placeholder="Email ID" required="" id="id_email">
                         <label for="id_telephone">Telephone:</label>  
-                        <input type="text" name="telephone" placeholder="Phone Number" required="" id="id_telephone">
+                        <input type="text" name="telephone" placeholder="Phone Number" class="number" required="" id="id_telephone">
                         <label for="id_telephone">Alternate Telephone:</label>  
-                        <input type="text" name="telephone1" placeholder="Alternate Number" required="" id="id_telephone1">
+                        <input type="text" name="telephone1" placeholder="Alternate Number" class="number" required="" id="id_telephone1">
                        </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <label for="id_country">Country:</label>  
@@ -121,11 +130,20 @@
                             <option value="" selected="selected">Please select district/city</option>
                         </select>
                         <label for="id_address">Address:</label>
-                        <input type="text" name="address" placeholder="Address" required="" id="id_address">
+                        <input type="text" name="address" placeholder="Address" class="capital" required="" id="id_address">
                         <label for="id_pincode">Pincode:</label>
-                        <input type="text" name="pincode" placeholder="Pincode" required="" id="id_pincode">
+                        <input type="text" name="pincode" placeholder="Pincode" class="number" required="" id="id_pincode"  maxlenght="6">
+                        <br>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg btn-block loginButton">Submit</button>
+                        
+                        <div class="btn-group" style="position: relative;top: 6px;">
+                            
+                            <button  class="btn btn-danger btn-sm" onclick="confirmResetForm()">Reset  </button>&nbsp
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </div>
+                          
+                        <br>
+                        {% comment %} <button type="submit" class="btn btn-primary btn-lg btn-block loginButton">Submit</button> {% endcomment %}
                     </form>
                 </div><br><br><br>
             </div>
@@ -143,6 +161,47 @@
         </div>
     </div>
 </body>
+
+    <script>
+    function confirmationBack() {
+        var isConfirmed = confirm("Are you sure you want to exit from this page?");
+        if (isConfirmed) {
+            
+            window.location.href = "{% url 'landingpage' %}";
+        }
+    }
+
+    function confirmResetForm() {
+        var isConfirmed = confirm("Are you sure you want to reset the Data?");
+        if (isConfirmed) {
+            
+            document.getElementById("yourFormId").reset();
+        }
+    }
+
+    $(document).ready(function(){
+ 
+        $('.number').keyup(function () {
+          this.value = this.value.replace(/[^0-9]/g, '');
+      });
+      
+      $('.addr').keyup(function () {
+          this.value = this.value.replace(/[^a-zA-Z0-9 /]/g, '');
+      });
+      
+      $('.char').keyup(function () {
+          this.value = this.value.replace(/[^a-zA-Z ]/g, '');
+      });
+       $('.capital').on('input', function(evt) {
+          $(this).val(function(_, val) {
+            return val.toUpperCase();
+          });
+      });
+});
+    </script>
+
+
+
     <!--   Core JS Files   -->
     <script src="{% static 'assets/js/main.js'%}"></script>
     <script src="{% static 'assets/js/CountryStateDistrictCityData.js'%}"></script>
