@@ -190,81 +190,88 @@
     </div>
 
     <script>
-        
-        jQuery.noConflict();
-        jQuery(document).ready(function($) {
-           
-            $("#clientDropdown").change(function () {
-                var selectedClient = $(this).val();
-                $.ajax({
-                    type: 'GET',
-                    url: '/homeDashboard/', 
-                    data: {'client_id': selectedClient},
-                    success: function (data) {
-                        
-                        $('#calculatedData').html(data);
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-            });
-        });
-    </script>
-    <div id="calculatedData">
-        
-    </div>
-    <script>
-        var xValues = ["Total User", "Active Users", "InActive Users"];
-        var yValues = [{{total_employee}}, {{in_activate}}, {{in_deactivate}}];
-        var barColors = ["red", "green", "blue"];
-    
-        new Chart("myChart", {
-            type: "bar",
-            data: {
-                labels: xValues,
-                datasets: [{
-                    backgroundColor: barColors,
-                    data: yValues
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true, 
-                        min: 0,
-                        max: Math.max.apply(null, yValues) + 10            
-                    }
-                },
-                legend: { display: false },
-                title: {
-                    display: true,
-                    text: "World Wine Production 2018"
-                }
-            }
-        });
-    </script>   
-    
-
-
-    <script> 
-      function editQuote(e){ 
-        $('#quote').removeAttr('disabled'); 
-        $('#updateButton').removeAttr('hidden');  
-        $('#editButton').attr('hidden',true);  
-        $('#quote').val(e);
+      jQuery.noConflict();
+      jQuery(document).ready(function($) {
+          // Initialize the chart once when the page loads
+          var myChart = initializeChart();
+  
+          $("#clientDropdown").change(function () {
+              var selectedClient = $(this).val();
+              $.ajax({
+                  type: 'GET',
+                  url: '/getDashboardData/' + selectedClient + '/',
+                  success: function (data) {
+                      console.log(data);
+  
+                      // Update the DOM elements with the received data
+                      $('#calculatedData').html('Total Employees: ' + data.total_employee);
+                      
+                      // For displaying the employee list
+                      var employeeListContainer = $('#employeeListContainer');
+                      employeeListContainer.empty(); // Clear previous content
+  
+                      if (data.all_employee.length > 0) {
+                          for (var i = 0; i < data.all_employee.length; i++) {
+                              var employee = data.all_employee[i];
+                              var listItem = $('<li>').text('Employee ID: ' + employee.pk + ', Name: ' + employee.fields.name);
+                              employeeListContainer.append(listItem);
+                          }
+                      } else {
+                          // Handle the case when there are no employees
+                          var noEmployeeItem = $('<li>').text('No employees found.');
+                          employeeListContainer.append(noEmployeeItem);
+                      }
+  
+                      // Update the chart with new data
+                      updateChart(myChart, data.total_employee, data.in_activate, data.in_deactivate);
+                  },
+                  error: function (error) {
+                      console.log(error);
+                  }
+              });
+          });
+      });
+  
+      function initializeChart() {
+          // Initialize the chart once when the page loads
+          var ctx = document.getElementById("myChart").getContext("2d");
+          return new Chart(ctx, {
+              type: "bar",
+              data: {
+                  labels: ["Total User", "Active Users", "InActive Users"],
+                  datasets: [{
+                      backgroundColor: ["red", "green", "blue"],
+                      data: [0, 0, 0]
+                  }]
+              },
+              options: {
+                  scales: {
+                      y: {
+                          beginAtZero: true, 
+                          min: 0,
+                          max: 10            
+                      }
+                  },
+                  legend: { display: false },
+                  title: {
+                      display: true,
+                      text: "World Wine Production 2018"
+                  }
+              }
+          });
       }
-    </script>
-    <script>
-
-      function updateQuote(){ 
-        $('.quoteUpdate').attr('disabled',true); 
-         $('#updateButton').attr('hidden',true);  
-         $('#editButton').removeAttr('hidden');   
+  
+      function updateChart(chart, totalEmployee, activeEmployee, inactiveEmployee) {
+          // Update the chart with new data
+          chart.data.datasets[0].data = [totalEmployee, activeEmployee, inactiveEmployee];
+          chart.update();
       }
-   </script>
+  </script>
+  
+  <div id="calculatedData"></div>
+  <ul id="employeeListContainer" style="display:none"></ul>   
     
-   
+
 
 </body>
 </html>

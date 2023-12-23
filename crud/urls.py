@@ -30,6 +30,7 @@ urlpatterns = [
     path('newCompanySetup/<str:username>/', newCompanySetup, name='newCompanySetup'), 
     path('appDisabled', appDisabled, name='appDisabled'), 
     path('homeDashboard/', homeDashboard, name='homeDashboard'), 
+    path('getDashboardData/<int:client_id>/', getDashboardData, name='getDashboardData'), 
 
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
