@@ -8,7 +8,8 @@ import string, random, time
 import pandas as pd
 from openpyxl import Workbook
 from django.urls import reverse
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.core.serializers import serialize
 from .utils import Calendar, Eventcal 
 from django.utils.safestring import mark_safe 
 from django.views import generic
@@ -19,6 +20,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.forms import SetPasswordForm
 from django.db.models import Q, Count, Sum
 from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp
+import json
 
 # Check is admin
 def is_admin(user):
@@ -112,6 +114,31 @@ def homeDashboard(request):
 
     return render(request, 'homeDashboard.html', context)
 
+def getDashboardData(request, client_id):
+    try:
+        all_employee = Employee.objects.filter(com_id=client_id)
+        total_employee = all_employee.count()
+
+        in_activate = Employee.objects.filter(com_id=client_id, status=True).count()
+        in_deactivate = Employee.objects.filter(com_id=client_id, status=False).count()
+
+        print("all_employee:", all_employee)
+        print("total_employee:", total_employee)
+        print("in_activate:", in_activate)
+        print("in_deactivate:", in_deactivate)
+
+        all_employee_list = json.loads(serialize('json', all_employee))
+
+        data = {
+            'all_employee': all_employee_list,
+            'total_employee': total_employee,
+            'in_activate': in_activate,
+            'in_deactivate': in_deactivate,
+        }
+        return JsonResponse(data)
+    except Exception as e:
+        return JsonResponse({'error': str(e)})
+    
 
 def approvedClientDashboard(request):
     clients = AllRequest.objects.filter(approve_status=True).all()
