@@ -647,20 +647,20 @@ def addEmployeebyExcel(request):
             for index, row in df.iterrows():
                 print(row)
                 # Extract data from the Excel columns
-                emp_id = row['emp_id']
-                name = row['name']
-                company_contact = row['company_contact']
-                personal_contact = row['personal_contact']
-                present_address = row['present_address']
-                permanent_address = row['permanent_address']
-                dob = row['dob']
-                doj = row['doj']
-                gender = row['gender']
-                email = row['email']
-                office_email = row['office_email']
-                designation = row['designation']
-                level = row['level']
-                department =  Department.objects.get(department=row['department'],com_id = com)
+                emp_id = row['Employee ID']
+                name = row['Name']
+                company_contact = row['Company Contact']
+                personal_contact = row['Personal Contact']
+                present_address = row['Present Address']
+                permanent_address = row['Permanent Address']
+                dob = row['DOB']
+                doj = row['DOJ']
+                gender = row['Gender'] 
+                email = row['Email']
+                office_email = row['Office Email']
+                designation = row['Designation']
+                level = row['Level']
+                department =  Department.objects.get(department=row['Department'],com_id = com)
                 password = "12345678"
                 # image = row['image']
                 # Create a User instance
@@ -706,12 +706,12 @@ def download_employees_as_excel(request):
         emp = Employee.objects.filter(email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="employees.xlsx"'
+    response['Content-Disposition'] = f'attachment; filename="Employees of {com}.xlsx"'
 
     # Create a workbook and add a worksheet
     wb = Workbook()
     ws = wb.active
-    ws.title = 'Employees'
+    ws.title = f"Employees of {com}"
 
     # Define column headers
     headers = [
