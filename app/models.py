@@ -7,17 +7,17 @@ from django.db.models import Q
 
 # Request LEAPSS Model
 class AllRequest(models.Model):
-    company_name = models.CharField(max_length=500)
-    website = models.CharField(max_length=500)
-    email = models.EmailField(max_length=500,unique=True) 
-    telephone = models.CharField(max_length=500)
+    company_name = models.CharField(max_length=500, unique=True)
+    website = models.CharField(max_length=500, unique=True, blank=True, null=True)
+    email = models.EmailField(max_length=500, unique=True) 
+    telephone = models.CharField(max_length=500, unique=True)
     telephone1 = models.CharField(max_length=500, blank=True, null=True)
     city = models.CharField(max_length=500)
     state = models.CharField(max_length=500)
     country = models.CharField(max_length=500)
     address = models.CharField(max_length=500)
     pincode = models.CharField(max_length=500)
-    username = models.CharField(max_length=500,unique=True) 
+    username = models.CharField(max_length=500, unique=True) 
     approve_status = models.BooleanField(default=False)
     decline_status = models.BooleanField(default=False)
     active_status = models.BooleanField(default=True)

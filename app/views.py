@@ -53,7 +53,16 @@ def requestApplication(request):
             instance.save()
             return render(request, 'successfullyApply.html')
         else:
-            messages.success(request, 'Check your data')
+            if 'company_name' in form.errors:
+                messages.error(request, 'Company Name already exists.')
+            if 'website' in form.errors:
+                messages.error(request, 'Website with this address already exists.')
+            if 'email' in form.errors:
+                messages.error(request, 'Email already exists.')
+            if 'telephone' in form.errors:
+                messages.error(request, 'Phone number already exists.')
+            # else:
+            #     messages.success(request, 'Check your data')
     else:
         form = AppRequestForm()
 
