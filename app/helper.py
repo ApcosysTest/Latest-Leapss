@@ -24,3 +24,11 @@ def send_admin_forgot_password_otp(otp, email):
     recipient_list = [email]
     send_mail(subject, message, email_from, recipient_list)
     return True
+
+def send_mail_about_client_request(name):
+    subject = 'Notification for Client Request'
+    message = f'A new client request from {name} in leapss.com'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['saswatkumar059@gmail.com']
+    send_mail(subject, message, email_from, recipient_list)
+    return True

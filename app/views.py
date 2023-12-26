@@ -19,7 +19,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.forms import SetPasswordForm
 from django.db.models import Q, Count, Sum
-from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp
+from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp, send_mail_about_client_request
 import json
 
 # Check is admin
@@ -51,6 +51,7 @@ def requestApplication(request):
             instance.active_status = True
             instance.username = instance.email
             instance.save()
+            send_mail_about_client_request(instance.company_name)
             return render(request, 'successfullyApply.html')
         else:
             if 'company_name' in form.errors:
@@ -238,7 +239,9 @@ def companyLogin(request):
                     else:
                         messages.success(request, 'Check your username and password')
                 else:
-                    return redirect('newCompanySetup', username=username)
+                    otp = str(random.randint(100000, 999999))
+                    send_admin_forgot_password_otp(otp, company.email)
+                    return redirect('newCompanySetup',otp=otp, username=username)
             else:
                 return redirect('appDisabled')
         except Company.DoesNotExist:
@@ -256,40 +259,78 @@ def companyLogin(request):
             messages.error(request, 'Company Not Found')
     return render(request, 'companyLogin.html')
 
-def newCompanySetup(request, username):
+def newCompanySetup(request, otp, username):
     if request.method == 'POST':
         old_password = request.POST['oldPassword']
         new_password = request.POST['newPassword']
         confirm_password = request.POST['confirmPassword']
         if new_password == confirm_password:
-            try:
-                company = Company.objects.get(username=username, password=old_password)
-                company.password = new_password
-                company.save()
-
-                # Creating Admin for the Company
-                if not User.objects.filter(username=username).exists():
-                    # Creating superuser
-                    new_superuser = User.objects.create_superuser(username, company.email, new_password)
-                    
-                    # Adding superuser to Admin group
-                    admin_group, created = Group.objects.get_or_create(name='ADMIN')
-                    new_superuser.groups.add(admin_group)
-                    
-                    # Assigning all available permissions to the superuser
-                    permissions = Permission.objects.all()
-                    for permission in permissions:
-                        new_superuser.user_permissions.add(permission)
-                    
-                    company.setup_completed = True
+            if old_password == otp:
+                try:
+                    company = Company.objects.get(username=username)
+                    company.password = new_password
                     company.save()
-                    response = redirect('homepage')
-                    response.set_cookie('company_id', company.id)
-                    return response
-                else:
-                    messages.warning(request, 'Superuser already exists')
-            except Company.DoesNotExist:
-                messages.error(request, 'Email not found or incorrect password')
+
+                    # Creating Admin for the Company
+                    if not User.objects.filter(username=username).exists():
+                        # Creating superuser
+                        new_superuser = User.objects.create_superuser(username, company.email, new_password)
+                        
+                        # Adding superuser to Admin group
+                        admin_group, created = Group.objects.get_or_create(name='ADMIN')
+                        new_superuser.groups.add(admin_group)
+                        
+                        # Assigning all available permissions to the superuser
+                        permissions = Permission.objects.all()
+                        for permission in permissions:
+                            new_superuser.user_permissions.add(permission)
+                        
+                        company.setup_completed = True
+                        company.save()
+
+                        # Creating dummy departments
+                        Department.objects.create(
+                            department='Production',
+                            dep_code='001',
+                            com_id=company
+                        )
+                        Department.objects.create(
+                            department='IT',
+                            dep_code='002',
+                            com_id=company
+                        )
+                        Department.objects.create(
+                            department='Finance',
+                            dep_code='003',
+                            com_id=company
+                        )
+                        Department.objects.create(
+                            department='Marketing',
+                            dep_code='004',
+                            com_id=company
+                        )
+
+                        # Creating dummy Leave Baskets
+                        Leave.objects.create(
+                            name='Sick Leave',
+                            days=15,
+                            com_id=company
+                        )
+                        Leave.objects.create(
+                            name='Paid Leave',
+                            days=30,
+                            com_id=company
+                        )
+
+                        response = redirect('homepage')
+                        response.set_cookie('company_id', company.id)
+                        return response
+                    else:
+                        messages.warning(request, 'Superuser already exists')
+                except Company.DoesNotExist:
+                    messages.error(request, 'Email not found or incorrect password')
+            else:
+                 messages.error(request, 'Invalid OTP')
         else:
             messages.error(request, 'Password and confirm password must be the same')
 
@@ -545,7 +586,7 @@ def onLeave(request):
             user.save()
             return HttpResponseRedirect(request.path_info)
     form = AbsentForm(com_id=com.id)
-    context = {'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'leav':leav, 'form':form, 'absent':absent, 'absent_count':absent_count, 'total_leave':total_leave,'apply_leav':apply_leav}
+    context = {'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'leav':leav, 'form':form, 'absent':absent, 'absent_count':absent_count, 'total_leave':total_leave,'apply_leav':apply_leav,'com':com}
     return render(request,'onLeave.html', context)
 
 # Delete Absent
