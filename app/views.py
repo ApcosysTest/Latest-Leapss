@@ -62,8 +62,6 @@ def requestApplication(request):
                 messages.error(request, 'Email already exists.')
             if 'telephone' in form.errors:
                 messages.error(request, 'Phone number already exists.')
-            # else:
-            #     messages.success(request, 'Check your data')
     else:
         form = AppRequestForm()
 
@@ -119,9 +117,6 @@ def homeDashboard(request):
         'in_activate': in_activate,
         'in_deactivate': in_deactivate,
     }
-    
-    
-
     return render(request, 'homeDashboard.html', context)
 
 def getDashboardData(request, client_id):
