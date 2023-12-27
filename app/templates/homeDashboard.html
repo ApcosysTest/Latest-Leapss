@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+{% if not user.is_authenticated %}
+    <script>window.location.href = "{% url 'landingpage' %}"</script>
+{% endif %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,6 +64,7 @@
       }
     </script>
 </head>
+
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
         <!-- Sidebar-->
@@ -81,7 +86,7 @@
                 <li><a class="list-group-item " href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
              </div>
              <div class="logout">
-              <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
+              <a class="nav-link"href="{% url 'logout_superuser' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
                 logout
                 </span><span style="font-family: 'Segoe UI', sans-serif; position:relative;bottom:3px; ">Log Out</span></a>
             </div>
@@ -108,7 +113,7 @@
             <section class="section container pageClass  bg-white rounded dashboard">
                 <div class="row">
                   <div class="col-md-3">
-                    <a href="/totalEmployees" style="text-decoration: none;">
+                    <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
                       <div class="card cardd"style = "background-color: #009eff;border:none;">
                           <div class="card-body">
                                
@@ -119,7 +124,7 @@
                     </a> 
                   </div>
                     <div class="col-md-3">
-                      <a href="/presentEmployees" style="text-decoration: none;">
+                      <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
                         <div class="card cardd" style = "background-color: #52D89C; border:none; ">
                             <div class="card-body">
                               <p class="card-text"><b>{{ approved_clients }}</b> <br>Active Clients </p>
@@ -129,7 +134,7 @@
                       </a>
                     </div>
                     <div class="col-md-3">
-                      <a href="/onLeave" style="text-decoration: none;">
+                      <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
                         <div class="card cardd"style = "background-color: #FFC14E;border:none;">
                             <div class="card-body">
                               <p class="card-text"><b>{{ inactive_clients }}</b> <br>InActive Clients</p>
@@ -139,7 +144,7 @@
                       </a>
                     </div>
                     <div class="col-md-3 ">
-                      <a href="/leaveApplicationDetails" style="text-decoration: none;">
+                      <a href="{% url 'rejectedClientDashboard' %}" style="text-decoration: none;">
                         <div class="card cardd" >
                             <div class="card-body"style = "background-color: #FF7B5D; border:none; border-radius:4px;">
                               <p class="card-text"><b>{{ rejected_clients }}</b> <br>Clients Request </p>
@@ -255,7 +260,7 @@
                   legend: { display: false },
                   title: {
                       display: true,
-                      text: "World Wine Production 2018"
+                      {% comment %} text: "World Wine Production 2018" {% endcomment %}
                   }
               }
           });
@@ -274,4 +279,5 @@
 
 
 </body>
+
 </html>

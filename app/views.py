@@ -14,6 +14,7 @@ from .utils import Calendar, Eventcal
 from django.utils.safestring import mark_safe 
 from django.views import generic
 from django.contrib.auth import authenticate, logout, login as auth_login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import Group, Permission
@@ -1576,3 +1577,29 @@ def delete_event(request, event_id):
         instance = Event()
     instance.delete()
     return redirect('adminDashboard')
+
+
+def superadminlogin(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            
+            if user.groups.filter(name='SUPERADMIN').exists():
+                login(request, user)
+                return redirect('homeDashboard')  
+            else:
+                messages.error(request, "You don't have the required permissions.")
+        else:
+            messages.error(request, "There was an error in the login details.")
+    
+    return render(request, 'superadminlogin.html')
+
+
+
+def logout_superuser(request):
+    logout(request)
+    # messages.success(request, "You have logout")
+    return redirect('landingpage')

@@ -31,6 +31,8 @@ urlpatterns = [
     path('appDisabled', appDisabled, name='appDisabled'), 
     path('homeDashboard/', homeDashboard, name='homeDashboard'), 
     path('getDashboardData/<int:client_id>/', getDashboardData, name='getDashboardData'), 
+    path('superadminlogin', superadminlogin, name='superadminlogin'),
+    path('logout_superuser', logout_superuser, name='logout_superuser'),
 
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
