@@ -106,15 +106,15 @@
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         {% comment %} <input type="hidden" name="csrfmiddlewaretoken" value="quRl9yQ4Da5ufbyGhCAbeOJeO2qJbUcFoqn8aRGEPeh7MyFqjJ3734XtCA2SshvV">                     {% endcomment %}
                         <label for="id_company_name">Company name:</label>    
-                        <input type="text" name="company_name" placeholder="Company Name" class="capital" required="" id="id_company_name" autofocus>
+                        <input type="text" name="company_name" placeholder="Company Name"  required="" id="id_company_name" autofocus>
                         <label for="id_website">Website:</label>   
                         {{ form.website }}
                         <label for="id_email">Email:</label>   
                         <input type="email" name="email" placeholder="Email ID" required="" id="id_email">
                         <label for="id_telephone">Telephone:</label>  
-                        <input type="text" name="telephone" placeholder="Phone Number" class="number" required="" id="id_telephone">
+                        <input type="text" name="telephone" placeholder="Phone Number" class="number" required="" id="id_telephone" maxlenght="10">
                         <label for="id_telephone">Alternate Telephone:</label>  
-                        <input type="text" name="telephone1" placeholder="Alternate Number" class="number" required="" id="id_telephone1">
+                        <input type="text" name="telephone1" placeholder="Alternate Number" class="number" required="" id="id_telephone1" maxlenght="10">
                        </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <label for="id_country">Country:</label>  
@@ -130,7 +130,7 @@
                             <option value="" selected="selected">Please select district/city</option>
                         </select>
                         <label for="id_address">Address:</label>
-                        <input type="text" name="address" placeholder="Address" class="capital" required="" id="id_address">
+                        <input type="text" name="address" placeholder="Address"  required="" id="id_address">
                         <label for="id_pincode">Pincode:</label>
                         <input type="text" name="pincode" placeholder="Pincode" class="number" required="" id="id_pincode"  maxlenght="6">
                         <br>
