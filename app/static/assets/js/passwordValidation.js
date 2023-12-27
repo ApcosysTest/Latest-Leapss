@@ -1,5 +1,7 @@
 //Password Validation
 
+var btn_check = false
+
 function spChars(str) {
     var re = /^.*(?=.{2,})(?=.*[@#$%^&+=]).*$/;
     return re.test(str);
@@ -24,10 +26,10 @@ function validatepass(e){
     var num = nums(password)
     var upperCase = upperCases(password) 
     var char = chars(password) 
+    
 
     if(e.key === 'Backspace'){ 
         document.getElementById('ir1').checked  = false;
-        document.getElementById('ir3').checked  = false;
         document.getElementById('ir4').checked  = false;
     }
     if (char === true){ 
@@ -54,15 +56,12 @@ function validatepass(e){
     else{ 
         document.getElementById('ir5').checked  = false; 
     }
-
-    var perc=Math.round(similarity(username,password)*10000)/100; 
-    if (perc < 60){
-        document.getElementById('ir3').checked  = true; 
-    } 
-    else{
-        document.getElementById('ir3').checked  = false;
-
-    }  
+    if (char && spChar && num && upperCase) {
+        btn_check = true
+    } else {
+        btn_check = false
+    }
+  
 }
 function handleFocus() {
     var helpertext = document.getElementsByClassName('helpertext');
@@ -124,8 +123,8 @@ function validate_password() {
     var confirm_pass = document.getElementById('id_password2').value;
     if (pass != confirm_pass) {
         document.getElementById('wrong_pass_alert').style.color = 'red';
-        document.getElementById('wrong_pass_alert').innerHTML
-          = '☒ Use same password';
+        document.getElementById('wrong_pass_alert').innerHTML = '☒ Use same password';
+        document.getElementById('ConformPasswordBtn').disabled = true;
     } else {
         if (confirm_pass == '')
         {
@@ -135,6 +134,10 @@ function validate_password() {
             document.getElementById('wrong_pass_alert').style.color = 'green';
             document.getElementById('wrong_pass_alert').innerHTML =
             '🗹 Password Matched';
+            if (btn_check == true)
+            {
+                document.getElementById('ConformPasswordBtn').disabled = false;
+            }
         }
     }
    }
@@ -144,3 +147,4 @@ function validate_password() {
         alert("Password not Matched");
     } 
    }
+   

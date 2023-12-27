@@ -64,6 +64,16 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .excel-desc{
+            font-size:14px;
+            margin:20px;
+            color:#5C5C5C;
+            text-align: justify;
+        }
+        .excel-img{
+            width:47px;
+            margin-right:25px;
+        }
     </style>
 </head>
 <body id="body-pd">
@@ -140,6 +150,16 @@
                                 <center><button type="submit" class="btn btn-primary">Upload</button></center>
                             </form>
                         </div>
+                        <div class="">
+                            <h6 class="text-center">Instruction For Uploading Excel File</h6>
+                            <p class="excel-desc">Save time by importing your forms via Excel. Before importing/uploading data, download the the template below, enter your data, and then select the file to import.</p>
+                            <div class="d-flex justify-content-center">
+                                <img src="{% static 'assets/img/excel_logo.png'%}" alt="" class="img-fluid excel-img">
+                                <a href="{% static 'assets/img/LEAPSS Employ Upload Form.xlsx' %}" download="LEAPSS Employ Upload Form.xlsx">
+                                    <button class="btn btn-success">Download Excel Template</button>
+                                </a>
+                            </div><br>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -186,7 +206,7 @@
                                 
                             </div>
                             <div >
-                                <label for="gender">Gender</label>
+                                <label for="gender">Gender</label><br>
                                 {{form1.gender}}
                     
                             </div>

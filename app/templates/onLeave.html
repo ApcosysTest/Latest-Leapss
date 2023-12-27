@@ -75,7 +75,7 @@
                 <div class="logo d-flex align-items-center">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
-                    <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
+                    <span>{% if com is None %}Your Company Name{% else %}{{ com.name }}{% endif %}</span>
                   </div>
                   <div class="input-group col-md-6">
                     <form method="POST" action="/profilestatus">

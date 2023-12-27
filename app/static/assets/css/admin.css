@@ -636,12 +636,12 @@ border-radius: 5px;
 .modal-footer button:hover{
   background-color: var(--main-color); 
 }
-.dashboard  .inputWithIcon{
+.inputWithIcon{
   position: relative;
   display: flex;
   justify-content: flex-end;
 }
-.dashboard .inputWithIcon input { 
+.inputWithIcon input { 
   border: 1px solid #aaa;
   border-radius: 4px;
   outline: none;
@@ -650,7 +650,7 @@ border-radius: 5px;
   padding-left: 40px;
   height: 40px;
 }
-.dashboard .inputWithIcon ion-icon {
+.inputWithIcon ion-icon {
   position: absolute;
   left: 25%;
   top: 2px;
