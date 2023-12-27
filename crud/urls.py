@@ -1,6 +1,6 @@
  
 from django.contrib import admin
-from django.urls import path , re_path
+from django.urls import path , re_path , include
 from app.views import *
 from django.conf import settings
 from django.conf.urls.static import static
@@ -13,6 +13,7 @@ urlpatterns = [
     path('', landingpage, name='landingpage'),
     path('homepage', homepage, name='homepage'),
     path('logout',LogoutView.as_view(next_page='/'),name='logout'),
+    path("__debug__/", include("debug_toolbar.urls")),
 
     # Apply LEAPSS
     path('requestApplication', requestApplication, name='requestApplication'), 

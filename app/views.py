@@ -1164,6 +1164,7 @@ def employeeSetupInitialization(request, email):
                     return redirect('homepage')
                 except Exception as e:
                     print(f"An exception occurred: {e}")
+                    messages.error(request, f"An exception occurred: {e}")
             else:
                 messages.error(request, 'Invalid One Time Password')
         else:
