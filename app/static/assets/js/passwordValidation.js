@@ -57,9 +57,9 @@ function validatepass(e){
         document.getElementById('ir5').checked  = false; 
     }
     if (char && spChar && num && upperCase) {
-        btn_check = true
+        btn_check = true;
     } else {
-        btn_check = false
+        btn_check = false;
     }
   
 }
@@ -124,7 +124,7 @@ function validate_password() {
     if (pass != confirm_pass) {
         document.getElementById('wrong_pass_alert').style.color = 'red';
         document.getElementById('wrong_pass_alert').innerHTML = '☒ Use same password';
-        document.getElementById('ConformPasswordBtn').disabled = true;
+        // document.getElementById('ConformPasswordBtn').disabled = false;
     } else {
         if (confirm_pass == '')
         {
@@ -134,10 +134,10 @@ function validate_password() {
             document.getElementById('wrong_pass_alert').style.color = 'green';
             document.getElementById('wrong_pass_alert').innerHTML =
             '🗹 Password Matched';
-            if (btn_check == true)
-            {
-                document.getElementById('ConformPasswordBtn').disabled = false;
-            }
+            // if (btn_check == true)
+            // {
+            //     document.getElementById('ConformPasswordBtn').disabled = false;
+            // }
         }
     }
    }
