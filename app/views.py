@@ -610,6 +610,20 @@ def activeEmployee(request):
     context = {'emp':emp,'com':com}
     return render(request, 'activeEmployee.html', context)
 
+
+#All Active Employee Detail
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def allactiveEmployee(request): 
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+    emp = Employee.objects.filter( com_id=com).order_by('name')
+    context = {'emp':emp,'com':com,  'status': 'Active'}
+    return render(request, 'allactiveEmployee.html', context)
+
+
 # Deactivate detail employee page 
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))

@@ -9,7 +9,20 @@
     {% load static %}
     <link href="{% static 'assets\css\admin.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'assets/css/approvalStatus.css'%}">
-
+    <style>
+      #inactivebtn {
+        background-color: #fff;
+        text-decoration: none;
+        color: #009eff;
+        border: 1px solid #009eff;
+        /* border-radius: 4px; */
+        margin-left: -5px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        padding: 2% 2%;
+        height: 50px;
+    }
+    </style>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     
@@ -32,7 +45,7 @@
 
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
-
+    
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -99,6 +112,7 @@
                       <p>
                         <a id="activebtn"  href="{% url 'activeEmployee' %}">Active</a> 
                         <a id="inactivebtn" href="{% url 'inactiveEmployee' %}">Inactive</a>
+                        <a id="inactivebtn" href="{% url 'allactiveEmployee' %}"> All Employee</a>
                       </p> 
                     </p>
                   </div>
@@ -212,5 +226,6 @@
         AOS.init();
     </script>
 
+    
 </body>
 </html>

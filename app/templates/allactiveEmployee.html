@@ -9,7 +9,20 @@
     {% load static %}
     <link href="{% static 'assets\css\admin.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'assets/css/approvalStatus.css'%}">
-
+    <style>
+      #inactivebtn {
+        background-color: #fff;
+        text-decoration: none;
+        color: #009eff;
+        border: 1px solid #009eff;
+        /* border-radius: 4px; */
+        margin-left: -5px;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        padding: 2% 2%;
+        height: 50px;
+    }
+    </style>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     
@@ -32,7 +45,7 @@
 
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
-
+    
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -68,44 +81,46 @@
         <div id="page-content-wrapper">
             <!-- Top navigation-->
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">
-              <!-- <div class="container">
-                  <button class="btn" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>
-              </div> -->
-              
-              <div class="logo d-flex align-items-center">
-                <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
-                  <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
-                  <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
-              
-                </div>
-                  <ul class="d-flex align-items-center header-nav">
-                    <li style="list-style: none;"class="addEmp">
+                <!-- <div class="container">
+                    <button class="btn" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>
+                </div> -->
+                
+                <div class="logo d-flex align-items-center">
+                  <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
+                    <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
+                    <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
+                
+                  </div>
+                    <ul class="d-flex align-items-center header-nav">
+                      <li style="list-style: none;margin-right:20px;" class="">
+                          <a type="button" href="/download_employees" style="width:250px;background-" class="btn">
+                            Download Employee Details
+                          </a>
+                      </li>
+                      <li style="list-style: none;"class="addEmp">
                         <a type="button" href="/addEmployee" class="btn ">
                           Add Employee
                         </a>
                     </li>
-                  </ul>
-                  
-          </nav>
+                    </ul>
+                    
+            </nav>
             <section class="section container pageClass bg-white rounded dashboard">
                 <div class="row" style="margin-top: 1%;">
-                    <div class="col-md-6"><h5 style="color: #009eff;padding: 1%;">Employee Details</h5>
+                  <div class="col-md-6"><h5 style="color: #009eff;padding: 1%;">Employee Details</h5>
+                    <p>
                       <p>
-                        <!-- <a href="{% url 'activeEmployee' %}">Active</a> |
-                        <a style="color:green;" href="{% url 'inactiveEmployee' %}">Inactive</a> --> 
-                        <p>
-                          <a id="aactivebtn"  href="{% url 'activeEmployee' %}">Active</a> 
-                          <a id="innactivebtn" href="{% url 'inactiveEmployee' %}">Inactive</a>
-                          <a id="aactivebtn"  href="{% url 'allactiveEmployee' %}">All Employee</a> 
-                        </p> 
-                      </p>
-                    </div>
+                        <a id="inactivebtn"  href="{% url 'activeEmployee' %}">Active</a> 
+                        <a id="inactivebtn" href="{% url 'inactiveEmployee' %}">Inactive</a>
+                        <a id="activebtn" href="{% url 'allactiveEmployee' %}">All Employee</a>
+                      </p> 
+                    </p>
+                  </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-4"style="padding-left:4%;">
                     <div class="input-group" style="float:inline-end ;margin-bottom: 4%;">
                     <div id="search-autocomplete" class="form-outline">
-
-
+                      <br>
                       <form method="POST" autocomplete="off" id="search-form" >
                         {% csrf_token %}
                         <div class="inputWithIcon">
@@ -113,19 +128,17 @@
                             <ion-icon name="search-outline"></ion-icon>
                         </div>
                     </form>
-
-
                     </div>
                     </div> 
                     </div> </div>
                     <div class="table-responsive-lg">
-                  <table class="table  "style=" overflow-x: hidden;">
+                  <table class="table  "style=" overflow-x: hidden; ">
                       <thead style="text-align: center;">
                         <tr>
                           <th scope="col">Name</th>
                           <th scope="col">Department</th>
                           <th scope="col">Employee Id</th>
-                          <th scope="col">Edit</th>
+                          <th scope="col">View</th>
                           <th scope="col">Status</th>
                         </tr>
                       </thead>
@@ -133,7 +146,7 @@
                         
                         {% for emp in emp %}  
                         <tr class='outers'>  
-                            <td class='name'>{{ emp.name}}</td>  
+                            <td style="text-align:left; margin-left:10%" class='name'>{{ emp.name}}</td>  
                             <td class='dep'>{{ emp.department }}</td>
                             <td class='emp_id'>{{ emp.emp_id }}</td>  
                             <td>  
@@ -141,39 +154,53 @@
                                   <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
                               </div>
                             </td>
-                            <td>  
+                            {% comment %} <td>  
                                 <div class="edit">
-                                    <a type="button" style="position: relative; top:-10px; background-color: #52D89C; border: #52D89C 1px solid;" class="btn btn-primary btn-lg" href="{% url 'activateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Activate</a>
+                                    <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " >{{emp.status}}</a>
                                 </div>
-                              </td>
+                              </td> {% endcomment %}
+                              <td>
+                                {% if emp.status %}
+                                <div class="edit">
+                                    <a class="btn btn-success btn-lg" style="position: relative; top: -10px; background-color : #218838; border-color: #218838;" href="#">Active</a>
+                                </div>
+                                {% else %}
+                                <div class="edit">
+                                    <a class="btn btn-danger btn-lg" style="position: relative; top: -10px; background-color: #bd2130; border-color: #bd2130;" href="#">Inactive</a>
+                                </div>
+                                {% endif %}
+                            </td> 
+                            
                         </tr>  
-                        {% empty %}
+                        {% comment %} {% empty %} {% endcomment %}
                        
-                          <tr><td colspan="4" style="text-align:center;">Nothing found</td></tr> 
+                          {% comment %} <tr><td colspan="4" style="text-align:center;">Nothing found</td></tr>  {% endcomment %}
                 
                     {% endfor %}  
                       </tbody>
                     </table> 
                     </div>
+                      
             </section>
         </div>
     </div>
     <script>
         $(document).ready(function () {
-  $('#dtDynamicVerticalScrollExample').DataTable({
-    "scrollY": "50vh",
-    "scrollCollapse": true,
-  });
-  $('.dataTables_length').addClass('bs-select');
-});
+        $('#dtDynamicVerticalScrollExample').DataTable({
+          "scrollY": "50vh",
+          "scrollCollapse": true,
+        });
+        $('.dataTables_length').addClass('bs-select');
+      });
     </script>
     <script>
       $(document).ready(function() {
       {
           $(".search").addClass("shadow-none");
       }
-  });
+     });
     </script>
+
     <script>
       const input = document.getElementById('search-input')
       input.addEventListener('keyup', (e) => {
@@ -211,5 +238,6 @@
         AOS.init();
     </script>
 
+    
 </body>
 </html>

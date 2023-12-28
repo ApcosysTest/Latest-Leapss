@@ -47,6 +47,7 @@ urlpatterns = [
     path('activeEmployee', activeEmployee, name='activeEmployee'),
     path('<int:id>/deactivateDetail',deactivateDetail, name='deactivateDetail'),
     path('inactiveEmployee', inactiveEmployee, name='inactiveEmployee'),
+    path('allactiveEmployee', allactiveEmployee, name='allactiveEmployee'),
     path('<int:id>/activateDetail',activateDetail, name='activateDetail'),
     path('addEmployee',addEmployee, name='addEmployee'),
     path('addEmployeebyExcel',addEmployeebyExcel, name='addEmployeebyExcel'),
