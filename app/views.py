@@ -496,7 +496,7 @@ class CalendarView(generic.ListView):
 def totalEmployees(request): 
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-            emp = Employee.objects.filter(email=request.user.username).first()
+            emp = Employee.objects.filter(office_email=request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     today = datetime.today().strftime("%Y-%m-%d")
@@ -516,7 +516,7 @@ def totalEmployees(request):
 def totalEmployeeDetails(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-            emp = Employee.objects.filter(email=request.user.username).first()
+            emp = Employee.objects.filter(office_email=request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     total_emp = Employee.objects.filter(status=True, com_id = com).count()
@@ -539,9 +539,9 @@ def totalEmployeeDetails(request, id):
 def presentEmployees(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-            emp = Employee.objects.filter(email=request.user.username).first()
+            emp = Employee.objects.filter(office_email=request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
-    emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
+    emails = Employee.objects.filter(com_id=com).values_list('office_email', flat=True)
     today = datetime.today().strftime("%Y-%m-%d")
     total_emp = Employee.objects.filter(status=True, com_id = com).count()
     onleave = LeaveApplication.objects.filter(user__employee__status=True, status_approve=True, date_from__lte=today, date_to__gte=today, user__username__in=emails).count()
@@ -552,7 +552,7 @@ def presentEmployees(request):
     
     leave = LeaveApplication.objects.filter(status_approve=True, date_from__lte=today, date_to__gte=today).values('user__id')
     absent = Absent.objects.filter(absent_on=today, user__user__username__in=emails).values('user__user__id')
-    present = Employee.objects.filter(user__username__in=emails).exclude(Q(user__id__in = absent) | Q(user__id__in = leave))
+    present = Employee.objects.filter(user__username__in=emails,status=True ).exclude(Q(user__id__in = absent) | Q(user__id__in = leave))
     context = {'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav, 'present':present, 'com':com}
     return render(request,'presentEmployees.html', context)
 
@@ -563,7 +563,7 @@ def presentEmployees(request):
 def onLeave(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
     today = datetime.today().strftime("%Y-%m-%d")
@@ -599,7 +599,7 @@ def deleteAbsent(request, id):
 def activeEmployee(request): 
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.filter(status=True, com_id=com).order_by('name')
     context = {'emp':emp,'com':com}
@@ -611,7 +611,7 @@ def activeEmployee(request):
 def deactivateDetail(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.get(id=id)
     form = DeactivateForm()
@@ -633,7 +633,7 @@ def deactivateDetail(request, id):
 def inactiveEmployee(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.filter(status=False, com_id=com)
     context = {'emp':emp,'com':com}
@@ -645,7 +645,7 @@ def inactiveEmployee(request):
 def activateDetail(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.get(id=id)
     form = ActivateForm()
@@ -667,7 +667,7 @@ def activateDetail(request, id):
 def addEmployee(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.filter(level = 'Level 1' or 'Level 2')
     if request.method == "POST":
@@ -709,7 +709,7 @@ def addEmployee(request):
 def addEmployeebyExcel(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     if request.method == 'POST':
         file = request.FILES['file']  # Assuming you have a form field named 'file' for file upload
@@ -775,7 +775,7 @@ def addEmployeebyExcel(request):
 def download_employees_as_excel(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = f'attachment; filename="Employees of {com}.xlsx"'
@@ -814,7 +814,7 @@ def download_employees_as_excel(request):
 def viewEmployee(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.get(id=id)
     context = {'emp':emp,'com':com}
@@ -826,7 +826,7 @@ def viewEmployee(request, id):
 def editEmployee(request,id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     data = Employee.objects.get(id=id)
     instance = Employee.objects.get(pk=id)
@@ -864,7 +864,7 @@ def companySetup(request):
     com = Company.objects.filter(username=request.user.username).first()
     is_employee = False
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
         is_employee = True
     if request.method == "POST": 
@@ -899,7 +899,7 @@ def editCompany(request, id):
 def department(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     dep = Department.objects.filter(com_id=com).all()
     context = {'dep':dep, 'com':com}
@@ -911,7 +911,7 @@ def department(request):
 def addDepartment(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     if request.method == "POST":
         form = CompanyDepForm(request.POST)
@@ -934,7 +934,7 @@ def addDepartment(request):
 def editDepartment(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     instance = Department.objects.get(pk=id)
     form = CompanyDepUpdateForm(request.POST or None, instance=instance)
@@ -968,7 +968,7 @@ def deleteDepartment(request, id):
 def leavePolicySetting(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     leave = LeavePolicy.objects.filter(com_id=com).first()
     count = Leave.objects.filter(com_id=com).count()
@@ -1008,7 +1008,7 @@ def leavePolicySetting(request):
 def setupPrivacyPolicy(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
 
     privacy_details = PrivacyPolicy.objects.filter(com_id=com).first()
@@ -1045,7 +1045,7 @@ def setupPrivacyPolicy(request):
 def setupTandC(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
 
     terms_details = Terms.objects.filter(com_id=com).first()
@@ -1081,7 +1081,7 @@ def addLeave(request):
     form = AddLeaveForm()
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     if request.method == 'POST':
         form = AddLeaveForm(request.POST)
@@ -1150,18 +1150,19 @@ def employeeLogin(request):
 
 def employeeSetupInitialization(request, email):
     if request.method == 'POST':
-        user_otp = request.POST['oldPassword']
+        # user_otp = request.POST['oldPassword']
         new_password = request.POST['newPassword']
         confirm_password = request.POST['confirmPassword']
         if new_password == confirm_password:
-            user = authenticate(username=email, password=user_otp)
-            employee = Employee.objects.get(email=email)
-            if user:
+            # user = authenticate(username=email, password=user_otp)
+            employee = Employee.objects.get(office_email=email)
+            if request.user:
                 try:                                                                                          
-                    user.set_password(new_password)
-                    user.save()
+                    request.user.set_password(new_password)
+                    request.user.save()
                     employee.employee_setup_completed = True
                     employee.save()
+                    time.sleep(2)
                     return redirect('homepage')
                 except Exception as e:
                     print(f"An exception occurred: {e}")
@@ -1169,7 +1170,7 @@ def employeeSetupInitialization(request, email):
                 messages.error(request, 'Invalid One Time Password')
         else:
             messages.error(request, 'Password and confirm password must be the same')
-    return render(request, 'newCompanySetup.html')
+    return render(request, 'employeeLoginFirstTime.html')
 
 # Employee Home Page
 class CalendarViewEmp(generic.ListView):
@@ -1183,7 +1184,7 @@ class CalendarViewEmp(generic.ListView):
         return super(CalendarViewEmp, self).dispatch(*args, **kwargs)   
     def dash(self):
         dict={}
-        emp = Employee.objects.filter(email=self.request.user.username).first()
+        emp = Employee.objects.filter(office_email=self.request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
         leave = Leave.objects.filter(com_id=emp.com_id).all()[:3]
         for l in leave:
@@ -1196,7 +1197,7 @@ class CalendarViewEmp(generic.ListView):
         return dic      
     
     def quote(self):  
-        emp = Employee.objects.filter(email=self.request.user.username).first()
+        emp = Employee.objects.filter(office_email=self.request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
         if self.request.method == 'GET': 
             quotedd = Quote.objects.filter(com_id = com).all().last()
@@ -1210,7 +1211,8 @@ class CalendarViewEmp(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        emp = Employee.objects.filter(email=self.request.user.username).first()
+        print(self.request.user.username)
+        emp = Employee.objects.filter(office_email=self.request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
 
         # use today's date for the calendar
@@ -1237,7 +1239,7 @@ class CalendarViewEmp(generic.ListView):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def profileSetting(request):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     context = {'com':com}   
     return render(request,'profileSetting.html', context) 
@@ -1246,7 +1248,7 @@ def profileSetting(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def howToUse(request):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     context ={'com':com}  
     return render(request,"howToUse.html", context)  
@@ -1255,7 +1257,7 @@ def howToUse(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def leaveSection(request): 
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first() 
     context ={'com':com}      
     return render(request,'leaveSection.html', context)
@@ -1265,7 +1267,7 @@ def leaveSection(request):
 @user_passes_test(is_employee)
 def leaveApplication(request):
     dic={}
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first() 
     leave = Leave.objects.filter(com_id=emp.com_id).all()
     for l in leave:
@@ -1304,7 +1306,7 @@ def withdrawLeaveApplication(request, id):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def leavePolicy(request):  
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     leave = LeavePolicy.objects.filter(com_id=emp.com_id).all().first()
     count = Leave.objects.filter(com_id=emp.com_id).all().count()
@@ -1318,7 +1320,7 @@ def leavePolicy(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def privacyPolicy(request):  
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     privacy = PrivacyPolicy.objects.filter(com_id=com).first()  
     context = {'privacy':privacy, 'com':com} 
@@ -1328,7 +1330,7 @@ def privacyPolicy(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def termsAndConditions(request):  
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     terms = Terms.objects.filter(com_id=com).first()  
     context = {'terms':terms, 'com':com} 
@@ -1344,7 +1346,7 @@ def leaveapplications(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def leaveBasket(request):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     dic1 = {}
     dic2 = {}
@@ -1376,7 +1378,7 @@ def leaveBasket(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def approvalStatus(request):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     leave = LeaveApplication.objects.filter(user=request.user)
     context ={'leave':leave, 'com':com}
@@ -1387,7 +1389,7 @@ def approvalStatus(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def leaveStatus(request):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     if request.user.employee.level == 'Level 1':
         user = Employee.objects.get(user=request.user)
@@ -1409,7 +1411,7 @@ def leaveStatus(request):
 def leaveApplicationDetails(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emps = Employee.objects.filter(com_id=com)
     emp_emails = emps.values_list('email', flat=True)
@@ -1422,7 +1424,7 @@ def leaveApplicationDetails(request):
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
 def reviewLeaveApplication(request ,id):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     if request.user.employee.level == 'Level 1':
         leave = LeaveApplication.objects.get(id=id)
@@ -1489,14 +1491,14 @@ def rejectLeave(request, id):
 def reviewEmployeeApplication(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     leave= LeaveApplication.objects.get(id=id)
     context = {'leave':leave, 'com':com}
     return render(request,'reviewEmployeeApplication.html', context)
 
 def reviewEmployeeApplicationEmployee(request, id):
-    emp = Employee.objects.filter(email=request.user.username).first()
+    emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
     leave= LeaveApplication.objects.get(id=id)
     context = {'leave':leave, 'com':com}
@@ -1547,7 +1549,7 @@ def get_date(req_day):
 def event(request, event_id=None):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
-        emp = Employee.objects.filter(email=request.user.username).first()
+        emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     instance = Event()
     if event_id:
