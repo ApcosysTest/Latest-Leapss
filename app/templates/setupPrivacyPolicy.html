@@ -101,7 +101,7 @@
                     </div> 
                 </center>
                 {% if privacy_details is not None %}
-
+                    <div id="privacyPolicyValue" style="display: none;">{{ form.privacypolicy.value | safe }}</div>
                     <form method="POST" class="post-form">  
                         {% csrf_token %}  <br><br>
                         <div class="container">
@@ -156,7 +156,7 @@
     <script>
         AOS.init();
     </script>
-    {% comment %} <script>
+    <script>
         ClassicEditor.create(document.querySelector("#tarea"), {
             toolbar: {
                 items: [
@@ -180,14 +180,15 @@
         .then((editor) => {
             window.editor = editor;
             console.log("CKEditor initialized without image upload option");
-            editor.setData(`{{privacy.privacypolicy}}`);
+            const x = document.querySelector("#privacyPolicyValue").value;
+            editor.setData(x);
             const data = editor.getData();
             console.log(data);
         })
         .catch((error) => {
             console.error(error);
         });
-    </script> {% endcomment %}
+    </script>
 
 </body>
 </html>
