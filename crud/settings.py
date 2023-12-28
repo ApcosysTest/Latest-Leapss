@@ -91,16 +91,14 @@ DATABASES = {
     } 
 }
 
-# DATABASES = {  
-#     'default': {  
-#         'ENGINE': 'django.db.backends.postgresql',  
-#         'NAME': 'dbds',
-#         'USER':'postgres',  
-#         'PASSWORD':'123',  
-#         'HOST':'localhost',  
-#         'PORT':'5432', 
-#     } 
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#    }
 # } 
+
 
 
 # Password validation
@@ -162,11 +160,8 @@ FORCE_SERVE_STATIC = True
 
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'mail.apcosys.in'
-# EMAIL_HOST_USER = 'admin@apcosys.in'
-# EMAIL_HOST_PASSWORD = 'FGHt@980gjk'
 
+EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'saswatkumar059@gmail.com'
-EMAIL_HOST_PASSWORD = 'upaiuqoeemveqgfe'
+EMAIL_HOST_USER = 'noreply.leapss@gmail.com'
+EMAIL_HOST_PASSWORD = 'ilbw gaie aqsr hbhj'
