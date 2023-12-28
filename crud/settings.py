@@ -176,7 +176,3 @@ EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'noreply.leapss@gmail.com'
 EMAIL_HOST_PASSWORD = 'ilbw gaie aqsr hbhj'
-
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'saswatkumar059@gmail.com'
-# EMAIL_HOST_PASSWORD = 'upaiuqoeemveqgfe'
