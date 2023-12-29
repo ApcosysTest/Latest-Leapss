@@ -172,3 +172,11 @@ class Absent(models.Model):
 
     def __str__(self):
         return self.user.name
+    
+    
+class FeedbackModel(models.Model):
+    text = models.TextField()
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.text

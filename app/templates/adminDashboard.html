@@ -53,7 +53,7 @@
             <ul class="sidebar-nav " id="sidebar-nav">
                 <li class="profile"data-bs-toggle="collapse">
                     <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
-                    <h6>{{user.username}}</h6>
+                    <h6>{{dic.com}}</h6>
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
@@ -83,10 +83,15 @@
                   </div>
                   <ul class="d-flex align-items-center header-nav">
                     <li style="list-style: none; "class="addEmp">
-                        <a type="button" style="margin-right:30px" href="/addEmployee" class="btn ">
-                          Add Employee
+                        <a type="button" style="margin-right:30px" href="/feedback" class="btn ">
+                          Feedback
                         </a>
                     </li>
+                    <li style="list-style: none; "class="addEmp">
+                      <a type="button" style="margin-right:30px" href="/addEmployee" class="btn ">
+                        Support
+                      </a>
+                  </li>
                   </ul>
             </nav>
             <section class="section container pageClass  bg-white rounded dashboard">

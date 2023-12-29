@@ -59,7 +59,7 @@
             <ul class="sidebar-nav " id="sidebar-nav">
                 <li class="profile"data-bs-toggle="collapse">
                     <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
-                    <h6>{{user.username}}</h6>
+                    <h6>{{com.name}}</h6>
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
@@ -109,12 +109,16 @@
                 <div class="row" style="margin-top: 1%;">
                   <div class="col-md-6"><h5 style="color: #009eff;padding: 1%;">Employee Details</h5>
                     <p>
+                      
                       <div class="btn-group">
-                        <a  class="btn btn-outline-primary " href="{% url 'activeEmployee' %}">Active</a>
-                        <a  class="btn btn-outline-primary " href="{% url 'inactiveEmployee' %}">Inactive</a>
-                        <a  class="btn btn-outline-primary active" href="{% url 'allactiveEmployee' %}">All Employees</a>
+                        <div class="tw-toggle">
                         
-                      </div>
+                        <a  class="btn btn-default " href="{% url 'activeEmployee' %}">Active</a>		&#160;
+                        <a  class="btn btn-default " href="{% url 'inactiveEmployee' %}">In Active</a>		&#160;
+                        <a  class="btn btn-primary " href="{% url 'allactiveEmployee' %}">All Employees</a>		
+                          </div>  
+                       </div> 
+                      
                     </p>
                   </div>
                     <div class="col-md-2"></div>
@@ -238,7 +242,31 @@
     <script>
         AOS.init();
     </script>
-
+    <style>
+      .btn-primary {
+          color: #fff;
+          background-color: #009eff;
+          border-color: #009eff;
+          border-radius: 19px;
+      }
+      .tw-toggle {
+        display: flex;
+        align-items: center;
+        height: 46px;
+        padding: 2px 3px;
+        border-radius: 50px;
+        position: relative;
+        border: 2px solid #009eff;
+        margin: 0;
+        flex-flow: wrap;
+        width: 301px;
+    }
+      .btn-default {
+          color: #333;
+          
+          border: none;
+      }
+      </style>
     
 </body>
 </html>
