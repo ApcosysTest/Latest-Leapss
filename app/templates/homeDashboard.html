@@ -51,12 +51,13 @@
           ['Total Clients',     {{total_company}}],
           ['Active Clients',      {{approved_clients}}],
           ['InActive Clients',  {{inactive_clients}}],
-          ['Clients Request', {{rejected_clients}}]
         ]);
 
         var options = {
           title: 'My Clients Activities',
           is3D: true,
+          colors: ['blue', 'green', 'red'],
+          slices: [{offset: 0.05}, {offset: 0.05}, {offset: 0.05}]
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
@@ -71,8 +72,9 @@
         <div class="border-end bg-white   position-sticky header" id="sidebar-wrapper">
           <div class="justify-content-center">
             <div class="leapss"><img src="{% static 'assets/img/logo.png'%}" alt="">
-            <button class="btn" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button></div>
-        </div>
+            <button class="btn" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button>
+            </div>
+          </div>
             <ul class="sidebar-nav " id="sidebar-nav">
                 <li class="profile"data-bs-toggle="collapse">
                     <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
@@ -83,6 +85,8 @@
                 <li ><a class="list-group-item active" href="{% url 'homeDashboard' %}"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
                 <li><a class="list-group-item " href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
+                <li><a class="list-group-item " href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
+                <li><a class="list-group-item " href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Feedback </span></a></li>
              </div>
@@ -114,7 +118,7 @@
             <section class="section container pageClass  bg-white rounded dashboard">
                 <div class="row">
                   <div class="col-md-3">
-                    <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
+                    <a href="{% url 'approvedClientDashboard' %}" style="text-decoration: none;">
                       <div class="card cardd"style = "background-color: #009eff;border:none;">
                           <div class="card-body">
                                
@@ -125,7 +129,7 @@
                     </a> 
                   </div>
                     <div class="col-md-3">
-                      <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
+                      <a href="{% url 'activeClientDashboard' %}" style="text-decoration: none;">
                         <div class="card cardd" style = "background-color: #52D89C; border:none; ">
                             <div class="card-body">
                               <p class="card-text"><b>{{ approved_clients }}</b> <br>Active Clients </p>
@@ -135,7 +139,7 @@
                       </a>
                     </div>
                     <div class="col-md-3">
-                      <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
+                      <a href="{% url 'inactiveClientDashboard' %}" style="text-decoration: none;">
                         <div class="card cardd"style = "background-color: #FFC14E;border:none;">
                             <div class="card-body">
                               <p class="card-text"><b>{{ inactive_clients }}</b> <br>InActive Clients</p>
@@ -145,10 +149,10 @@
                       </a>
                     </div>
                     <div class="col-md-3 ">
-                      <a href="{% url 'rejectedClientDashboard' %}" style="text-decoration: none;">
+                      <a href="{% url 'appRequestDashboard' %}" style="text-decoration: none;">
                         <div class="card cardd" >
                             <div class="card-body"style = "background-color: #FF7B5D; border:none; border-radius:4px;">
-                              <p class="card-text"><b>{{ rejected_clients }}</b> <br>Clients Request </p>
+                              <p class="card-text"><b>{{ client_requests }}</b> <br>Clients Request </p>
                               {% comment %} <h5 class="card-title" style="color: #ffffff;">{{dic.apply_leav}}</h5> {% endcomment %}
                             </div>
                         </div>
@@ -207,7 +211,7 @@
                   type: 'GET',
                   url: '/getDashboardData/' + selectedClient + '/',
                   success: function (data) {
-                      console.log(data);
+                      console.log(data.in_deactivate);
   
                       // Update the DOM elements with the received data
                       $('#calculatedData').html('Total Employees: ' + data.total_employee);
@@ -246,17 +250,20 @@
               data: {
                   labels: ["Total User", "Active Users", "InActive Users"],
                   datasets: [{
-                      backgroundColor: ["red", "green", "blue"],
+                      backgroundColor: ["blue", "green", "red"],
+                      borderColor: ["blue", "green", "red"],
                       data: [0, 0, 0]
                   }]
               },
               options: {
                   scales: {
-                      y: {
-                          beginAtZero: true, 
-                          min: 0,
-                          max: 10            
+                    yAxes: [{
+                      ticks: {
+                        beginAtZero: true,
+                        callback: function(value) {if (value % 1 === 0) {return value;} }
                       }
+                    }]
+ 
                   },
                   legend: { display: false },
                   title: {
@@ -264,7 +271,11 @@
                       {% comment %} text: "World Wine Production 2018" {% endcomment %}
                   }
               }
+
+
+
           });
+
       }
   
       function updateChart(chart, totalEmployee, activeEmployee, inactiveEmployee) {

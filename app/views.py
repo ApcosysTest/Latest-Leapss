@@ -100,6 +100,7 @@ def homeDashboard(request):
     approved_clients = AllRequest.objects.filter(active_status=True).count()
     inactive_clients = AllRequest.objects.filter(active_status=False).count()
     rejected_clients = AllRequest.objects.filter(decline_status=True).count()
+    client_requests  = AllRequest.objects.filter(approve_status=False,decline_status=False).count()
 
     
     all_employee = None
@@ -120,6 +121,7 @@ def homeDashboard(request):
         'approved_clients': approved_clients,
         'inactive_clients': inactive_clients,
         'rejected_clients': rejected_clients,
+        'client_requests': client_requests,
         'all_clients': all_clients,
         'all_employee': all_employee,
         'total_employee': total_employee,
@@ -136,10 +138,6 @@ def getDashboardData(request, client_id):
         in_activate = Employee.objects.filter(com_id=client_id, status=True).count()
         in_deactivate = Employee.objects.filter(com_id=client_id, status=False).count()
 
-        print("all_employee:", all_employee)
-        print("total_employee:", total_employee)
-        print("in_activate:", in_activate)
-        print("in_deactivate:", in_deactivate)
 
         all_employee_list = json.loads(serialize('json', all_employee))
 
@@ -156,7 +154,24 @@ def getDashboardData(request, client_id):
 def approvedClientDashboard(request):
     clients = AllRequest.objects.filter(approve_status=True).all()
     context ={
-        'clients':clients
+        'clients':clients,
+        'page': "approvedClient"
+    }
+    return render(request, 'approvedClientDashboard.html', context)
+
+def inactiveClientDashboard(request):
+    clients = AllRequest.objects.filter(active_status=False, approve_status=True).all()
+    context ={
+        'clients':clients,
+        'page': 'inactiveClient'
+    }
+    return render(request, 'approvedClientDashboard.html', context)
+
+def activeClientDashboard(request):
+    clients = AllRequest.objects.filter(active_status=True, approve_status=True).all()
+    context ={
+        'clients':clients,
+        'page': 'activeClient'
     }
     return render(request, 'approvedClientDashboard.html', context)
 
@@ -739,7 +754,7 @@ def addEmployeebyExcel(request):
             df = pd.read_excel(file)
             
             for index, row in df.iterrows():
-                print(row)
+  
                 # Extract data from the Excel columns
                 emp_id = row['Employee ID']
                 name = row['Name']
@@ -1314,7 +1329,6 @@ class CalendarViewEmp(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.request.user.username)
         emp = Employee.objects.filter(office_email=self.request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
 
