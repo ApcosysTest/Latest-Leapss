@@ -1164,11 +1164,9 @@ def employeeLogin(request):
 
 def employeeSetupInitialization(request, email):
     if request.method == 'POST':
-        # user_otp = request.POST['oldPassword']
         new_password = request.POST['newPassword']
         confirm_password = request.POST['confirmPassword']
         if new_password == confirm_password:
-            # user = authenticate(username=email, password=user_otp)
             employee = Employee.objects.get(office_email=email)
             if request.user:
                 try:                                                                                          
