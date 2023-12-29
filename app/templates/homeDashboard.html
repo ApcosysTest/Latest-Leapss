@@ -56,7 +56,8 @@
         var options = {
           title: 'My Clients Activities',
           is3D: true,
-          colors: ['blue', 'green', 'red']
+          colors: ['blue', 'green', 'red'],
+          slices: [{offset: 0.05}, {offset: 0.05}, {offset: 0.05}]
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
