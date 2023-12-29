@@ -45,7 +45,38 @@
 
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
-    
+    <style>
+        .report-box button{
+            height:200px;
+            width:200px;
+            background-color:#52d89c;
+            border:none;
+            border-radius:10px;
+            margin:90px 0px 20px;
+        }
+        .report-box img{
+            width:70%;
+            {% comment %} margin:90px 0px; {% endcomment %}
+        }
+        .backup-btn{
+            width:100%;
+            height:100px;
+            background-color:#CF94D9;
+            color:white;
+            font-size:24px;
+            font-weight:bold;
+            border:none;
+            border-radius:10px;
+        }
+        .backup-btn img{
+            width:70px;
+        }
+        @media (max-width: 767px) {
+            .report-box button {
+                margin: 10px 0;
+            }
+        }
+    </style>
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -65,12 +96,11 @@
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
                 <li ><a class="list-group-item" href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item " href="/leaveApplicationDetails"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Leave Section</span></a></li>
-                <li><a class="list-group-item active" href="{% url 'activeEmployee' %}"><i class="bi bi-people" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Employee</span></a></li>
+                <li><a class="list-group-item " href="{% url 'activeEmployee' %}"><i class="bi bi-people" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Employee</span></a></li>
                 <li><a class="list-group-item " href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
                 <li><a class="list-group-item" href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
                 <li><a class="list-group-item " href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
-                <li><a class="list-group-item " href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports</span></a></li>
-                <li><a class="list-group-item " href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
+                <li><a class="list-group-item active" href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
              </div>
              <div class="logout">
               <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
@@ -87,90 +117,102 @@
                     <button class="btn" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>
                 </div> -->
                 
-                <div class="logo d-flex align-items-center">
+                <div class="logo d-flex align-items-center" style="height:58px;">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
                     <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
-                
                   </div>
-                    <ul class="d-flex align-items-center header-nav">
-                      <li style="list-style: none;margin-right:20px;" class="">
-                          <a type="button" href="/download_employees" style="width:250px;background-" class="btn">
-                            Download Employee Details
-                          </a>
-                      </li>
-                      <li style="list-style: none;"class="addEmp">
-                        <a type="button" href="/addEmployee" class="btn ">
-                          Add Employee
-                        </a>
-                    </li>
-                    </ul>
                     
             </nav>
             <section class="section container pageClass bg-white rounded dashboard">
                 <div class="row" style="margin-top: 1%;">
-                  <div class="col-md-6"><h5 style="color: #009eff;padding: 1%;">Employee Details</h5>
-                    <p>
-                      <p>
-                        <a id="activebtn"  href="{% url 'activeEmployee' %}">Active</a> 
-                        <a id="inactivebtn" href="{% url 'inactiveEmployee' %}">Inactive</a>
-                        <a id="inactivebtn" href="{% url 'allactiveEmployee' %}"> All Employees</a>
-                      </p> 
-                    </p>
-                  </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4"style="padding-left:4%;">
-                    <div class="input-group" style="float:inline-end ;margin-bottom: 4%;">
-                    <div id="search-autocomplete" class="form-outline">
-                      <br>
-                      <form method="POST" autocomplete="off" id="search-form" >
-                        {% csrf_token %}
-                        <div class="inputWithIcon">
-                            <input id="search-input" class="search" type="search" placeholder="Search..." autofocus />
-                            <ion-icon name="search-outline"></ion-icon>
+                <div class="col-md-6"><h5 style="color: #009eff;padding: 1%;">Reports And Backup</h5></div>
+                </div>   
+                <div class="row">
+                    <div class="col-md-0 col-lg-2 col-sm-0 col-xs-0"></div>
+                    <div class="row col-md-0 col-lg-8 col-sm-12 col-xs-12">
+                        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 report-box d-flex justify-content-center"><button data-toggle="modal" data-target="#exampleModalCenter"><img src="{% static 'assets/img/emp report2.png'%}" alt=""><h3>Employee<br>Reports</h3></button></div>
+                        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 report-box d-flex justify-content-center"><button data-toggle="modal" data-target="#exampleModalCenter2" style="background-color:#60c2ff;"><img src="{% static 'assets/img/leave report.png'%}" alt=""><h3>Leave<br>Reports</h3></button></div>
+                        <div class="col-md-4 col-lg-4 col-sm-12 col-xs-12 report-box d-flex justify-content-center"><button data-toggle="modal" data-target="#exampleModalCenter3" style="background-color:#ffc14e;"><img src="{% static 'assets/img/event report.png'%}" alt=""><h3>Event<br>Reports</h3></button></div>
+                    </div>
+                    <div class="col-md-0 col-lg-2 col-sm-0 col-xs-0"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-0 col-lg-2 col-sm-0 col-xs-0"></div>
+                    <div class="row col-md-0 col-lg-8 col-sm-12 col-xs-12" style="padding:15px 30px;">
+                        <button class="backup-btn">Take Company Data Backup</button>
+                    </div>
+                    <div class="col-md-0 col-lg-2 col-sm-0 col-xs-0"></div>
+                </div>
+                <!-- Modal for Employee Reports -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Employee Reports</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                         </div>
-                    </form>
+                        <div class="modal-body">
+                            <a type="button" href="{% url 'download_pdf_report' 'active' %}" class="btn">Report of Active Employees</a><br>
+                            <a type="button" href="{% url 'download_pdf_report' 'inactive' %}" class="btn">Report of Inactive Employees</a><br>
+                            <a type="button" href="{% url 'download_pdf_report' 'all' %}" class="btn">Report of All Employees</a><br>
+                            {% comment %} <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Individual Employee</a> {% endcomment %}
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
-                    </div> 
-                    </div> </div>
-                    <div class="table-responsive-lg">
-                  <table class="table  "style=" overflow-x: hidden; ">
-                      <thead style="text-align: center;">
-                        <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Department</th>
-                          <th scope="col">Employee Id</th>
-                          <th scope="col">View</th>
-                          <th scope="col">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody style="text-align: center;">
-                        
-                        {% for emp in emp %}  
-                        <tr class='outers'>  
-                            <td style="text-align:left; margin-left:10%" class='name'>{{ emp.name}}</td>  
-                            <td class='dep'>{{ emp.department }}</td>
-                            <td class='emp_id'>{{ emp.emp_id }}</td>  
-                            <td>  
-                              <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
-                              </div>
-                            </td>
-                            <td>  
-                              <div class="reject">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " style="width: 80%; background-color: #FF7B5D; border: none ;"href="{% url 'deactivateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Deactivate</a>
-                              </div>
-                            </td>
-                        </tr>  
-                        {% comment %} {% empty %} {% endcomment %}
-                       
-                          {% comment %} <tr><td colspan="4" style="text-align:center;">Nothing found</td></tr>  {% endcomment %}
-                
-                    {% endfor %}  
-                      </tbody>
-                    </table> 
                     </div>
-                      
+                </div>
+
+                <!-- Modal for Leave Reports -->
+                <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Leave Reports</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            {% comment %} <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Employees Present Today</a><br>
+                            <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Employees Absent Today</a><br>
+                            <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Leave Report of a Perticular Employee</a> {% endcomment %}
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Modal for Event Reports -->
+                <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Event Reports</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            {% comment %} <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Complete Calender Event</a><br>
+                            <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Public Holidays</a><br>
+                            <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Birthday & Others</a> {% endcomment %}
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
+
+
             </section>
         </div>
     </div>

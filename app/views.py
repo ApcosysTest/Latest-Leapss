@@ -22,6 +22,14 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.db.models import Q, Count, Sum
 from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp, send_mail_about_client_request
 import json
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.pagesizes import landscape, A4, A1, A2, A3
+from io import BytesIO
+from reportlab.lib.styles import getSampleStyleSheet
+
 
 # Check is admin
 def is_admin(user):
@@ -1132,6 +1140,86 @@ def deleteLeave(request,id):
     instance.delete()
     return redirect('leavePolicySetting')
 
+def reportPrinting(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+    context = {'com':com}
+    return render(request,'reportPrinting.html', context)
+
+def download_pdf_report(request, option):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    # Create a PDF buffer
+    buffer = BytesIO()  # Import BytesIO at the top of your file: `from io import BytesIO`
+    # buffer['Content-Disposition'] = 'attachment; filename="tabular_report.pdf"'
+
+    # Create a PDF document object with landscape A4 size
+    pdf = SimpleDocTemplate(buffer, pagesize=landscape(A3))
+
+    data = [
+        ['Employee ID', 'Name', 'Company Contact', 'Personal Contact', 'Present Address', 'Permanent Address',
+         'Date of Birth', 'Date of Joining', 'Gender', 'Email', 'Office Email', 'Status', 'Designation', 'Level']
+    ]
+    if option == 'active':
+        employees = Employee.objects.filter(com_id=com, status=True)
+    elif option == 'inactive':
+        employees = Employee.objects.filter(com_id=com, status=False)
+    elif option == 'all':
+        employees = Employee.objects.filter(com_id=com)
+
+    for employee in employees:
+        # Format data for each employee
+        employee_data = [
+            employee.emp_id,
+            employee.name,
+            employee.company_contact if employee.company_contact else '',
+            employee.personal_contact,
+            employee.present_address if employee.present_address else '',
+            employee.permanent_address if employee.permanent_address else '',
+            employee.dob.strftime('%Y-%m-%d'),  # Format date of birth
+            employee.doj.strftime('%Y-%m-%d'),  # Format date of joining
+            employee.gender,
+            employee.email if employee.email else '',
+            employee.office_email,
+            'Active' if employee.status else 'Inactive',
+            employee.designation,
+            employee.level
+        ]
+        data.append(employee_data)
+
+    # Create a table and define its style
+    # table = Table(data)
+    styles = getSampleStyleSheet()
+    style_table  = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+    ])
+    table = Table(data, style=style_table)
+    table.setStyle(style_table)
+
+    # Create elements list and add the table
+    elements = [table]
+
+    # Build the PDF document with the elements list
+    pdf.build(elements)
+
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="employee_report.pdf"'
+    response.write(pdf_bytes)
+
+    return response  # Return the PDF content
+
 #$#$#$ EMPLOYEE #$#$#$
 # Employee Login
 def employeeLogin(request):
@@ -1161,7 +1249,7 @@ def employeeLogin(request):
     }
     return render(request,"employeeLogin.html", context)
 
-
+# Employe Login Initial process
 def employeeSetupInitialization(request, email):
     if request.method == 'POST':
         new_password = request.POST['newPassword']
