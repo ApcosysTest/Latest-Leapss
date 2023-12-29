@@ -76,6 +76,11 @@ urlpatterns = [
     
 
 
+    
+    path('reportPrinting', reportPrinting, name='reportPrinting'),
+    path('download_pdf_report/<str:option>/', download_pdf_report, name='download_pdf_report'),
+
+
 
 # Employee
     path('employeeLogin', employeeLogin, name='employeeLogin'),
