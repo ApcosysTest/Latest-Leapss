@@ -1168,10 +1168,13 @@ def employeeSetupInitialization(request, email):
         confirm_password = request.POST['confirmPassword']
         if new_password == confirm_password:
             employee = Employee.objects.get(office_email=email)
+            print("yes")
             if request.user:
                 try:                                                                                          
-                    request.user.set_password(new_password)
-                    request.user.save()
+                    user = User.objects.get(username=email)
+                    print("yes")
+                    user.set_password(new_password)
+                    user.save()
                     employee.employee_setup_completed = True
                     employee.save()
                     time.sleep(2)
