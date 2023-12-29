@@ -94,10 +94,13 @@
                         <!-- <a href="{% url 'activeEmployee' %}">Active</a> |
                         <a style="color:green;" href="{% url 'inactiveEmployee' %}">Inactive</a> --> 
                         <p>
-                          <a id="aactivebtn"  href="{% url 'activeEmployee' %}">Active</a> 
-                          <a id="innactivebtn" href="{% url 'inactiveEmployee' %}">Inactive</a>
-                          <a id="aactivebtn"  href="{% url 'allactiveEmployee' %}">All Employees</a> 
-                        </p> 
+                          <div class="btn-group">
+                            <a  class="btn btn-outline-primary " href="{% url 'activeEmployee' %}">Active</a>
+                            <a  class="btn btn-outline-primary active" href="{% url 'inactiveEmployee' %}">Inactive</a>
+                            <a  class="btn btn-outline-primary " href="{% url 'allactiveEmployee' %}">All Employees</a>
+                            
+                          </div>
+                        </p>
                       </p>
                     </div>
                     <div class="col-md-2"></div>
