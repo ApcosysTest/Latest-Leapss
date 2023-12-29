@@ -1,2 +1,8 @@
 app/__pycache__
 crud/__pycache__
+
+
+*.log
+*.pot
+*.pyc
+__pycache__
