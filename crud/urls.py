@@ -69,6 +69,9 @@ urlpatterns = [
     path('changeAdminPassword/<str:otp>/<str:email>/', changeAdminPassword, name='changeAdminPassword'),
     path('setupPrivacyPolicy', setupPrivacyPolicy, name='setupPrivacyPolicy'),
     path('setupTandC', setupTandC, name='setupTandC'),
+
+
+    
     path('reportPrinting', reportPrinting, name='reportPrinting'),
     path('download_pdf_report/<str:option>/', download_pdf_report, name='download_pdf_report'),
 
