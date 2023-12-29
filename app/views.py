@@ -1614,3 +1614,45 @@ def logout_superuser(request):
     logout(request)
     # messages.success(request, "You have logout")
     return redirect('landingpage')
+
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def feedback(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    feedback = FeedbackModel.objects.filter(company_id=com.id)
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+        
+    if request.method == 'POST':
+        feedback_text = request.POST.get('name', '')
+        company_id = request.POST.get('cid', '')
+        company_instance = get_object_or_404(Company, id=company_id)
+        feedback_instance = FeedbackModel.objects.create(text=feedback_text, company_id=company_instance)
+        #return HttpResponse("Feedback submitted successfully!")
+        return redirect('feedback')
+
+    else:
+        context = {'com': com, 'feedback': feedback}
+        return render(request, 'feedback.html', context)
+    
+    
+    
+def companyfeedback(request):
+    feedback_entries = FeedbackModel.objects.all()
+    context = {'feedback_entries': feedback_entries}
+    return render(request, 'adminviewfeedback.html', context)
+
+
+def viewfeedbackClient(request, client_id, feedback_id):
+    
+    client = get_object_or_404(Company, pk=client_id)
+   
+    feedback = get_object_or_404(FeedbackModel, pk=feedback_id)
+
+    context = {
+        'feedback': feedback,
+        'client': client,
+    }
+
+    return render(request, 'viewfeedbackClient.html', context)

@@ -33,6 +33,8 @@ urlpatterns = [
     path('getDashboardData/<int:client_id>/', getDashboardData, name='getDashboardData'), 
     path('superadminlogin', superadminlogin, name='superadminlogin'),
     path('logout_superuser', logout_superuser, name='logout_superuser'),
+     path('companyfeedback', companyfeedback, name='companyfeedback'),
+    path('viewfeedbackClient/<int:client_id>/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'), 
 
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
@@ -69,6 +71,9 @@ urlpatterns = [
     path('changeAdminPassword/<str:otp>/<str:email>/', changeAdminPassword, name='changeAdminPassword'),
     path('setupPrivacyPolicy', setupPrivacyPolicy, name='setupPrivacyPolicy'),
     path('setupTandC', setupTandC, name='setupTandC'),
+    path('feedback', feedback, name='feedback'),
+   
+    
 
 
 
