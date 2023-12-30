@@ -31,6 +31,7 @@ from io import BytesIO
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
+from django.core.mail import send_mail
 
 
 # Check is admin
@@ -442,7 +443,7 @@ class CalendarView(generic.ListView):
         total_leave = onleave + absent_count
         apply_leav = LeaveApplication.objects.filter(status_approve=False, status_reject=False, level1_approve=True, user__username__in=emails).count()
 
-        dic ={'com':com.name, 'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav}       
+        dic ={'com':com, 'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav}       
         return dic 
     
     def quotesub(self): 
@@ -1339,7 +1340,7 @@ def download_event_report(request, option):
 
     # Create a list to hold table data
     data = [
-        ['Title', 'Category', 'Description', 'Date', 'visibility']
+        ['Title', 'Category', 'Description', 'Date']
     ]
 
     # Create a sample stylesheet
@@ -1360,7 +1361,6 @@ def download_event_report(request, option):
             event.category,
             event.description,
             event.date.strftime('%Y-%m-%d') if event.date else '',
-            event.visibility,
         ]
         data.append(event_data)
 
@@ -1920,3 +1920,34 @@ def viewfeedbackClient(request, client_id, feedback_id):
     }
 
     return render(request, 'viewfeedbackClient.html', context)
+
+
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def supportcompany(request):
+    if request.method == 'POST':
+        namecontent = request.POST.get('namecontent', '')
+        company_id = request.POST.get('cid', '')
+        cname = request.POST.get('cname', '')
+        cemailid = request.POST.get('cemailid', '')
+        cwebsite = request.POST.get('cwebsite', '')
+        cphone = request.POST.get('cphone', '')
+
+
+        # Send email
+        subject = "Inquiry Support from Company"
+        email_content = f"Name: {namecontent}\n\nCompany Name: {cname}\n\nEmail: {cemailid}\n\nWebsite: {cwebsite}\n\nPhone: {cphone}"
+        send_mail(subject, email_content, 'noreply.leapss@gmail.com', ['noreply.leapss@gmail.com'], fail_silently=False)
+
+
+        if request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': 'Mail Sent ..'})
+        else:
+            # If it's not an AJAX request, return an HTML response
+            context = {'success_message': 'Mail Sented ..'}
+           
+            return render(request, 'adminDashboard.html', context)
+
+
+    else:
+        return redirect('CalendarView')
