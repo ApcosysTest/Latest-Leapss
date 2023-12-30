@@ -26,6 +26,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import uuid
 
+
 # Check is admin
 def is_admin(user):
     return user.groups.filter(name='ADMIN').exists()
@@ -1661,9 +1662,7 @@ def viewfeedbackClient(request, client_id, feedback_id):
         'feedback': feedback,
         'client': client,
     }
-    
-    
-    
+       
     return render(request, 'viewfeedbackClient.html', context)
 
 
