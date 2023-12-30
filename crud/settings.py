@@ -171,6 +171,16 @@ EMAIL_HOST_USER = 'saswatkumar059@gmail.com'
 EMAIL_HOST_PASSWORD = 'upaiuqoeemveqgfe'
 
 
+
+
+
+
+
+
+
+
+
+
 # reCaptcha
 RECAPTCHA_PUBLIC_KEY = '6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG' 
 RECAPTCHA_PRIVATE_KEY = '6LeXkGYkAAAAAANuX0uqZjh7Q1MIy45eszgUHpoL'

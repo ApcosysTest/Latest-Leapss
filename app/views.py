@@ -1657,8 +1657,18 @@ def viewfeedbackClient(request, client_id, feedback_id):
         'feedback': feedback,
         'client': client,
     }
+    
+    
 
     return render(request, 'viewfeedbackClient.html', context)
+
+
+
+
+
+
+
+
 
 def contactSuccess(request):
     return render(request, 'contactSuccess.html')
