@@ -1652,18 +1652,18 @@ def viewfeedbackClient(request, client_id, feedback_id):
     client = get_object_or_404(Company, pk=client_id)
    
     feedback = get_object_or_404(FeedbackModel, pk=feedback_id)
-
-
-
-
-
+    
+    
+    
+    
+    
     context = {
         'feedback': feedback,
         'client': client,
     }
     
     
-
+    
     return render(request, 'viewfeedbackClient.html', context)
 
 
