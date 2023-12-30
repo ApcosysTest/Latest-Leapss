@@ -29,6 +29,8 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 from reportlab.lib.pagesizes import landscape, A4, A1, A2, A3
 from io import BytesIO
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 
 # Check is admin
@@ -984,11 +986,15 @@ def editDepartment(request, id):
 
 # Delete Department 
 @login_required(login_url='adminLogin') 
-@user_passes_test(is_admin) 
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def deleteDepartment(request, id):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     list =[]
     dep = Department.objects.get(id=id)
-    dep_count = Employee.objects.values('department__department','department').filter(status=True).annotate(emp_count=Count('emp_id'))
+    dep_count = Employee.objects.values('department__department','department').filter(status=True, com_id = com).annotate(emp_count=Count('emp_id'))
     for dept in dep_count:
         list.append(dept['department__department'])
     if dep.department in list: 
@@ -1155,12 +1161,18 @@ def deleteLeave(request,id):
     instance.delete()
     return redirect('leavePolicySetting')
 
+
+
+
+
+
 def reportPrinting(request):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
         emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
-    context = {'com':com}
+    form = PerticularEmployeeForm(request.POST or None, request.FILES or None, com_id=com.id)
+    context = {'com':com, 'form':form}
     return render(request,'reportPrinting.html', context)
 
 def download_pdf_report(request, option):
@@ -1169,17 +1181,20 @@ def download_pdf_report(request, option):
         emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
 
-    # Create a PDF buffer
-    buffer = BytesIO()  # Import BytesIO at the top of your file: `from io import BytesIO`
-    # buffer['Content-Disposition'] = 'attachment; filename="tabular_report.pdf"'
-
-    # Create a PDF document object with landscape A4 size
+    # Create a PDF buffer and document object
+    buffer = BytesIO()
     pdf = SimpleDocTemplate(buffer, pagesize=landscape(A3))
 
+    # Create a list to hold table data
     data = [
         ['Employee ID', 'Name', 'Company Contact', 'Personal Contact', 'Present Address', 'Permanent Address',
          'Date of Birth', 'Date of Joining', 'Gender', 'Email', 'Office Email', 'Status', 'Designation', 'Level']
     ]
+
+    # Create a sample stylesheet
+    styles = getSampleStyleSheet()
+
+    # Fetch employees based on the provided option
     if option == 'active':
         employees = Employee.objects.filter(com_id=com, status=True)
     elif option == 'inactive':
@@ -1187,17 +1202,21 @@ def download_pdf_report(request, option):
     elif option == 'all':
         employees = Employee.objects.filter(com_id=com)
 
+    # Iterate through employees
     for employee in employees:
         # Format data for each employee
+        present_address = Paragraph(employee.present_address if employee.present_address else '', styles['Normal'])
+        permanent_address = Paragraph(employee.permanent_address if employee.permanent_address else '', styles['Normal'])
+
         employee_data = [
             employee.emp_id,
             employee.name,
             employee.company_contact if employee.company_contact else '',
             employee.personal_contact,
-            employee.present_address if employee.present_address else '',
-            employee.permanent_address if employee.permanent_address else '',
-            employee.dob.strftime('%Y-%m-%d'),  # Format date of birth
-            employee.doj.strftime('%Y-%m-%d'),  # Format date of joining
+            present_address,
+            permanent_address,
+            employee.dob.strftime('%Y-%m-%d') if employee.dob else '',
+            employee.doj.strftime('%Y-%m-%d') if employee.doj else '',
             employee.gender,
             employee.email if employee.email else '',
             employee.office_email,
@@ -1207,18 +1226,17 @@ def download_pdf_report(request, option):
         ]
         data.append(employee_data)
 
-    # Create a table and define its style
-    # table = Table(data)
-    styles = getSampleStyleSheet()
-    style_table  = TableStyle([
+    # Create a table with styles
+    style_table = [
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-    ])
-    table = Table(data, style=style_table)
-    table.setStyle(style_table)
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        # ('PADDING', (0, 0), (-1, -1), 5),
+    ]
+    table = Table(data, style=style_table, repeatRows=1)
 
     # Create elements list and add the table
     elements = [table]
@@ -1226,6 +1244,7 @@ def download_pdf_report(request, option):
     # Build the PDF document with the elements list
     pdf.build(elements)
 
+    # Get PDF content from BytesIO object
     pdf_bytes = buffer.getvalue()
 
     # Create a Django HttpResponse with PDF content as attachment
@@ -1233,7 +1252,138 @@ def download_pdf_report(request, option):
     response['Content-Disposition'] = 'attachment; filename="employee_report.pdf"'
     response.write(pdf_bytes)
 
-    return response  # Return the PDF content
+    return response
+
+def generate_employee_report(request):
+
+    if request.method == 'POST':
+        id = request.POST['employee']
+        employee = Employee.objects.filter(id=id).first()
+    else:
+         form = EmployeeLoginForm()
+
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=A4)
+    # employee = Employee.objects.filter(id=id).first()
+
+    if not employee:
+        return HttpResponse("Employee not found", status=404)
+
+    data = [
+        ['Attribute', 'Value']
+    ]
+
+    employee_data = [
+        ['Employee ID', employee.emp_id],
+        ['Name', employee.name],
+        ['Company Contact', employee.company_contact if employee.company_contact else ''],
+        ['Personal Contact', employee.personal_contact],
+        ['Present Address', employee.present_address if employee.present_address else ''],
+        ['Permanent Address', employee.permanent_address if employee.permanent_address else ''],
+        ['Date of Birth', employee.dob.strftime('%Y-%m-%d') if employee.dob else ''],
+        ['Date of Joining', employee.doj.strftime('%Y-%m-%d') if employee.doj else ''],
+        ['Gender', employee.gender],
+        ['Email', employee.email if employee.email else ''],
+        ['Office Email', employee.office_email],
+        ['Status', 'Active' if employee.status else 'Inactive'],
+        ['Designation', employee.designation],
+        ['Department', employee.department],
+        ['Reporting Person', employee.reporting],
+        ['Level', employee.level]
+    ]
+    data.extend(employee_data)
+
+    style_table = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('PADDING', (0, 0), (-1, -1), 15),
+    ])
+
+    table = Table(data, style=style_table)
+    elements = [table]
+
+    pdf.build(elements)
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="employee_report_{employee.id}.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
+def download_event_report(request, option):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    # Create a PDF buffer and document object
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=landscape(A3))
+
+    # Create a list to hold table data
+    data = [
+        ['Title', 'Category', 'Description', 'Date', 'visibility']
+    ]
+
+    # Create a sample stylesheet
+    styles = getSampleStyleSheet()
+
+    # Fetch employees based on the provided option
+    if option == 'all':
+        events = Event.objects.filter(com_id=com)
+    elif option == 'holiday':
+        events = Event.objects.filter(com_id=com, category='Public Holiday')
+    elif option == 'birthdayOthers':
+        events = Event.objects.filter(com_id=com).exclude(category='Public Holiday')
+
+    # Iterate through employees
+    for event in events:
+        event_data = [
+            event.title,
+            event.category,
+            event.description,
+            event.date.strftime('%Y-%m-%d') if event.date else '',
+            event.visibility,
+        ]
+        data.append(event_data)
+
+    # Create a table with styles
+    style_table = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        # ('PADDING', (0, 0), (-1, -1), 5),
+    ]
+    table = Table(data, style=style_table, repeatRows=1)
+
+    # Create elements list and add the table
+    elements = [table]
+
+    # Build the PDF document with the elements list
+    pdf.build(elements)
+
+    # Get PDF content from BytesIO object
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="employee_report.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
+
+
+
 
 #$#$#$ EMPLOYEE #$#$#$
 # Employee Login
