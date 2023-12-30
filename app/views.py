@@ -1702,4 +1702,5 @@ def supportcompany(request):
             
             return render(request, 'adminDashboard.html', context)
 
-    return redirect('CalendarView')
+    else:
+        return redirect('CalendarView')
