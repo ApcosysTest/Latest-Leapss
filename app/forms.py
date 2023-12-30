@@ -204,6 +204,19 @@ class EmployeeUpdateForm(forms.ModelForm):
         model = Employee
         fields = ['emp_id', 'name','gender','office_email', 'personal_contact','company_contact', 'present_address','permanent_address', 'dob', 'doj','email', 'image', 'designation','level', 'department', 'reporting']
 
+class PerticularEmployeeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        com = kwargs.pop('com_id', None)
+        super(PerticularEmployeeForm, self).__init__(*args, **kwargs)
+        
+        if com:
+            self.fields['employee'] = NameChoiceField(queryset=Employee.objects.order_by('name').filter(com_id = com).exclude(status=False),widget=forms.Select(attrs={ }), empty_label="Select Employee", required=True)
+        
+    class Meta:
+        model=Employee
+        fields=['name']
+
+
 class EmployeeUpdateExtraForm(forms.ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Must be Company\'s E-mail Id'}), required=True)
     

@@ -81,6 +81,8 @@ urlpatterns = [
     
     path('reportPrinting', reportPrinting, name='reportPrinting'),
     path('download_pdf_report/<str:option>/', download_pdf_report, name='download_pdf_report'),
+    path('generate_employee_report', generate_employee_report, name='generate_employee_report'),
+    path('download_event_report/<str:option>/', download_event_report, name='download_event_report'),
 
 
 
