@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'captcha',
+   
     'app',
     'django_cleanup',
     
@@ -180,8 +180,3 @@ EMAIL_HOST_PASSWORD = 'upaiuqoeemveqgfe'
 
 
 
-
-# reCaptcha
-RECAPTCHA_PUBLIC_KEY = '6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG' 
-RECAPTCHA_PRIVATE_KEY = '6LeXkGYkAAAAAANuX0uqZjh7Q1MIy45eszgUHpoL'
-RECAPTCHA_PROXY_HOST = 'https://recaptcha.net'
