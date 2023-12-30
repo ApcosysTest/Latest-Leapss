@@ -41,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'captcha',
     'app',
     'django_cleanup',
+    
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
@@ -166,3 +169,9 @@ EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'saswatkumar059@gmail.com'
 EMAIL_HOST_PASSWORD = 'upaiuqoeemveqgfe'
+
+
+# reCaptcha
+RECAPTCHA_PUBLIC_KEY = '6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG' 
+RECAPTCHA_PRIVATE_KEY = '6LeXkGYkAAAAAANuX0uqZjh7Q1MIy45eszgUHpoL'
+RECAPTCHA_PROXY_HOST = 'https://recaptcha.net'

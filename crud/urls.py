@@ -72,6 +72,9 @@ urlpatterns = [
     path('setupPrivacyPolicy', setupPrivacyPolicy, name='setupPrivacyPolicy'),
     path('setupTandC', setupTandC, name='setupTandC'),
     path('feedback', feedback, name='feedback'),
+    path('supportcompany', supportcompany, name='supportcompany'),
+    path('contactSuccess', contactSuccess, name='contactSuccess'),
+    
    
     
 

@@ -87,11 +87,11 @@
                           Feedback
                         </a>
                     </li>
-                    <li style="list-style: none; "class="addEmp">
-                      <a type="button" style="margin-right:30px" href="/addEmployee" class="btn ">
-                        Support
-                      </a>
+                  <li style="list-style: none; "class="addEmp">
+                      <button type="button" class="btn" style="margin-right:30px; position: relative; top: 8px;" data-toggle="modal" data-target="#exampleModalCenter" >Support</button>
                   </li>
+                  
+                    
                   </ul>
             </nav>
             <section class="section container pageClass  bg-white rounded dashboard">
@@ -259,6 +259,124 @@
             </section>
         </div>
     </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Support Form </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" >
+              
+              <form method="post" action="{% url 'supportcompany' %}">
+                  {% csrf_token %}
+                  
+                  <div class="form-group">
+                  
+                      <input type="hidden" class="form-control"  placeholder="Company Id" readonly="" name="cid" value="{{dic.com.id}}">
+                      <input type="hidden" class="form-control"  placeholder="Company Name" readonly="" name="cname" value="{{dic.com}}">
+                      <input type="hidden" class="form-control"  placeholder="Company Email iD" readonly="" name="cemailid" value="{{dic.com.email}}">
+                      <input type="hidden" class="form-control"  placeholder="Company website" readonly="" name="cwebsite" value="{{dic.com.website}}">
+                      <input type="hidden" class="form-control"  placeholder="Company Phone" readonly="" name="cphone" value="{{dic.com.telephone}}">
+                      
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Enter Your Doubts</label>
+                      <textarea class="form-control" placeholder="Submit any inquiry, and our team will contact you soon." row="10" name="namecontent" required=""></textarea>
+                    </div>
+                   
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+
+    <button type="button" class="btn" style="display:none;" data-toggle="modal" data-target="#exampleModalCenterNew" id="supportSubmitted">new</button>
+                  
+                  
+    <div class="modal fade" id="exampleModalCenterNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          
+          <div class="modal-body" >
+              
+            <div class="container">
+              <div class="success">
+                  <img class="circle" src="http://sversity.com/static/image/Circle-green.png" width="100px" height="100px">
+                  <img class="circle"  src="data:image/png;base64,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" style="height: 84px;
+    position: absolute;
+    top: 23px;">
+                  <p>Thank you for your response; we will revert within 48 working hours.</p>
+                 
+                  <div class="con-btn">
+                      <a class="btn-new" href="{% url 'adminDashboard' %}">Continue</a>
+                  </div>
+              </div>
+          </div>
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Add this JavaScript to show a pop-up if the success key is true
+      document.addEventListener("DOMContentLoaded", function() {
+        var successMessage = "{{ success_message|default:'' }}"; // Use the success message from Django context
+  
+        if (successMessage) {
+          //alert(successMessage); // You can use a more sophisticated pop-up library if needed
+          $('#exampleModalCenterNew').modal('show');
+        }
+      });
+    </script>
+    <style>
+      .success {
+          height: 300px;
+          
+          margin: auto;
+          
+          display: flex;
+          justify-content: center;
+      }
+      .success .circle {
+          position: absolute;
+          margin-top: 50px;
+      }
+     
+      
+      .success p {
+          padding-top: 175px;
+          font-size: 18px;
+          padding: 175px 55px 0;
+          text-align: center;
+      }
+      .success p {
+          padding-top: 175px;
+          font-size: 18px;
+          padding: 175px 55px 0;
+          text-align: center;
+      }
+      .con-btn {
+          position: absolute;
+          margin-top: 280px;
+      }
+      .btn-new {
+          background-color: #155e00 !important;
+          color: white !important;
+          box-shadow: 3px 3px 10px #0000009C;
+          border-radius: 4px !important;
+          padding: 10px 40px !important;
+      }
+  </style>
+    
     <div class="d-flex justify-content-between privacy bg-primary">
       <div class="row">
           <a href="{% url 'privacyPolicy' %}">Privacy Policy</a>
