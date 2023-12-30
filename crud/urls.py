@@ -89,7 +89,9 @@ urlpatterns = [
     path('leaveBasket', leaveBasket, name='leaveBasket'),
     path("approvalStatus",approvalStatus, name='approvalStatus'),
     path('presentEmployees', presentEmployees, name='presentEmployees'),
-    path('reviewEmployeeApplicationEmployee/<int:id>', reviewEmployeeApplicationEmployee, name='reviewEmployeeApplicationEmployee'),  
+    path('reviewEmployeeApplicationEmployee/<int:id>', reviewEmployeeApplicationEmployee, name='reviewEmployeeApplicationEmployee'), 
+
+    path('check_email_uniqueness', check_email_uniqueness, name='check_email_uniqueness'),
 
     # Employee Level 0
     # re_path(r'^hrAdminDashboard$', CalendarViewHR.as_view(), name='hrAdminDashboard'), 

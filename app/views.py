@@ -726,11 +726,22 @@ def addEmployee(request):
                 group=Group.objects.get_or_create(name='HR')
                 group[0].user_set.add(user)
             return redirect('activeEmployee')
+        else:
+            print(form.errors)
+            print(form1.errors)
     else:
         form = AddEmployeeExtraForm()
         form1 = AddEmployeeForm(com_id=com.id)
     context={'form':form, 'form1':form1, 'emp':emp,'com':com}
     return render(request, 'addEmployee.html', context)
+
+
+def check_email_uniqueness(request):
+    if request.method == 'POST' and request.is_ajax():
+        email = request.POST.get('email', None)
+        is_unique = not Employee.objects.filter(email=email).exists()
+        return JsonResponse({'is_unique': is_unique})
+    
 
 # Upload Employee Detail through Excell
 @login_required(login_url='adminLogin')

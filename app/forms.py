@@ -107,22 +107,22 @@ GENDER = (
 
 # Add Employee Form
 class AddEmployeeForm(forms.ModelForm):
-    emp_id = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Employee Id'}))
-    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Employee Name'}))
-    company_contact = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Official Number'}),required=False)
-    personal_contact = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Personal Number'}))
-    present_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Present Address'}),required=False)
-    permanent_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Permanent Address'}),required=False)
-    dob = forms.DateField(widget=forms.DateInput(format=('%d-%m-%Y'),attrs={'class': 'datepicker', 'placeholder': 'Select a date', 'type': 'date'}))
-    doj = forms.DateField(widget=forms.DateInput(format=('%d-%m-%Y'),attrs={'class': 'datepicker', 'placeholder': 'Select a date', 'type': 'date'}))
-    gender = forms.ChoiceField(choices=GENDER,widget=forms.Select())
-    email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder':'Personal Email ID'}),required=False)
-    office_email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder':'Official Email ID'}),required=False)
-    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control'}), required=False)
-    designation = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Designation'}))
-    level = forms.ChoiceField(choices=LEVELS, widget=forms.Select())
-    department = forms.ModelChoiceField(queryset=Department.objects.all(),widget=forms.Select(), empty_label="Select Department", required=True)
-    reporting = NameChoiceField(queryset=Employee.objects.order_by('name').filter(Q(level='Level 0') | Q(level='Level 1') | Q(level='Level 2')).exclude(status=False),widget=forms.Select(attrs={ }), empty_label="Select Reporting Person", required=False)
+    emp_id = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Employee Id', 'id': 'emp_id', 'name': 'emp_id'}), label='Employee ID')
+    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Employee Name'}), label='Employee Name')
+    company_contact = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Official Number'}),required=False, label='Official Number')
+    personal_contact = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Personal Number'}), label='Personal Number')
+    present_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Present Address'}),required=False, label='Present Address')
+    permanent_address = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Permanent Address'}),required=False, label='Permanent Address')
+    dob = forms.DateField(widget=forms.DateInput(format=('%d-%m-%Y'),attrs={'class': 'datepicker', 'placeholder': 'Select a date', 'type': 'date'}), label='Date Of Birth')
+    doj = forms.DateField(widget=forms.DateInput(format=('%d-%m-%Y'),attrs={'class': 'datepicker', 'placeholder': 'Select a date', 'type': 'date'}), label='Date of Joining')
+    gender = forms.ChoiceField(choices=GENDER,widget=forms.Select(), label='Gender')
+    email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder':'Personal Email ID', 'id': 'email', 'name': 'email'}),required=False, label='email')
+    office_email = forms.CharField(widget=forms.EmailInput(attrs={'placeholder':'Official Email ID', 'id': 'official_email', 'name': 'official_email'}),required=False, label='Official Email')
+    image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control'}), required=False, label='Image')
+    designation = forms.CharField(widget=forms.TextInput(attrs={'placeholder':'Designation'}), label='Designnation')
+    level = forms.ChoiceField(choices=LEVELS, widget=forms.Select(), label='Level')
+    department = forms.ModelChoiceField(queryset=Department.objects.all(),widget=forms.Select(), empty_label="Select Department", required=True, label='Department')
+    reporting = NameChoiceField(queryset=Employee.objects.order_by('name').filter(Q(level='Level 0') | Q(level='Level 1') | Q(level='Level 2')).exclude(status=False),widget=forms.Select(attrs={ }), empty_label="Select Reporting Person", required=False, label='Reporting Person')
 
     def __init__(self, *args, **kwargs):
         com = kwargs.pop('com_id', None)
@@ -140,7 +140,7 @@ class AddEmployeeForm(forms.ModelForm):
         }
 
 class AddEmployeeExtraForm(forms.ModelForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Must be Company\'s E-mail Id'}), required=True)
+    username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Must be Company\'s E-mail Id', 'id': 'username', 'name': 'username'}), required=True, label='Username')
     # password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Minimum 8 and 1 special character','id':'Password'}), required=True)
     # confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm Password','id':'Confirm_Password','onkeyup':'validate_password()'}), required=True)
 
