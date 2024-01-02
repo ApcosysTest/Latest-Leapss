@@ -32,7 +32,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from django.core.mail import send_mail
-
+import json, urllib.request, requests
+from django.conf import settings
+import uuid
 
 # Check is admin
 def is_admin(user):
@@ -1944,7 +1946,6 @@ def supportcompany(request):
         cemailid = request.POST.get('cemailid', '')
         cwebsite = request.POST.get('cwebsite', '')
         cphone = request.POST.get('cphone', '')
-
 
         # Send email
         subject = "Inquiry Support from Company"
