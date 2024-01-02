@@ -114,9 +114,9 @@
                       <div class="btn-group">
                         <div class="tw-toggle">
                         
-                        <a  class="btn btn-default " href="{% url 'activeEmployee' %}">Active</a>		&#160;
-                        <a  class="btn btn-default " href="{% url 'inactiveEmployee' %}">In Active</a>		&#160;
-                        <a  class="btn btn-primary " href="{% url 'allactiveEmployee' %}">All Employees</a>		
+                        <a  class="btnnew btn-default " href="{% url 'activeEmployee' %}">Active</a>		&#160;
+                        <a  class="btnnew btn-default " href="{% url 'inactiveEmployee' %}">In Active</a>		&#160;
+                        <a  class="btnnew btn-primary " href="{% url 'allactiveEmployee' %}">All Employees</a>		
                           </div>  
                        </div> 
                       
@@ -260,12 +260,21 @@
         border: 2px solid #009eff;
         margin: 0;
         flex-flow: wrap;
-        width: 301px;
+        width: 283px;
     }
       .btn-default {
           color: #333;
           
           border: none;
+      }
+      .btnnew{
+        padding: 5px 10px 5px 10px;
+        text-decoration: none; 
+        border-radius: 20px;
+      
+      }
+      .btnnew:hover { 
+        text-decoration: none; 
       }
       </style>
     
