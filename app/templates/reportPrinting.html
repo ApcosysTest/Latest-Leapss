@@ -56,7 +56,6 @@
         }
         .report-box img{
             width:70%;
-            {% comment %} margin:90px 0px; {% endcomment %}
         }
         .backup-btn{
             width:100%;
@@ -92,8 +91,20 @@
             margin:0px 0px 5px 60px;
         } 
         #id_employee{
+            overflow: hidden;
             width:75%;
             margin:0px 0px 5px 60px;
+            animation: expandHeight 0.3s forwards;
+        }
+        @keyframes expandHeight {
+            from {
+                height: 0;
+            }
+            to {
+            }
+        }
+        #employeeReportForm{
+            display: none;
         }
         @media (max-width: 767px) {
             .report-box button {
@@ -185,15 +196,11 @@
                             <a type="button" href="{% url 'download_pdf_report' 'active' %}" class="btn">Report of Active Employees</a><br>
                             <a type="button" href="{% url 'download_pdf_report' 'inactive' %}" class="btn">Report of Inactive Employees</a><br>
                             <a type="button" href="{% url 'download_pdf_report' 'all' %}" class="btn">Report of All Employees</a><br>
-                            <form action="/generate_employee_report" method="POST" enctype="multipart/form-data">
+                            <a type="button" id="employeeReportButton" href="#" class="btn">Report of Individual Employee</a>
+                            <form id="employeeReportForm" action="/generate_employee_report" method="POST" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 {{form.employee}}
                                 <button class="btn">Report of Individual Employee</button>
-                                {% comment %} <a type="button" href="{% url 'generate_employee_report' form.employee %}" class="btn">
-                                
-                                    Report of Individual Employee
-                                    
-                                   </a> {% endcomment %}
                             </form>
                             
                         </div>
@@ -253,6 +260,12 @@
             </section>
         </div>
     </div>
+    <script>
+        document.getElementById('employeeReportButton').onclick = function() {
+            document.getElementById('employeeReportButton').style.display="none";
+            document.getElementById('employeeReportForm').style.display="block";
+        };
+    </script>
     <script>
         $(document).ready(function () {
         $('#dtDynamicVerticalScrollExample').DataTable({

@@ -29,6 +29,6 @@ def send_mail_about_client_request(name):
     subject = 'Notification for Client Request'
     message = f'A new client request from {name} in leapss.com'
     email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['saswatkumar059@gmail.com']
+    recipient_list = ['mailbox101@apcosys.in']
     send_mail(subject, message, email_from, recipient_list)
     return True
