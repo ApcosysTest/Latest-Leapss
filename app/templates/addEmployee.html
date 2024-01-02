@@ -71,6 +71,16 @@
             animation: spin 1s linear infinite;
         }
 
+        .card-body{
+            padding: 0;
+            border: 1px solid rgba(0,0,0,.125);
+            border-radius: 0.25rem; 
+            margin-left: 0.4rem;
+            width: 80%;
+        }
+
+
+
         /* CSS for the spinner animation */
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -86,6 +96,19 @@
             width:47px;
             margin-right:25px;
         }
+
+        @media (max-width: 576px){
+            .cards {
+                height: auto;
+            }
+
+            .card-body{
+                margin: auto;
+                width: 100%;
+            }
+        }
+
+
     </style>
 </head>
 <body id="body-pd">
@@ -229,34 +252,13 @@
                                         </div>
                                     {% endif %}
                                 {% endfor %}
+                                
 
 
-                                <div class="col-md-6">
-                                    <div class="card cards"style="margin-bottom:0rem; height: 0;">
-                                        <div class="card-body" style="padding:1rem; height: 1rem;">
-                                            <div class="row">
-                                                <div class="col-md-5"> 
-                                                    <div class="preview">
-                                                        <img height="110px" width="110px" id="file-ip-1-preview">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-7"  style="text-align: center;"> 
-                                                    <label style="margin: 13% auto; text-align: center; font-size:12px;" for="id_image">Image<br>(Must be Less than 200KB)  </label>
-                                                    <input hidden id="id_image" accept="image/*" type="file" id="image" name="image" onchange="showPreview(event);">
-                                                    <div class="row upup">
-                                                        <a id="upload_link" href="javascript:void(0)"  type="button"  class="btn btn-primary uploadButton">Upload Photo</a>
-                                                    </div>
-                                                    
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- <div id="photoLabel" style="margin:auto 2% 2% 2%; color:red;">
-                                        </div>  -->
-                                    </div>
-                                </div>
+                                
 
 
-                                {% for field in form.visible_fields %}
+                                <!-- {% for field in form.visible_fields %}
                                     
                                     {% if field.label != 'Image' %}
         
@@ -273,15 +275,34 @@
                                             </span>
                                         </div>
                                     {% endif %}
-                                {% endfor %}
-
-                                
-                            
-                            
+                                {% endfor %} -->
 
 
-                        
+
+                                <div class="card cards col-md-6" style="margin: 1rem auto; border: none;">
+                                    <div class="card-body">
+                                        <div class="row" style="margin: auto;">
+                                            <div class="col-md-5"> 
+                                                <div class="preview">
+                                                    <img height="110px" class="mx-auto" width="110px" id="file-ip-1-preview">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-7"  style="text-align: center;"> 
+                                                <label style="margin: 13% auto; text-align: center; font-size:12px;" for="id_image">Image<br>(Must be Less than 200KB)  </label>
+                                                <input hidden id="id_image" accept="image/*" type="file" id="image" name="image" onchange="showPreview(event);">
+                                                <div class="row upup">
+                                                    <a id="upload_link" href="javascript:void(0)"  type="button"  class="btn btn-sm btn-primary uploadButton" style="padding: 0.5rem; margin: auto;font-size: smaller;">Upload Photo</a>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    
+                                    </div> 
+                                    <div id="photoLabel" style="margin:auto 2% 2% 2%; color:red;">
+                                    </div> 
+                                </div>
                             
+                    
                             
                             
                         </div>
@@ -317,24 +338,6 @@
                     return false;
                 }
                     
-              // AJAX request to check username uniqueness
-            //   $.ajax({
-            //     url: "/check_username_uniqueness/",
-            //     method: "POST",
-            //     data: { username: username },
-            //     async: false,  // Synchronous request to wait for the response
-            //     success: function(response) {
-            //       if (!response.is_unique) {
-            //         alert("Username is not unique. Please choose a different username.");
-            //         return false;
-            //       }
-            //     },
-            //     error: function(xhr, errmsg, err) {
-            //       console.log(xhr.status + ": " + xhr.responseText);
-            //     }
-            //   });
-        
-              // AJAX request to check email uniqueness
               $.ajax({
                 url: "/check_email_uniqueness/",
                 method: "POST",
@@ -406,6 +409,7 @@
     $('#id_image').change(function() {
         var i = $(this).prev('label').clone();
         var file = $('#id_image')[0].files[0].name; 
+        console.log(file)
         $(this).prev('label').html(file); 
     }); 
     function showPreview(event){

@@ -84,6 +84,15 @@
                 <h5 style="color: #009eff; padding: 2%;">Edit Employee</h5>
                 <div class="details">
                     <form method="POST" class="post-form" enctype="multipart/form-data">
+
+                        {% for field in form.visible_fields %}
+                            <span style="color: red; text-decoration: none; width: 50%; margin-top: 0rem; font-size: 0.8rem;">
+                                {% if field.errors %}
+                                    {{ field.errors }} {# outputs a UL with class 'errorlist' #}
+                                {% endif %}
+                            </span>
+                        {% endfor %}
+
                           {% csrf_token %}  
                             <div class="row"  style="margin-left: 5%;">
                                 <div class="col-md-6">
@@ -165,9 +174,7 @@
                                       </div> 
                                     </div>
                                       
-                                     {% comment %} <div id="change">
-                                        <a href="{% url 'changePassword' data.id %}"class="btn   btn-primary btn-sm  ">Change Password</a>
-                                     </div> {% endcomment %}
+
                                       <div style="margin-left: 2%;">
                                         <a href="{% url 'activeEmployee' %}"   class="btn  btn-outline-info btn-md cancel"> Cancel</a>
                                         <button type="submit" class="btn   btn-primary btn-sm  add "  onclick="wrong_pass_alert()">Save</button>

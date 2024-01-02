@@ -711,7 +711,7 @@ def addEmployee(request):
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.filter(level = 'Level 1' or 'Level 2')
     if request.method == "POST":
-        form = AddEmployeeExtraForm(request.POST)
+        form = AddEmployeeExtraForm(request.POST or None)
         form1 = AddEmployeeForm(request.POST, request.FILES, com_id=com.id)
         if form.is_valid() and form1.is_valid():
             characters = string.ascii_letters + string.digits + string.punctuation
@@ -729,6 +729,8 @@ def addEmployee(request):
             f2.com_id=com
             f2.employee_setup_completed=False
             user1=f2.save()
+            form.username = office_email
+            form.save()
             
             send_account_creation_mail(office_email, name, company, username, password)
             group=Group.objects.get_or_create(name='EMPLOYEE')
