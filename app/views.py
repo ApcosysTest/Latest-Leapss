@@ -1127,7 +1127,7 @@ def setupPrivacyPolicy(request):
             else:
                 print(form.errors)
 
-    context = {'leave': leave, 'form': form, 'privacy_details': privacy_details, 'com': com}
+    context = {'form': form, 'privacy_details': privacy_details, 'com': com}
     return render(request, "setupPrivacyPolicy.html", context)
 
 # Terms & Conditions Setting
@@ -1164,7 +1164,7 @@ def setupTandC(request):
             else:
                 print(form.errors)
 
-    context = {'leave': leave, 'form': form, 'terms_details': terms_details, 'com': com}
+    context = {'form': form, 'terms_details': terms_details, 'com': com}
     return render(request, "setupTermsAndConditions.html", context)
 
 # Add Leave
