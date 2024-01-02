@@ -202,6 +202,9 @@ class FeedbackModel(models.Model):
     def __str__(self):
         return self.text
     
+
+
+
 class Support(models.Model):
     text = models.TextField()
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
@@ -211,3 +214,8 @@ class Support(models.Model):
     def __str__(self):
         return self.text
 
+
+class CompanyBackup(models.Model):
+    company = models.ForeignKey(User, on_delete=models.CASCADE)
+    backup_file = models.FileField(upload_to='backups/')
+    created_at = models.DateTimeField(auto_now_add=True)

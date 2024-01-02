@@ -396,17 +396,27 @@ class LeaveLevel0Form(forms.ModelForm):
         fields = ['level0_comm']  
 
 # Absent Form
-today = datetime.today().strftime("%Y-%m-%d")
-leave = LeaveApplication.objects.filter(status_approve=True, date_from__lte=today, date_to__gte=today).values('user__id')
-absent = Absent.objects.filter(absent_on=today).values('user__user__id')
 class AbsentForm(forms.ModelForm):
-    # user = NameChoiceField(queryset=Employee.objects.order_by('name').exclude(Q(user__id__in = absent) | Q(user__id__in = leave)))
-
-    def __init__(self, com_id, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
+        com_id = kwargs.pop('com_id', None)
         super(AbsentForm, self).__init__(*args, **kwargs)
-        emails = Employee.objects.filter(com_id=com_id).values_list('email', flat=True)
-        self.fields['user']     = NameChoiceField(queryset=Employee.objects.filter(com_id=com_id).order_by('name').exclude(Q(user__id__in = absent) | Q(user__id__in = leave)))
+        if com_id is not None:
+            today = datetime.today().strftime("%Y-%m-%d")
+            leave = LeaveApplication.objects.filter(status_approve=True, date_from__lte=today, date_to__gte=today).values('user__id')
+            absent = Absent.objects.filter(absent_on=today).values('user__user__id')
+            self.fields['user'] = NameChoiceField(
+                queryset=Employee.objects.filter(com_id=com_id)
+                                         .order_by('name')
+                                         .exclude(Q(user__id__in=absent) | Q(user__id__in=leave))
+            )
 
     class Meta:
         model = Absent
         fields = ['user']
+
+
+# Backup Form
+class BackupUploadForm(forms.ModelForm):
+    class Meta:
+        model = CompanyBackup
+        fields = ['backup_file']

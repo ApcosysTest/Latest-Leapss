@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Upload File</title>
+</head>
+
+<body>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="backup_file">
+        <button type="submit">Upload File</button>
+    </form>
+    <h1>List of Extracted Files</h1>
+    <ul>
+        {% for file_name in extracted_files %}
+            <li>{{ file_name }}</li>
+        {% endfor %}
+    </ul>
+    
+    <h1>Specific File Content</h1>
+    {% if specific_file_content %}
+        <pre>{{ specific_file_content }}</pre>
+    {% else %}
+        <p>No specific file content retrieved.</p>
+    {% endif %}
+</body>
+
+</html> 

@@ -1,0 +1,23 @@
+<html>
+    <head></head>
+    <body>
+        <!-- Display list of backups for the current user -->
+        <h1>Backups for {{ request.user.username }}</h1>
+        <ul>
+        {% for backup in backups %}
+            <li>{{ backup.backup_file.name }} - {{ backup.created_at }}</li>
+            <a href="{% url 'retrieve_backup' backup.id %}">Retrieve</a>
+        {% endfor %}
+        </ul>
+
+        <!-- Add a button to trigger backup creation -->
+        <form action="{% url 'create_backup' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Create Backup</button>
+        </form>
+
+        <!-- Add a link to upload a backup file -->
+        <a href="{% url 'upload_backup' %}">Upload Backup</a>
+
+    </body>
+</html>

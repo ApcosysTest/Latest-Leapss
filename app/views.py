@@ -22,6 +22,9 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.db.models import Q, Count, Sum
 from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp, send_mail_about_client_request
 import json
+import os
+import io
+import zipfile
 from reportlab.pdfgen import canvas
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
@@ -32,9 +35,13 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from django.core.mail import send_mail
+from django.core.management import call_command
+from cryptography.fernet import Fernet, InvalidToken
+import zipfile
 import json, urllib.request, requests
 from django.conf import settings
 import uuid
+
 
 # Check is admin
 def is_admin(user):
@@ -1421,6 +1428,143 @@ def download_event_report(request, option):
 
     return response
 
+def download_leave_report(request, option):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    # Create a PDF buffer and document object
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=landscape(A3))
+
+    # Create a list to hold table data
+    data = [
+        ['Employee ID', 'Name', 'Company Contact', 'Personal Contact',
+         'Date of Birth', 'Date of Joining', 'Gender', 'Email', 'Office Email','Designation', 'Level']
+    ]
+
+    # Create a sample stylesheet
+    styles = getSampleStyleSheet()
+
+    # Fetch employees based on the provided option
+    if option == 'present':
+        emails = Employee.objects.filter(com_id=com).values_list('office_email', flat=True)
+        today = datetime.today().strftime("%Y-%m-%d")    
+        leave = LeaveApplication.objects.filter(status_approve=True, date_from__lte=today, date_to__gte=today).values('user__id')
+        absent = Absent.objects.filter(absent_on=today, user__user__username__in=emails).values('user__user__id')
+        employees = Employee.objects.filter(user__username__in=emails,status=True ).exclude(Q(user__id__in = absent) | Q(user__id__in = leave))
+    elif option == 'absent':
+        emails = Employee.objects.filter(com_id=com).values_list('office_email', flat=True)
+        today = datetime.today().strftime("%Y-%m-%d")    
+        leave = LeaveApplication.objects.filter(status_approve=True, date_from__lte=today, date_to__gte=today).values('user__id')
+        absent = Absent.objects.filter(absent_on=today, user__user__username__in=emails).values('user__user__id')
+        employees = Employee.objects.filter(user__username__in=emails, status=True).filter(Q(user__id__in=absent) | Q(user__id__in=leave))
+
+    # Iterate through employees
+    for employee in employees:
+        employee_data = [
+            employee.emp_id,
+            employee.name,
+            employee.company_contact if employee.company_contact else '',
+            employee.personal_contact,
+            employee.dob.strftime('%Y-%m-%d') if employee.dob else '',
+            employee.doj.strftime('%Y-%m-%d') if employee.doj else '',
+            employee.gender,
+            employee.email if employee.email else '',
+            employee.office_email,
+            employee.designation,
+            employee.level
+        ]
+        data.append(employee_data)
+
+    # Create a table with styles
+    style_table = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        # ('PADDING', (0, 0), (-1, -1), 5),
+    ]
+    table = Table(data, style=style_table, repeatRows=1)
+
+    # Create elements list and add the table
+    elements = [table]
+
+    # Build the PDF document with the elements list
+    pdf.build(elements)
+
+    # Get PDF content from BytesIO object
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="employee_report.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
+def generate_employee_leave_report(request):
+
+    if request.method == 'POST':
+        id = request.POST['employee']
+        employee = Employee.objects.filter(id=id).first()
+    else:
+         form = EmployeeLoginForm()
+
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=A4)
+
+    if not employee:
+        return HttpResponse("Employee not found", status=404)
+    
+    user = employee.user  # Assuming 'user' is a ForeignKey field in the Employee model
+    leaves = LeaveApplication.objects.filter(user=user)
+    absents = Absent.objects.filter(user=employee)
+
+    data = [
+        ['date_from', 'date_to', 'reason']
+    ]
+    for leave in leaves:
+        employee_data = [
+            leave.date_from,
+            leave.date_to,
+            leave.reason
+        ]
+        data.append(employee_data)
+    for absent in absents:
+        employee_data = [
+            absent.absent_on,
+            absent.absent_on,
+            "absent"
+        ]
+        data.append(employee_data)
+
+    style_table = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('PADDING', (0, 0), (-1, -1), 15),
+    ])
+
+    table = Table(data, style=style_table)
+    elements = [table]
+
+    pdf.build(elements)
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="employee_report_{employee.id}.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
 
 
 
@@ -2000,3 +2144,117 @@ def supportcompany(request):
 
     else:
         return redirect('CalendarView')
+    
+
+
+# Backup of a company
+def backup_list(request):
+    backups = CompanyBackup.objects.filter(company=request.user)
+    return render(request, 'backup_list.html', {'backups': backups})
+
+# def create_backup(request):
+#     com = Company.objects.filter(username=request.user.username).first()
+#     if com is None:
+#         emp = Employee.objects.filter(office_email=request.user.username).first()
+#         com = Company.objects.filter(name=emp.com_id).first()
+
+#     # Define the base directory for backups
+#     base_directory = 'backups/'
+
+#     # Check if the directory exists, if not, create it
+#     if not os.path.exists(base_directory):
+#         os.makedirs(base_directory)
+
+
+#     # List of models to backup
+#     models_to_backup = [
+#         AllRequest, Company, Department, Employee, LeavePolicy, PrivacyPolicy, Terms, Leave, Quote, Event, LeaveApplication, Absent, FeedbackModel
+#     ]
+
+#     # Loop through each model to create a backup
+#     for model in models_to_backup:
+#         model_name = model.__name__
+#         model_backup_path = os.path.join(base_directory, f'{model_name.lower()}_backup_{com.id}.json')
+#         call_command('dumpdata', f'app.{model_name}', '--output', model_backup_path, '--pks', str(com.id))
+
+#     # Save backup information to the database
+#     backup_instance = CompanyBackup.objects.create(company=request.user, backup_file=os.path.join('backups_folder', f'combined_backup_{com.id}.zip'))
+
+#     return redirect('backup_list')
+
+def create_backup(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    base_directory = 'backups/'
+
+    if not os.path.exists(base_directory):
+        os.makedirs(base_directory)
+
+    models_to_backup = [
+        Company, Department, Employee, LeavePolicy, PrivacyPolicy, Terms, Leave, Quote, Event, LeaveApplication, Absent,
+        FeedbackModel
+    ]
+
+    # Define your encryption key or generate a new one securely
+    key = b'WaO41lzHcg76QQ4siPdTcf0BUsuTnsTCMKJBSrmBack='
+    cipher_suite = Fernet(key)
+
+    encrypted_zip_buffer = BytesIO()
+
+    with zipfile.ZipFile(encrypted_zip_buffer, 'a', zipfile.ZIP_DEFLATED, False) as zip_file:
+        for model in models_to_backup:
+            model_name = model.__name__
+            model_backup_path = os.path.join(base_directory, f'{model_name.lower()}_backup_{com.id}.json')
+            call_command('dumpdata', f'app.{model_name}', '--output', model_backup_path, '--pks', str(com.id))
+
+            with open(model_backup_path, 'rb') as model_file:
+                model_data = model_file.read()
+                zip_file.writestr(f'{model_name.lower()}_backup_{com.id}.json', model_data)
+
+            # Clean up the temporary JSON backup file
+            os.remove(model_backup_path)
+
+    encrypted_zip_buffer.seek(0)
+    encrypted_data = cipher_suite.encrypt(encrypted_zip_buffer.read())
+
+    response = HttpResponse(encrypted_data, content_type='application/octet-stream')
+    response['Content-Disposition'] = f'attachment; filename=encrypted_combined_backup_{com.id}.zip'
+
+    return response
+
+def upload_backup(request):
+    if request.method == 'POST':
+        form = BackupUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            backup = form.save(commit=False)
+            backup.company = request.user
+            backup.save()
+            return redirect('backup_list')
+    else:
+        form = BackupUploadForm()
+    return render(request, 'upload_backup.html', {'form': form})
+
+def retrieve_backup(request):
+    if request.method == 'POST' and request.FILES.get('backup_file'):
+        uploaded_file = request.FILES['backup_file']
+        encrypted_data = uploaded_file.read()
+        key = b'WaO41lzHcg76QQ4siPdTcf0BUsuTnsTCMKJBSrmBack='
+        cipher_suite = Fernet(key)
+
+        # Decrypt the backup data
+        try:
+            decrypted_data = cipher_suite.decrypt(encrypted_data)
+            decrypted_buffer = io.BytesIO(decrypted_data)
+            with zipfile.ZipFile(decrypted_buffer, 'r') as zip_file:
+                extracted_files = zip_file.namelist()  # List of files in the zip
+
+                # Example: Read a specific file content
+                # specific_file_content = zip_file.read('file_name_within_zip.txt')
+
+            return render(request, 'retrieve_backup.html', {'extracted_files': extracted_files})
+        except InvalidToken as e:
+            print(f"Decryption failed: {e}")
+    return render(request, 'retrieve_backup.html')
