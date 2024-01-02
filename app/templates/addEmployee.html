@@ -33,9 +33,17 @@
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
     <style>
+        p {
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+        ul {
+            margin-bottom: 0;
+        }
         .errorlist {
             padding-left: 20px;
         }
+
 
         label{
             margin: 0% 2%;
@@ -212,7 +220,7 @@
                                                 <p class="help">{{ field.help_text }}</p>
                                             {% endif %}
 
-                                            <span style="color: red; text-decoration: none;">
+                                            <span style="color: red; text-decoration: none; width: 50%; margin-top: 0rem; font-size: 0.8rem;">
                                                 {% if field.errors %}
                                                     {{ field.errors }} {# outputs a UL with class 'errorlist' #}
                                                 {% endif %}
@@ -221,6 +229,31 @@
                                         </div>
                                     {% endif %}
                                 {% endfor %}
+
+
+                                <div class="col-md-6">
+                                    <div class="card cards"style="margin-bottom:0rem; height: 0;">
+                                        <div class="card-body" style="padding:1rem; height: 1rem;">
+                                            <div class="row">
+                                                <div class="col-md-5"> 
+                                                    <div class="preview">
+                                                        <img height="110px" width="110px" id="file-ip-1-preview">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-7"  style="text-align: center;"> 
+                                                    <label style="margin: 13% auto; text-align: center; font-size:12px;" for="id_image">Image<br>(Must be Less than 200KB)  </label>
+                                                    <input hidden id="id_image" accept="image/*" type="file" id="image" name="image" onchange="showPreview(event);">
+                                                    <div class="row upup">
+                                                        <a id="upload_link" href="javascript:void(0)"  type="button"  class="btn btn-primary uploadButton">Upload Photo</a>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div id="photoLabel" style="margin:auto 2% 2% 2%; color:red;">
+                                        </div>  -->
+                                    </div>
+                                </div>
 
 
                                 {% for field in form.visible_fields %}
@@ -233,7 +266,7 @@
                                             {% if field.help_text %}
                                                 <p class="help">{{ field.help_text }}</p>
                                             {% endif %}
-                                            <span style="color: red; text-decoration: none;">
+                                            <span style="color: red; text-decoration: none; width: 50%; margin-top: 0rem; font-size: 0.8rem;">
                                                 {% if field.errors %}
                                                     {{ field.errors }} {# outputs a UL with class 'errorlist' #}
                                                 {% endif %}
@@ -241,40 +274,24 @@
                                         </div>
                                     {% endif %}
                                 {% endfor %}
-                            
-                            
-
 
                                 
                             
-                                <div class="card cards "style="margin-bottom:0rem">
-                                <div class="card-body" style="padding:1rem">
-                                    <div class="row">
-                                        <div class="col-md-5"> 
-                                            <div class="preview">
-                                                <img height="110px" width="110px" id="file-ip-1-preview">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-7"  style="text-align: center;"> 
-                                            <label style="margin: 13% auto; text-align: center; font-size:12px;" for="id_image">Image<br>(Must be Less than 200KB)  </label>
-                                            <input hidden id="id_image" accept="image/*" type="file" id="image" name="image" onchange="showPreview(event);">
-                                            <div class="row upup">
-                                                <a id="upload_link" href="javascript:void(0)"  type="button"  class="btn btn-primary uploadButton">Upload Photo</a>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="photoLabel" style="margin:auto 2% 2% 2%; color:red;">
-                                </div> 
-                            </div>
+                            
+
+
+                        
                             
                             
-                            <div class="w-100" style="margin: 2rem 1rem; display: flex; justify-content: space-between;">
-                                <a href="{% url 'activeEmployee' %}"   class="btn  btn-outline-info btn-md cancel">Cancel</a>
-                                <button type="submit" class="btn   btn-primary btn-sm  add "  onclick="wrong_pass_alert()">Save</button>
-                            </div>
+                            
                         </div>
+
+                        <div style="margin: 2rem 5rem 0 2rem; display: flex; justify-content: space-between; width: 100vw;">
+                            <a href="{% url 'activeEmployee' %}"   class="btn  btn-outline-info btn-sm cancel">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-sm  add"  onclick="wrong_pass_alert()">Save</button>
+                        </div>
+
+                        
                     
                     
                             </form>
