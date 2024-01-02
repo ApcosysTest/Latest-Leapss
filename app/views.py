@@ -1923,6 +1923,12 @@ def companyfeedback(request):
     return render(request, 'adminviewfeedback.html', context)
 
 
+def admincompanysupport(request):
+    supports = Support.objects.all()
+    context = {'supports': supports}
+    return render(request, 'adminviewsupport.html', context)
+
+
 def viewfeedbackClient(request, client_id, feedback_id):
     
     client = get_object_or_404(Company, pk=client_id)
@@ -1935,6 +1941,21 @@ def viewfeedbackClient(request, client_id, feedback_id):
     }
 
     return render(request, 'viewfeedbackClient.html', context)
+
+
+def viewsupportClient(request, support_id):
+    
+    support = get_object_or_404(Support, pk=support_id)
+    client = get_object_or_404(Company, pk=support.company_id.id)
+   
+    
+
+    context = {
+        'support': support,
+        'client': client,
+    }
+
+    return render(request, 'viewsupportClient.html', context)
 
 
 @login_required(login_url='adminLogin')

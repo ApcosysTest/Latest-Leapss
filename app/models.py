@@ -201,3 +201,13 @@ class FeedbackModel(models.Model):
     
     def __str__(self):
         return self.text
+    
+class Support(models.Model):
+    text = models.TextField()
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
+    id = models.BigAutoField(primary_key=True)
+    resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+

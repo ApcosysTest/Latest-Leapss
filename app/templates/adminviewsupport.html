@@ -53,13 +53,13 @@
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
                 <li ><a class="list-group-item" href="{% url 'homeDashboard' %}"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
-                <li><a class="list-group-item active" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
+                <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
                 <li><a class="list-group-item" href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
-                <li><a class="list-group-item " href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
-                <li><a class="list-group-item " href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
-                <li><a class="list-group-item " href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
-                <li><a class="list-group-item " href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Feedback</span></a></li>
-                <li><a class="list-group-item" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>
+                <li><a class="list-group-item" href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
+                <li><a class="list-group-item" href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
+                <li><a class="list-group-item" href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
+                <li><a class="list-group-item" href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span> Feedback</span></a></li>
+                <li><a class="list-group-item active" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>
              </div>
              <div class="logout">
               <a class="nav-link"href="{% url 'logout_superuser' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
@@ -72,7 +72,7 @@
             <!-- Top navigation-->
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
                   
-                <h1 style="text-align:center;color:royalblue;">Clients</h1>
+                <h1 style="text-align:center;color:royalblue;">Support queries From Company</h1>
                 <form method="POST" autocomplete="off" id="search-form" >
                     {% csrf_token %}
                     <div class="inputWithIcon">
@@ -85,32 +85,30 @@
             <table class="table" style="width: 95%;margin: 30px;">
                 <thead>
                     <tr>
+                        <th>Sl no </th>
                         <th>Company Name</th>
                         <th>Website</th>
-                        <th>Email</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Country</th>
-                        <th>Action</th>
+                        
+                        <th>phone</th>
+                        <th>Ticket ID</th>
+                        <th>View</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for client in clients %}
+                    {% for support  in supports  %}
                     <tr class="outers">
-                        <td class='name'>{{ client.company_name }}</td>
-                        <td><a href="{{ client.website }}" target="_blank">{{ client.website }}</a></td>
-                        <td class='dep'>{{ client.email }}</td>
-                        <td class='emp_id'>{{ client.city }}</td>
-                        <td class='state'>{{ client.state }}</td>
-                        <td class='country'>{{ client.country }}</td>
-                        <td>
-                            <a href="{% url 'ApproveClient' client.id %}" class="btn btn-primary">Approve</a>
-                            <a href="{% url 'RejectClient' client.id %}" class="btn btn-danger">Decline</a>
-                        </td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ support.company_id.name }}</td>
+                        <td >{{ support.company_id.website }}</td>
+                        
+                        <td >{{ support.company_id.telephone }}</td>
+                        <td >{{ support.id }}</td>
+                        <td ><a href="{% url 'viewsupportClient' support.id %}" class="btn btn-info" style="width:80px;">View</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -158,5 +156,12 @@
              })
         })
     </script>
+    <style>
+        .btn-info {
+            color: #fff;
+            background-color: #009eff;
+            border-color: #009eff;
+        }
+    </style>
 </body>
 </html>
