@@ -48,22 +48,27 @@
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Task', 'Hours per Day'],
-          ['Total Clients',     {{total_company}}],
+          
           ['Active Clients',      {{approved_clients}}],
           ['InActive Clients',  {{inactive_clients}}],
+          [' Clients Request',  {{client_requests}}],
         ]);
 
         var options = {
-          title: 'My Clients Activities',
+          title: 'Total Clients : {{total_company}}',
           is3D: true,
-          colors: ['blue', 'green', 'red'],
-          slices: [{offset: 0.05}, {offset: 0.05}, {offset: 0.05}]
+          colors: ['#52d89c', '#ffc14e', '#ff7b5d'],
         };
 
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
       }
     </script>
+
+   
+    
+    
+    
 </head>
 
 <body id="body-pd">
@@ -162,26 +167,40 @@
                 
 
                     <br>
-                <div class="container">
-                    
-                    <div class="row">
-                      <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" >
-                        {% comment %} <h4>My Web Page</h4> {% endcomment %}
-                        <div id="piechart_3d" style="width: 600px; height: 350px;"></div>
-                      </div>
-                      <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" >
-                        <select class="form-control" id="clientDropdown">
-                            <option value="0">Select Client</option>
-                            {% for all_client in all_clients %}
-                             <option value="{{ all_client.pk }}">{{ all_client }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="container">
+                      <div class="row">
+                          <!-- Client Dropdown -->
+                          <div class="col-sm-12 shadow-lg p-3 mb-5 bg-white rounded">
+                              <select class="form-control" id="clientDropdown">
+                                  <option value="0">Select Client</option>
+                                  {% for all_client in all_clients %}
+                                      <option value="{{ all_client.pk }}">{{ all_client }}</option>
+                                  {% endfor %}
+                              </select>
+                          </div>
+                          
+                          <!-- Default Pie Chart -->
+                          <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" id="defaultdata">
+                              <div id="piechart_3d" style="width: 600px; height: 350px;"></div>
+                          </div>
+                          <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" id="defaultbar">
+                            <canvas id="myChartnew" style="width:100%;max-width:600px"></canvas>
+                          </div>
 
-                        <canvas id="myChart" style="max-width:600px"></canvas>
+                          <!-- New Pie Chart (Initially Hidden) -->
+                          <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded " id="newdata">
+                            <div id="newChart" style="width: 600px; height: 450px;"></div>
+                          </div>
 
+                          <!-- Bar Chart -->
+                          <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" id="newbar">
+                              <canvas id="myChart" style="max-width:600px"></canvas>
+                          </div>
+
+                          
                       </div>
-                    </div>
                   </div>
+                  
                  
             </section>
 
@@ -199,14 +218,48 @@
       </div>
     </div>
 
+
+    <script>
+      var xValues = ["Active Clients", "InActive Clients", "Clients Request"];
+      var yValues = [ {{approved_clients}}, {{inactive_clients}}, {{client_requests}}];
+      var barColors = ['#52d89c', '#ffc14e', '#ff7b5d'];
+      
+      new Chart("myChartnew", {
+        type: "bar",
+        data: {
+          labels: xValues,
+          datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+          }]
+        },
+        options: {
+          legend: {display: false},
+          title: {
+            display: true,
+            text: "Total Clients :  {{total_company}}"
+          }
+        }
+      });
+    </script>
+
     <script>
       jQuery.noConflict();
       jQuery(document).ready(function($) {
-          // Initialize the chart once when the page loads
-          var myChart = initializeChart();
+          // Initialize the bar chart once when the page loads
+          var barChart = initializeChart();
   
           $("#clientDropdown").change(function () {
               var selectedClient = $(this).val();
+              console.log("Selected Client: " + selectedClient);
+              if (selectedClient !== '0') {
+                  $("#newdata").show();
+                  $("#defaultdata").hide();
+                  $("#defaultbar").hide();
+              } else {
+                  $("#newdata").hide();
+                  $("#defaultdata").show();
+              }
               $.ajax({
                   type: 'GET',
                   url: '/getDashboardData/' + selectedClient + '/',
@@ -215,7 +268,7 @@
   
                       // Update the DOM elements with the received data
                       $('#calculatedData').html('Total Employees: ' + data.total_employee);
-                      
+  
                       // For displaying the employee list
                       var employeeListContainer = $('#employeeListContainer');
                       employeeListContainer.empty(); // Clear previous content
@@ -232,8 +285,11 @@
                           employeeListContainer.append(noEmployeeItem);
                       }
   
-                      // Update the chart with new data
-                      updateChart(myChart, data.total_employee, data.in_activate, data.in_deactivate);
+                      // Update the bar chart with new data
+                      updateChart(barChart, data.total_employee, data.in_activate, data.in_deactivate);
+  
+                      // Draw the pie chart with new data
+                      drawNewChart(data.total_employee, data.in_activate, data.in_deactivate);
                   },
                   error: function (error) {
                       console.log(error);
@@ -243,47 +299,64 @@
       });
   
       function initializeChart() {
-          // Initialize the chart once when the page loads
+          // Initialize the bar chart once when the page loads
           var ctx = document.getElementById("myChart").getContext("2d");
           return new Chart(ctx, {
               type: "bar",
               data: {
                   labels: ["Total User", "Active Users", "InActive Users"],
                   datasets: [{
-                      backgroundColor: ["blue", "green", "red"],
-                      borderColor: ["blue", "green", "red"],
+                      backgroundColor: ['#52d89c', '#ffc14e', '#ff7b5d'],
+                      borderColor: ['#52d89c', '#ffc14e', '#ff7b5d'],
                       data: [0, 0, 0]
                   }]
               },
               options: {
                   scales: {
-                    yAxes: [{
-                      ticks: {
-                        beginAtZero: true,
-                        callback: function(value) {if (value % 1 === 0) {return value;} }
-                      }
-                    }]
- 
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true,
+                              callback: function(value) {if (value % 1 === 0) {return value;} }
+                          }
+                      }]
                   },
                   legend: { display: false },
                   title: {
-                      display: true,
+                      display: true
                       {% comment %} text: "World Wine Production 2018" {% endcomment %}
                   }
               }
-
-
-
           });
-
+      }
+  
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawNewChart);
+  
+      function drawNewChart(totalEmployee, activeEmployee, inactiveEmployee) {
+          const newData = google.visualization.arrayToDataTable([
+              ['Country', 'Wine Production (Mhl)'],
+              {% comment %} ['Total User', totalEmployee], {% endcomment %}
+              ['Active User', activeEmployee],
+              ['In Active User', inactiveEmployee]
+          ]);
+  
+          const newOptions = {
+              {% comment %} title: 'Total Employees', {% endcomment %}
+              is3D: true,
+              colors: ['#52d89c', '#ffc14e', '#ff7b5d'],
+          };
+  
+          const newChart = new google.visualization.PieChart(document.getElementById('newChart'));
+          newChart.draw(newData, newOptions);
       }
   
       function updateChart(chart, totalEmployee, activeEmployee, inactiveEmployee) {
-          // Update the chart with new data
+          // Update the bar chart with new data
           chart.data.datasets[0].data = [totalEmployee, activeEmployee, inactiveEmployee];
           chart.update();
       }
   </script>
+  
   
   <div id="calculatedData"></div>
   <ul id="employeeListContainer" style="display:none"></ul>   
