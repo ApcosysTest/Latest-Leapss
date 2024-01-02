@@ -58,6 +58,7 @@
                 <li><a class="list-group-item " href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
                 <li><a class="list-group-item" href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
                 <li><a class="list-group-item " href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
+                <li><a class="list-group-item " href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
              </div>
              <div class="logout">
               <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
@@ -84,6 +85,15 @@
                 <h5 style="color: #009eff; padding: 2%;">Edit Employee</h5>
                 <div class="details">
                     <form method="POST" class="post-form" enctype="multipart/form-data">
+
+                        {% for field in form.visible_fields %}
+                            <span style="color: red; text-decoration: none; width: 50%; margin-top: 0rem; font-size: 0.8rem;">
+                                {% if field.errors %}
+                                    {{ field.errors }} {# outputs a UL with class 'errorlist' #}
+                                {% endif %}
+                            </span>
+                        {% endfor %}
+
                           {% csrf_token %}  
                             <div class="row"  style="margin-left: 5%;">
                                 <div class="col-md-6">
@@ -137,10 +147,6 @@
                                     </div>                                
                                                                     
                                     <div>
-                                        <label for="username">Username</label><br>
-                                        {{form1.username}}      
-                                    </div>     
-                                    <div>
                                         <label for="emp_id">Employee ID</label>
                                         {{form.emp_id}}
                                     </div> 
@@ -165,9 +171,7 @@
                                       </div> 
                                     </div>
                                       
-                                     {% comment %} <div id="change">
-                                        <a href="{% url 'changePassword' data.id %}"class="btn   btn-primary btn-sm  ">Change Password</a>
-                                     </div> {% endcomment %}
+
                                       <div style="margin-left: 2%;">
                                         <a href="{% url 'activeEmployee' %}"   class="btn  btn-outline-info btn-md cancel"> Cancel</a>
                                         <button type="submit" class="btn   btn-primary btn-sm  add "  onclick="wrong_pass_alert()">Save</button>

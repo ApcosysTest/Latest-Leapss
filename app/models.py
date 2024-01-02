@@ -2,6 +2,10 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.db.models import Q
+
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+from datetime import date
  
 # Create your models here.
 
@@ -17,7 +21,7 @@ class AllRequest(models.Model):
     country = models.CharField(max_length=500)
     address = models.CharField(max_length=500)
     pincode = models.CharField(max_length=500)
-    username = models.CharField(max_length=500, unique=True) 
+    username = models.CharField(max_length=500, unique=True)
     approve_status = models.BooleanField(default=False)
     decline_status = models.BooleanField(default=False)
     active_status = models.BooleanField(default=True)
@@ -54,18 +58,32 @@ class Department(models.Model):
 
     def __str__(self):
         return self.department
+    
+
+# date of birth validator 
+    
+def validate_dob(value):
+    today = date.today()
+    age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+
+    if age < 18:
+        raise ValidationError(
+            # _("%(value)s is not an even number"),
+            _("Age should be greater than 18"),
+            params={"value": value},
+        )
 
 # Employee Model
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     com_id = models.ForeignKey(Company, on_delete=models.CASCADE)
-    emp_id = models.CharField(max_length=200,unique=True)
+    emp_id = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     company_contact = models.CharField(max_length=100,null=True,blank=True)
     personal_contact = models.CharField(max_length=100)
     present_address = models.CharField(max_length=100,null=True,blank=True)
     permanent_address = models.CharField(max_length=100,null=True,blank=True)
-    dob = models.DateField()
+    dob = models.DateField(validators=[validate_dob])
     doj = models.DateField()
     gender = models.CharField(max_length=20)
     email = models.EmailField(max_length=70,null=True,blank=True, unique=True)
@@ -79,6 +97,9 @@ class Employee(models.Model):
     deactivate = models.CharField(max_length=5000, null=True, blank=True)
     activate = models.CharField(max_length=5000, null=True, blank=True)
     employee_setup_completed = models.BooleanField(default=True) 
+
+    class Meta:
+        unique_together = ('com_id', 'emp_id')
 
     def __str__(self):
         return self.emp_id
@@ -181,6 +202,18 @@ class FeedbackModel(models.Model):
     def __str__(self):
         return self.text
     
+
+
+
+class Support(models.Model):
+    text = models.TextField()
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
+    id = models.BigAutoField(primary_key=True)
+    resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+
 
 class CompanyBackup(models.Model):
     company = models.ForeignKey(User, on_delete=models.CASCADE)

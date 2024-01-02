@@ -38,6 +38,9 @@ from django.core.mail import send_mail
 from django.core.management import call_command
 from cryptography.fernet import Fernet, InvalidToken
 import zipfile
+import json, urllib.request, requests
+from django.conf import settings
+import uuid
 
 
 # Check is admin
@@ -161,7 +164,7 @@ def getDashboardData(request, client_id):
         return JsonResponse({'error': str(e)})
 
 def approvedClientDashboard(request):
-    clients = AllRequest.objects.filter(approve_status=True).all()
+    clients = AllRequest.objects.filter(approve_status=True).all().order_by('company_name')
     context ={
         'clients':clients,
         'page': "approvedClient"
@@ -729,25 +732,29 @@ def addEmployee(request):
         com = Company.objects.filter(name=emp.com_id).first()
     emp = Employee.objects.filter(level = 'Level 1' or 'Level 2')
     if request.method == "POST":
-        form = AddEmployeeExtraForm(request.POST)
+
         form1 = AddEmployeeForm(request.POST, request.FILES, com_id=com.id)
-        if form.is_valid() and form1.is_valid():
+        if form1.is_valid():
             characters = string.ascii_letters + string.digits + string.punctuation
             custom_password = ''.join(random.choice(characters) for _ in range(10))
             name = request.POST['name']
             office_email = request.POST['office_email']
-            username = request.POST['username']
+            username = office_email
             password = custom_password
             company = com.name
-            user=form.save()
+
+            user=User.objects.create(username=username)
             user.set_password(password)
             user.save()
+
             f2=form1.save(commit=False)
             f2.user=user
             f2.com_id=com
             f2.employee_setup_completed=False
             user1=f2.save()
+
             
+
             send_account_creation_mail(office_email, name, company, username, password)
             group=Group.objects.get_or_create(name='EMPLOYEE')
             group[0].user_set.add(user)
@@ -756,12 +763,10 @@ def addEmployee(request):
                 group[0].user_set.add(user)
             return redirect('activeEmployee')
         else:
-            print(form.errors)
             print(form1.errors)
     else:
-        form = AddEmployeeExtraForm()
         form1 = AddEmployeeForm(com_id=com.id)
-    context={'form':form, 'form1':form1, 'emp':emp,'com':com}
+    context={'form1':form1, 'emp':emp,'com':com}
     return render(request, 'addEmployee.html', context)
 
 
@@ -901,13 +906,18 @@ def editEmployee(request,id):
     instance = Employee.objects.get(pk=id)
     instance1=User.objects.get(pk=instance.user.id)
     form = EmployeeUpdateForm(request.POST or None, request.FILES or None, instance=instance, com_id=com.id)
-    form1 = EmployeeUpdateExtraForm(request.POST or None, instance=instance1)
-    if form.is_valid() and form1.is_valid():
+    # form1 = EmployeeUpdateExtraForm(request.POST or None, instance=instance1)
+    if form.is_valid():
+        official_email = request.POST.get('office_email')
+        instance1.username = official_email
+        instance1.save()
         form.save()
-        form1.save()
+
+        messages.success(request, 'details have been updated.')
+
         return redirect('activeEmployee')
 
-    context = {'form':form, 'form1':form1, 'data':data,'com':com}
+    context = {'form':form, 'data':data, 'com':com}
     return render(request,'editEmployee.html', context) 
 
 # Admin Change password of Employee
@@ -1056,20 +1066,28 @@ def leavePolicySetting(request):
                 data = form.save(commit=False)
                 data.com_id = com
                 data.save()
+                messages.success(request, "Privacy policy has been added.")
                 return redirect('leavePolicySetting')
             else:
+                messages.error(request, "form.errors")
                 print(form.errors)
         else:
             form = LeavePolicyForm(initial={'com_id': com.id})
     else:
         instance = LeavePolicy.objects.get(pk=leave.id)
-        form = LeavePolicyUpdateForm(request.POST or None, instance=instance, initial={'com_id': com.id})
+        print(instance)
+        
         if request.method == "POST":
+
+            form = LeavePolicyUpdateForm(request.POST or None, instance=instance, initial={'com_id': com.id})
             if form.is_valid():
                 form.save()
+                messages.success(request, "Privacy policy is updated.")
                 return redirect('leavePolicySetting')
             else:
                 print(form.errors)
+        else:
+            form = LeavePolicyUpdateForm(instance=instance, initial={'com_id': com.id})
 
     context = {'leave': leave, 'form': form, 'lea1': lea1, 'lea2': lea2, 'com': com}
     return render(request, "leavePolicySetting.html", context)
@@ -2063,6 +2081,12 @@ def companyfeedback(request):
     return render(request, 'adminviewfeedback.html', context)
 
 
+def admincompanysupport(request):
+    supports = Support.objects.all()
+    context = {'supports': supports}
+    return render(request, 'adminviewsupport.html', context)
+
+
 def viewfeedbackClient(request, client_id, feedback_id):
     
     client = get_object_or_404(Company, pk=client_id)
@@ -2077,6 +2101,21 @@ def viewfeedbackClient(request, client_id, feedback_id):
     return render(request, 'viewfeedbackClient.html', context)
 
 
+def viewsupportClient(request, support_id):
+    
+    support = get_object_or_404(Support, pk=support_id)
+    client = get_object_or_404(Company, pk=support.company_id.id)
+   
+    
+
+    context = {
+        'support': support,
+        'client': client,
+    }
+
+    return render(request, 'viewsupportClient.html', context)
+
+
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def supportcompany(request):
@@ -2087,7 +2126,6 @@ def supportcompany(request):
         cemailid = request.POST.get('cemailid', '')
         cwebsite = request.POST.get('cwebsite', '')
         cphone = request.POST.get('cphone', '')
-
 
         # Send email
         subject = "Inquiry Support from Company"
