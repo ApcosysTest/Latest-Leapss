@@ -344,6 +344,18 @@ def newCompanySetup(request, otp, username):
                             com_id=company
                         )
 
+                        # Creating dummy Privacy Policy
+                        PrivacyPolicy.objects.create(
+                            privacypolicy=f'<p>Privacy Policy of</p><h2>{company.name}</h2>',
+                            com_id=company
+                        )
+
+                        #Creating dummy Terms and Conditions
+                        Terms.objects.create(
+                            terms=f'<p>Terms and Conditions of</p><h2>{company.name}</h2>',
+                            com_id=company
+                        )
+
                         response = redirect('homepage')
                         response.set_cookie('company_id', company.id)
                         return response
