@@ -32,7 +32,9 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 from django.core.mail import send_mail
-
+import json, urllib.request, requests
+from django.conf import settings
+import uuid
 
 # Check is admin
 def is_admin(user):
@@ -341,6 +343,18 @@ def newCompanySetup(request, otp, username):
                         Leave.objects.create(
                             name='Paid Leave',
                             days=30,
+                            com_id=company
+                        )
+
+                        # Creating dummy Privacy Policy
+                        PrivacyPolicy.objects.create(
+                            privacypolicy=f'<p>Privacy Policy of</p><h2>{company.name}</h2>',
+                            com_id=company
+                        )
+
+                        #Creating dummy Terms and Conditions
+                        Terms.objects.create(
+                            terms=f'<p>Terms and Conditions of</p><h2>{company.name}</h2>',
                             com_id=company
                         )
 
@@ -1968,7 +1982,6 @@ def supportcompany(request):
         cemailid = request.POST.get('cemailid', '')
         cwebsite = request.POST.get('cwebsite', '')
         cphone = request.POST.get('cphone', '')
-
 
         # Send email
         subject = "Inquiry Support from Company"

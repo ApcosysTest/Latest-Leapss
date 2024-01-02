@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'captcha',
     'app',
     'django_cleanup',
 ]
@@ -166,3 +167,9 @@ EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'noreply.leapss@gmail.com'
 EMAIL_HOST_PASSWORD = 'ilbw gaie aqsr hbhj'
+
+
+# reCaptcha
+RECAPTCHA_PUBLIC_KEY = '6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG' 
+RECAPTCHA_PRIVATE_KEY = '6LeXkGYkAAAAAANuX0uqZjh7Q1MIy45eszgUHpoL'
+RECAPTCHA_PROXY_HOST = 'https://recaptcha.net'
