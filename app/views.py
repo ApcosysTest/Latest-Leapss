@@ -22,6 +22,17 @@ from django.contrib.auth.forms import SetPasswordForm
 from django.db.models import Q, Count, Sum
 from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp, send_mail_about_client_request
 import json
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.pagesizes import landscape, A4, A1, A2, A3
+from io import BytesIO
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
+from django.core.mail import send_mail
+
 
 # Check is admin
 def is_admin(user):
@@ -432,7 +443,7 @@ class CalendarView(generic.ListView):
         total_leave = onleave + absent_count
         apply_leav = LeaveApplication.objects.filter(status_approve=False, status_reject=False, level1_approve=True, user__username__in=emails).count()
 
-        dic ={'com':com.name, 'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav}       
+        dic ={'com':com, 'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav}       
         return dic 
     
     def quotesub(self): 
@@ -987,11 +998,15 @@ def editDepartment(request, id):
 
 # Delete Department 
 @login_required(login_url='adminLogin') 
-@user_passes_test(is_admin) 
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def deleteDepartment(request, id):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     list =[]
     dep = Department.objects.get(id=id)
-    dep_count = Employee.objects.values('department__department','department').filter(status=True).annotate(emp_count=Count('emp_id'))
+    dep_count = Employee.objects.values('department__department','department').filter(status=True, com_id = com).annotate(emp_count=Count('emp_id'))
     for dept in dep_count:
         list.append(dept['department__department'])
     if dep.department in list: 
@@ -1158,6 +1173,229 @@ def deleteLeave(request,id):
     instance.delete()
     return redirect('leavePolicySetting')
 
+
+
+
+
+
+def reportPrinting(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+    form = PerticularEmployeeForm(request.POST or None, request.FILES or None, com_id=com.id)
+    context = {'com':com, 'form':form}
+    return render(request,'reportPrinting.html', context)
+
+def download_pdf_report(request, option):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    # Create a PDF buffer and document object
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=landscape(A3))
+
+    # Create a list to hold table data
+    data = [
+        ['Employee ID', 'Name', 'Company Contact', 'Personal Contact', 'Present Address', 'Permanent Address',
+         'Date of Birth', 'Date of Joining', 'Gender', 'Email', 'Office Email', 'Status', 'Designation', 'Level']
+    ]
+
+    # Create a sample stylesheet
+    styles = getSampleStyleSheet()
+
+    # Fetch employees based on the provided option
+    if option == 'active':
+        employees = Employee.objects.filter(com_id=com, status=True)
+    elif option == 'inactive':
+        employees = Employee.objects.filter(com_id=com, status=False)
+    elif option == 'all':
+        employees = Employee.objects.filter(com_id=com)
+
+    # Iterate through employees
+    for employee in employees:
+        # Format data for each employee
+        present_address = Paragraph(employee.present_address if employee.present_address else '', styles['Normal'])
+        permanent_address = Paragraph(employee.permanent_address if employee.permanent_address else '', styles['Normal'])
+
+        employee_data = [
+            employee.emp_id,
+            employee.name,
+            employee.company_contact if employee.company_contact else '',
+            employee.personal_contact,
+            present_address,
+            permanent_address,
+            employee.dob.strftime('%Y-%m-%d') if employee.dob else '',
+            employee.doj.strftime('%Y-%m-%d') if employee.doj else '',
+            employee.gender,
+            employee.email if employee.email else '',
+            employee.office_email,
+            'Active' if employee.status else 'Inactive',
+            employee.designation,
+            employee.level
+        ]
+        data.append(employee_data)
+
+    # Create a table with styles
+    style_table = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        # ('PADDING', (0, 0), (-1, -1), 5),
+    ]
+    table = Table(data, style=style_table, repeatRows=1)
+
+    # Create elements list and add the table
+    elements = [table]
+
+    # Build the PDF document with the elements list
+    pdf.build(elements)
+
+    # Get PDF content from BytesIO object
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="employee_report.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
+def generate_employee_report(request):
+
+    if request.method == 'POST':
+        id = request.POST['employee']
+        employee = Employee.objects.filter(id=id).first()
+    else:
+         form = EmployeeLoginForm()
+
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=A4)
+    # employee = Employee.objects.filter(id=id).first()
+
+    if not employee:
+        return HttpResponse("Employee not found", status=404)
+
+    data = [
+        ['Attribute', 'Value']
+    ]
+
+    employee_data = [
+        ['Employee ID', employee.emp_id],
+        ['Name', employee.name],
+        ['Company Contact', employee.company_contact if employee.company_contact else ''],
+        ['Personal Contact', employee.personal_contact],
+        ['Present Address', employee.present_address if employee.present_address else ''],
+        ['Permanent Address', employee.permanent_address if employee.permanent_address else ''],
+        ['Date of Birth', employee.dob.strftime('%Y-%m-%d') if employee.dob else ''],
+        ['Date of Joining', employee.doj.strftime('%Y-%m-%d') if employee.doj else ''],
+        ['Gender', employee.gender],
+        ['Email', employee.email if employee.email else ''],
+        ['Office Email', employee.office_email],
+        ['Status', 'Active' if employee.status else 'Inactive'],
+        ['Designation', employee.designation],
+        ['Department', employee.department],
+        ['Reporting Person', employee.reporting],
+        ['Level', employee.level]
+    ]
+    data.extend(employee_data)
+
+    style_table = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('PADDING', (0, 0), (-1, -1), 15),
+    ])
+
+    table = Table(data, style=style_table)
+    elements = [table]
+
+    pdf.build(elements)
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="employee_report_{employee.id}.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
+def download_event_report(request, option):
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    # Create a PDF buffer and document object
+    buffer = BytesIO()
+    pdf = SimpleDocTemplate(buffer, pagesize=landscape(A3))
+
+    # Create a list to hold table data
+    data = [
+        ['Title', 'Category', 'Description', 'Date']
+    ]
+
+    # Create a sample stylesheet
+    styles = getSampleStyleSheet()
+
+    # Fetch employees based on the provided option
+    if option == 'all':
+        events = Event.objects.filter(com_id=com)
+    elif option == 'holiday':
+        events = Event.objects.filter(com_id=com, category='Public Holiday')
+    elif option == 'birthdayOthers':
+        events = Event.objects.filter(com_id=com).exclude(category='Public Holiday')
+
+    # Iterate through employees
+    for event in events:
+        event_data = [
+            event.title,
+            event.category,
+            event.description,
+            event.date.strftime('%Y-%m-%d') if event.date else '',
+        ]
+        data.append(event_data)
+
+    # Create a table with styles
+    style_table = [
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        # ('PADDING', (0, 0), (-1, -1), 5),
+    ]
+    table = Table(data, style=style_table, repeatRows=1)
+
+    # Create elements list and add the table
+    elements = [table]
+
+    # Build the PDF document with the elements list
+    pdf.build(elements)
+
+    # Get PDF content from BytesIO object
+    pdf_bytes = buffer.getvalue()
+
+    # Create a Django HttpResponse with PDF content as attachment
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="employee_report.pdf"'
+    response.write(pdf_bytes)
+
+    return response
+
+
+
+
+
 #$#$#$ EMPLOYEE #$#$#$
 # Employee Login
 def employeeLogin(request):
@@ -1187,19 +1425,20 @@ def employeeLogin(request):
     }
     return render(request,"employeeLogin.html", context)
 
-
+# Employe Login Initial process
 def employeeSetupInitialization(request, email):
     if request.method == 'POST':
-        # user_otp = request.POST['oldPassword']
         new_password = request.POST['newPassword']
         confirm_password = request.POST['confirmPassword']
         if new_password == confirm_password:
-            # user = authenticate(username=email, password=user_otp)
             employee = Employee.objects.get(office_email=email)
+            print("yes")
             if request.user:
                 try:                                                                                          
-                    request.user.set_password(new_password)
-                    request.user.save()
+                    user = User.objects.get(username=email)
+                    print("yes")
+                    user.set_password(new_password)
+                    user.save()
                     employee.employee_setup_completed = True
                     employee.save()
                     time.sleep(2)
@@ -1639,3 +1878,76 @@ def logout_superuser(request):
     logout(request)
     # messages.success(request, "You have logout")
     return redirect('landingpage')
+
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def feedback(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    feedback = FeedbackModel.objects.filter(company_id=com.id)
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+        
+    if request.method == 'POST':
+        feedback_text = request.POST.get('name', '')
+        company_id = request.POST.get('cid', '')
+        company_instance = get_object_or_404(Company, id=company_id)
+        feedback_instance = FeedbackModel.objects.create(text=feedback_text, company_id=company_instance)
+        #return HttpResponse("Feedback submitted successfully!")
+        return redirect('feedback')
+
+    else:
+        context = {'com': com, 'feedback': feedback}
+        return render(request, 'feedback.html', context)
+    
+    
+    
+def companyfeedback(request):
+    feedback_entries = FeedbackModel.objects.all()
+    context = {'feedback_entries': feedback_entries}
+    return render(request, 'adminviewfeedback.html', context)
+
+
+def viewfeedbackClient(request, client_id, feedback_id):
+    
+    client = get_object_or_404(Company, pk=client_id)
+   
+    feedback = get_object_or_404(FeedbackModel, pk=feedback_id)
+
+    context = {
+        'feedback': feedback,
+        'client': client,
+    }
+
+    return render(request, 'viewfeedbackClient.html', context)
+
+
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def supportcompany(request):
+    if request.method == 'POST':
+        namecontent = request.POST.get('namecontent', '')
+        company_id = request.POST.get('cid', '')
+        cname = request.POST.get('cname', '')
+        cemailid = request.POST.get('cemailid', '')
+        cwebsite = request.POST.get('cwebsite', '')
+        cphone = request.POST.get('cphone', '')
+
+
+        # Send email
+        subject = "Inquiry Support from Company"
+        email_content = f"Name: {namecontent}\n\nCompany Name: {cname}\n\nEmail: {cemailid}\n\nWebsite: {cwebsite}\n\nPhone: {cphone}"
+        send_mail(subject, email_content, 'noreply.leapss@gmail.com', ['noreply.leapss@gmail.com'], fail_silently=False)
+
+
+        if request.headers.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return JsonResponse({'success': True, 'message': 'Mail Sent ..'})
+        else:
+            # If it's not an AJAX request, return an HTML response
+            context = {'success_message': 'Mail Sented ..'}
+           
+            return render(request, 'adminDashboard.html', context)
+
+
+    else:
+        return redirect('CalendarView')

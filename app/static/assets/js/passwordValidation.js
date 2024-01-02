@@ -134,10 +134,10 @@ function validate_password() {
             document.getElementById('wrong_pass_alert').style.color = 'green';
             document.getElementById('wrong_pass_alert').innerHTML =
             '🗹 Password Matched';
-            // if (btn_check == true)
-            // {
-            //     document.getElementById('ConformPasswordBtn').disabled = false;
-            // }
+            if (btn_check == true)
+            {
+                document.getElementById('ConformPasswordBtn').disabled = false;
+            }
         }
     }
    }

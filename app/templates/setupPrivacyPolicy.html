@@ -48,7 +48,7 @@
             <ul class="sidebar-nav " id="sidebar-nav">
                 <li class="profile"data-bs-toggle="collapse">
                     <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
-                    <h6>{{user.username}}</h6>
+                    <h6>{{com.name}}</h6>
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
@@ -71,7 +71,7 @@
             <!-- Top navigation-->
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">
                   
-                <div class="logo d-flex align-items-center">
+                <div class="logo d-flex align-items-center" style="height:58px;">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
                     <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>

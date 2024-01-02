@@ -51,18 +51,18 @@
             <ul class="sidebar-nav " id="sidebar-nav">
                 <li class="profile"data-bs-toggle="collapse">
                     <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
-                    <h6>{{user.username}}</h6>
+                    <h6>{{com.name}}</h6>
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
                 <!-- <button class="btn" id="sidebarClose"><span class="bi bi-x "></span></button> -->
-                <li ><a class="list-group-item " href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
+                <li><a class="list-group-item " href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item " href="/leaveApplicationDetails"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Leave Section</span></a></li>
                 <li><a class="list-group-item " href="{% url 'activeEmployee' %}"><i class="bi bi-people" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Employee</span></a></li>
                 <li><a class="list-group-item active" href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
                 <li><a class="list-group-item" href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
                 <li><a class="list-group-item " href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
-                
+                <li><a class="list-group-item " href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
             </div>
              <div class="logout">
               <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
