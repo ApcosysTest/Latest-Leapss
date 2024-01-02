@@ -103,7 +103,7 @@
             to {
             }
         }
-        #employeeReportForm{
+        #employeeReportForm, #leaveReportForm{
             display: none;
         }
         @media (max-width: 767px) {
@@ -227,7 +227,12 @@
                         <div class="modal-body">
                             <a type="button" href="{% url 'download_leave_report' 'present' %}" class="btn">Report of Employees Present Today</a><br>
                             <a type="button" href="{% url 'download_leave_report' 'absent' %}" class="btn">Report of Employees Absent Today</a><br>
-                            {% comment %} <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Leave Report of a Perticular Employee</a> {% endcomment %}
+                            <a type="button" id="leaveReportButton" href="#" class="btn">Leave Report of a Perticular Employee</a>
+                            <form id="leaveReportForm" action="/generate_employee_leave_report" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{form.employee}}
+                                <button class="btn">Leave Report of a Perticular Employee</button>
+                            </form>
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -267,6 +272,10 @@
         document.getElementById('employeeReportButton').onclick = function() {
             document.getElementById('employeeReportButton').style.display="none";
             document.getElementById('employeeReportForm').style.display="block";
+        };
+        document.getElementById('leaveReportButton').onclick = function() {
+            document.getElementById('leaveReportButton').style.display="none";
+            document.getElementById('leaveReportForm').style.display="block";
         };
     </script>
     <script>
