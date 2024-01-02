@@ -75,6 +75,9 @@ urlpatterns = [
     path('setupTandC', setupTandC, name='setupTandC'),
     path('feedback', feedback, name='feedback'),
     path('supportcompany', supportcompany, name='supportcompany'),
+
+    path('admincompanysupport', admincompanysupport, name='admincompanysupport'),
+    path('viewsupportClient/<int:support_id>/', viewsupportClient, name='viewsupportClient'),
    
     
 
