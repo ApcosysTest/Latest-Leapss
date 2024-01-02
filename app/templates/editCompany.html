@@ -83,7 +83,7 @@
             <section class="section container  bg-white rounded dashboard"> 
                 <div class="container companySetup">
                     <!-- <h5>Company Information</h5> -->
-                    <form method="POST">
+                    <form method="POST" id="editform">
                         {% csrf_token %} 
                         <div class="row form"  id="previous">
                             <div class="col-md-6">
@@ -119,19 +119,19 @@
                                 <div style="margin-bottom:1.5%;" >
                                     <label for="country">Country</label><br>
                                     <select name="country" id="countySel" size="1">
-                                        <option  value="" selected="selected">{{form.country.value}}</option>
+                                        <option  value="{{form.country.value}}" selected="selected">{{form.country.value}}</option>
                                     </select>
                                 </div>
                                 <div style="margin-bottom:1.5%;">
                                     <label for="state">State</label><br>
                                     <select name="state" id="stateSel" size="1">
-                                        <option value="" selected="selected">{{form.state.value}}</option>
+                                        <option value="{{form.state.value}}" selected="selected">{{form.state.value}}</option>
                                     </select>
                                 </div>
                                 <div style="margin-bottom:1.5%;">
                                     <label for="city">City</label><br>
                                     <select name="city" id="districtSel" size="1">
-                                        <option value="" selected="selected">{{form.city.value}}</option>
+                                        <option value="{{form.city.value}}" selected="selected">{{form.city.value}}</option>
                                     </select>
                                 </div>
                                  <div style="margin-bottom:1.5%;">
@@ -147,7 +147,7 @@
                                          <a href="{% url 'companySetup' %}" id="nextButton" class="btn" style="padding:11px 0 0 0;"> Cancel</a>
                                     </div>
                                     <div class="col-md-7" style="padding:0%"> 
-                                        <button type="submit"  id="nextButton" class="btn" > Save</button> 
+                                        <button type="submit"  id="nextButton" class="btn" data-toggle="modal" data-target="#exampleModalCenter"> Save</button> 
                                     </div>
                                 </div>
                             </div>
@@ -157,11 +157,24 @@
             </section>
         </div>
     </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div style="font-size:30px;margin:20px 50px;color:green;font-weight:bold;text-align:center;">Your details have been Successfully Updated</div>
+            </div>
+          </div>
+        </div>
+    </div>
+
     <script>
         //search shadow
         $(document).ready(function() {
             {
                $(".search").addClass("shadow-none");
+
+            });
             }
         });
     </script>
