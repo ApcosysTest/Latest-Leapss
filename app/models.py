@@ -77,7 +77,7 @@ def validate_dob(value):
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     com_id = models.ForeignKey(Company, on_delete=models.CASCADE)
-    emp_id = models.CharField(max_length=200,unique=True)
+    emp_id = models.CharField(max_length=200)
     name = models.CharField(max_length=200)
     company_contact = models.CharField(max_length=100,null=True,blank=True)
     personal_contact = models.CharField(max_length=100)
@@ -97,6 +97,9 @@ class Employee(models.Model):
     deactivate = models.CharField(max_length=5000, null=True, blank=True)
     activate = models.CharField(max_length=5000, null=True, blank=True)
     employee_setup_completed = models.BooleanField(default=True) 
+
+    class Meta:
+        unique_together = ('com_id', 'emp_id')
 
     def __str__(self):
         return self.emp_id
@@ -198,3 +201,13 @@ class FeedbackModel(models.Model):
     
     def __str__(self):
         return self.text
+    
+class Support(models.Model):
+    text = models.TextField()
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
+    id = models.BigAutoField(primary_key=True)
+    resolved = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.text
+

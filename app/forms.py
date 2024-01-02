@@ -307,7 +307,7 @@ class LeavePolicyUpdateForm(forms.ModelForm):
     leavepolicy = forms.CharField(widget=forms.Textarea(attrs=({'id':'tarea', 'placeholder': 'Fill in your leave policy'})))
     class Meta:  
         model = LeavePolicy
-        fields = '__all__'
+        fields = ['leavepolicy']
 
 # Privacy Policy Update Form
 class PrivacyPolicyUpdateForm(forms.ModelForm):

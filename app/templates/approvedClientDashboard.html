@@ -59,6 +59,7 @@
                 <li><a class="list-group-item {% if page == "inactiveClient" %}active{% endif %} " href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span> Feedback</span></a></li>
+                <li><a class="list-group-item" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>
              </div>
              <div class="logout">
               <a class="nav-link"href="{% url 'logout_superuser' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
@@ -93,23 +94,23 @@
                 </thead>
                 <tbody>
                     {% for client in clients %}
-                    <tr class='outers'>
-                        <td class='name'>{{ client.company_name }}</td>
-                        <td><a href="{{ client.website }}" target="_blank">{{ client.website }}</a></td>
-                        <td class='dep'>{{ client.email }}</td>
-                        <td class='emp_id'>{{ client.city }}</td>
-                        <td class='country'>{{ client.country }}</td>
-                        <td>
-                            <div class="btn-group">
-                            <a href="{% url 'viewClient' client.id %}" class="btn btn-info" style="width:80px;">View</a>
-                            {% if client.active_status == True %}
-                                <a href="{% url 'disableClient' client.id %}" class="btn btn-success" style="width:130px;">Disable Client</a>
-                            {% else %}
-                                <a href="{% url 'enableClient' client.id %}" class="btn btn-warning" style="width:130px;">Enable Client</a>
-                            {% endif %}
-                        </div>
-                        </td>
-                    </tr>
+                        <tr class='outers'>
+                            <td class='name'>{{ client.company_name }}</td>
+                            <td><a href="{{ client.website }}" target="_blank">{{ client.website }}</a></td>
+                            <td class='dep'>{{ client.email }}</td>
+                            <td class='emp_id'>{{ client.city }}</td>
+                            <td class='country'>{{ client.country }}</td>
+                            <td>
+                                <div class="btn-group">
+                                <a href="{% url 'viewClient' client.id %}" class="btn btn-info mr-2" style="width:80px;">View</a>
+                                {% if client.active_status == True %}
+                                    <a href="{% url 'disableClient' client.id %}" class="btn btn-success" id='disable_client' style="width:130px;">Disable Client</a>
+                                {% else %}
+                                    <a href="{% url 'enableClient' client.id %}" class="btn btn-warning" id='disable_client' style="width:130px;">Enable Client</a>
+                                {% endif %}
+                            </div>
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -153,6 +154,16 @@
                 }
              })
         })
+
+        $(document).ready(function(){
+            $('#disable_client').on('click', function(){
+                alert('Are you sure?');
+            });
+            $('#enable_client').on('click', function(){
+                alert('Are you sure?');
+            });
+        });
+
     </script>
     <style>
         .btn-info {
