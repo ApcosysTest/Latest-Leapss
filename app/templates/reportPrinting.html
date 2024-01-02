@@ -178,7 +178,10 @@
                 <div class="row">
                     <div class="col-md-0 col-lg-2 col-sm-0 col-xs-0"></div>
                     <div class="row col-md-0 col-lg-8 col-sm-12 col-xs-12" style="padding:15px 30px;">
-                        <button class="backup-btn">Take Company Data Backup</button>
+                        <form action="{% url 'create_backup' %}" style="width:100%" method="post">
+                            {% csrf_token %}
+                            <button class="backup-btn">Take Company Data Backup</button>
+                        </form>
                     </div>
                     <div class="col-md-0 col-lg-2 col-sm-0 col-xs-0"></div>
                 </div>
@@ -222,9 +225,9 @@
                         </button>
                         </div>
                         <div class="modal-body">
-                            {% comment %} <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Employees Present Today</a><br>
-                            <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Report of Employees Absent Today</a><br>
-                            <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Leave Report of a Perticular Employee</a> {% endcomment %}
+                            <a type="button" href="{% url 'download_leave_report' 'present' %}" class="btn">Report of Employees Present Today</a><br>
+                            <a type="button" href="{% url 'download_leave_report' 'absent' %}" class="btn">Report of Employees Absent Today</a><br>
+                            {% comment %} <a type="button" href="{% url 'download_pdf_report' %}" class="btn">Leave Report of a Perticular Employee</a> {% endcomment %}
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

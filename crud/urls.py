@@ -85,6 +85,12 @@ urlpatterns = [
     path('download_pdf_report/<str:option>/', download_pdf_report, name='download_pdf_report'),
     path('generate_employee_report', generate_employee_report, name='generate_employee_report'),
     path('download_event_report/<str:option>/', download_event_report, name='download_event_report'),
+    path('download_leave_report/<str:option>/', download_leave_report, name='download_leave_report'),
+
+    path('backups/', backup_list, name='backup_list'),
+    path('create_backup/', create_backup, name='create_backup'),
+    path('upload_backup/', upload_backup, name='upload_backup'),
+    path('retrieve_backup/', retrieve_backup, name='retrieve_backup'),
 
 
 

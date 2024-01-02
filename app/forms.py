@@ -410,3 +410,10 @@ class AbsentForm(forms.ModelForm):
     class Meta:
         model = Absent
         fields = ['user']
+
+
+# Backup Form
+class BackupUploadForm(forms.ModelForm):
+    class Meta:
+        model = CompanyBackup
+        fields = ['backup_file']
