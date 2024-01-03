@@ -210,6 +210,8 @@ class Support(models.Model):
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
     id = models.BigAutoField(primary_key=True)
     resolved = models.BooleanField(default=False)
+    date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return self.text

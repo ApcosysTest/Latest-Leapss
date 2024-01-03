@@ -91,6 +91,9 @@
                   <li style="list-style: none; "class="addEmp">
                       <button type="button" class="btn" style="margin-right:30px; position: relative; top: 8px;" data-toggle="modal" data-target="#exampleModalCenter" >Support</button>
                   </li>
+                  <li style="list-style: none; "class="addEmp">
+                    <button type="button" class="btn" style="margin-right:30px; position: relative; top: 8px;" data-toggle="modal" data-target="#viewqueries" >view queries</button>
+                </li>
                   
                     
                   </ul>
@@ -138,6 +141,23 @@
                       </a>
                     </div>  
                 </div> 
+                <center>  
+                  <div class="container" >
+                  {% if messages %}
+                          <div class ="messages" style="width: 300px;">
+              
+                      {% for message in messages  %}
+                              <div class="alert alert-{{message.tags}}" role="alert">
+                                  <strong style="font-size: 15px;">! {{message}}</strong> 
+                              </div>
+              
+                      {% endfor %}
+              
+                          </div>
+                          
+                  {% endif %}
+                  </div> 
+              </center> 
                 <div class="container quoteContainer">
                   
                   {% if quote == None %} 
@@ -329,6 +349,55 @@
         </div>
       </div>
     </div>
+
+
+    <div class="modal fade" id="viewqueries" tabindex="-1" role="dialog" aria-labelledby="viewqueriesLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="viewqueriesLabel">Your Queries</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            
+
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Ticket ID</th>
+                  <th scope="col">Query</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">View</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for query in queries %}
+                <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <td>{{query.id}}</td>
+                  <td>{{ query.text|truncatechars:3 }}</td>
+                  {% if query.resolved %}
+                  <td style="color: green;">Resolved</td>
+                  {% else %}
+                  <td style="color: blue;">Pending</td>
+                  {% endif %}
+                  <td style="color: green;"><a href="viewquery/{{query.id}}/" type="button" class="btn btn-primary">View</a></td>
+                </tr>
+                {% endfor %}
+                
+              </tbody>
+            </table>
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
 
     <script>
       // Add this JavaScript to show a pop-up if the success key is true

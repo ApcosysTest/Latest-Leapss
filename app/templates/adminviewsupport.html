@@ -73,6 +73,7 @@
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
                   
                 <h1 style="text-align:center;color:royalblue;">Support queries From Company</h1>
+                
                 <form method="POST" autocomplete="off" id="search-form" >
                     {% csrf_token %}
                     <div class="inputWithIcon">
@@ -82,6 +83,23 @@
                 </form>
                   
             </nav>
+            <center>  
+                <div class="container" >
+                {% if messages %}
+                        <div class ="messages" style="width: 300px;">
+            
+                    {% for message in messages  %}
+                            <div class="alert alert-{{ message.tags }}" role="alert">
+                                <strong style="font-size: 15px;">! {{message}}</strong> 
+                            </div>
+            
+                    {% endfor %}
+            
+                        </div>
+                        
+                {% endif %}
+                </div> 
+            </center> 
             <table class="table" style="width: 95%;margin: 30px;">
                 <thead>
                     <tr>

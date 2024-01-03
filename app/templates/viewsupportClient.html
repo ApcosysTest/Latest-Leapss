@@ -121,8 +121,20 @@
                 </div>
 
                 <div class="col-12">
-                   <h4>Support - TicketID: ({{support.id}})</h4>
-                   <p>{{support.text}}</p>
+                   <h4>Support - TicketID: ({{support.id}}{% if support.resolved %} - Resolved{% endif %})</h4>
+                   <div>{{support.text}}</div>
+                   {% if support.comment %}
+                    <p>Comment: {{support.comment}}</p>
+                   {% endif %}
+
+                   {% if not support.resolved %}
+
+                    <form action="{% url "queryresolve" support.id %}" method="post"> {% csrf_token %}
+                        <input type="submit" class="btn btn-success" name="resolve" value="Resolve" />
+                    </form>
+
+                   {% endif %}
+
                 </div>
             </div>
             

@@ -515,6 +515,7 @@ class CalendarView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         com = Company.objects.filter(username=self.request.user.username).first()
+        queries = Support.objects.filter(company_id=com)
         if com is None:
             emp = Employee.objects.filter(email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
@@ -524,6 +525,7 @@ class CalendarView(generic.ListView):
         today_year, today_month, today_date = (int(x) for x in today.split('-'))
         d = get_date(self.request.GET.get('month', None))
         context['prev_month'] = prev_month(d)
+        context['queries'] = queries
         context['next_month'] = next_month(d)
         cal = Calendar(d.year, d.month, today_date, today_month, today_year, adminStatus)
         html_cal = cal.formatmonth(com, withyear=True)
@@ -2127,6 +2129,10 @@ def supportcompany(request):
         cwebsite = request.POST.get('cwebsite', '')
         cphone = request.POST.get('cphone', '')
 
+        company = Company.objects.get(id=company_id)
+
+        Support.objects.create(text = namecontent, company_id = company)
+
         # Send email
         subject = "Inquiry Support from Company"
         email_content = f"Name: {namecontent}\n\nCompany Name: {cname}\n\nEmail: {cemailid}\n\nWebsite: {cwebsite}\n\nPhone: {cphone}"
@@ -2258,3 +2264,42 @@ def retrieve_backup(request):
         except InvalidToken as e:
             print(f"Decryption failed: {e}")
     return render(request, 'retrieve_backup.html')
+
+def queryresolve(request, id):
+
+    if request.method == 'POST':
+        query = Support.objects.get(id=id)
+        query.resolved = True
+        query.save()
+        messages.success(request, f"Query with ticketID {query.id} has been resolved")
+    
+    return redirect('admincompanysupport')
+
+
+def queryraise(request, id):
+
+    query = Support.objects.get(id=id)
+    if request.method == 'POST':
+        query.resolved = False
+        query.save()
+        messages.success(request, f"Query with ticketID {query.id} has been raised again")
+    
+    return redirect('viewquery', id=query.id)
+
+def querycomment(request, id):
+
+    query = Support.objects.get(id=id)
+    if request.method == 'POST':
+        comment = request.POST.get('comment')
+        query.comment = comment
+        query.save()
+        messages.success(request, f"Your comment has been added")
+    
+    return redirect('viewquery', id=query.id)
+
+
+def viewquery(request, id):
+    query = Support.objects.get(id=id)
+    com = Company.objects.filter(username=request.user.username).first()
+
+    return render(request, 'viewquery.html', {'query': query, 'com': com})
