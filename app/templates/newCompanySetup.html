@@ -123,7 +123,7 @@ input[type='radio']:checked:after {
                             <div class="text-center">Creating Asserts of Company</div>
                         </div>
                     </div>
-                    <form action="" id="passwordChangeForm" method="POST" onsubmit="return validateForm()">
+                    <form  id="passwordChangeForm" method="POST" onsubmit="return validateForm()">
                         {% csrf_token %}
                         <div class="inputField">
                             <input type="text" id="id_username" placeholder="One Time Password (Check Email)" name="oldPassword" required>
