@@ -78,6 +78,10 @@ urlpatterns = [
 
     path('admincompanysupport', admincompanysupport, name='admincompanysupport'),
     path('viewsupportClient/<int:support_id>/', viewsupportClient, name='viewsupportClient'),
+    path('queryresolve/<int:id>/', queryresolve, name='queryresolve'),
+    path('queryraise/<int:id>/', queryraise, name='queryraise'),
+    path('viewquery/<int:id>/', viewquery, name='viewquery'),
+    path('querycomment/<int:id>/', querycomment, name='querycomment'),
    
     
 
