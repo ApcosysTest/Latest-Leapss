@@ -41,7 +41,7 @@ import zipfile
 import json, urllib.request, requests
 from django.conf import settings
 import uuid
-
+from django.contrib.auth.models import User
 
 # Check is admin
 def is_admin(user):
@@ -383,33 +383,49 @@ def adminForgotPassword(request):
     if request.method == 'POST':
         email = request.POST['email']
         try:
-            valid_email = User.objects.get(username=email).username
-            otp = str(random.randint(100000, 999999))
-            send_admin_forgot_password_otp(otp, email)
-            return redirect('changeAdminPassword', otp=otp , email=valid_email)
+            valid_email = User.objects.get(username__exact=email).username
+            return redirect('changeAdminPassword', email=valid_email)
         except User.DoesNotExist:
             messages.error(request, 'Email was not found')
     return render(request, 'forgotPassword.html')
 
-def changeAdminPassword(request, otp, email):
+
+def changeAdminPassword(request, email):
+     
     if request.method == 'POST':
-        user_otp = request.POST['oldPassword']
-        new_password = request.POST['newPassword']
-        confirm_password = request.POST['confirmPassword']
+        user_otp = request.POST.get('oldPassword')
+        
+        new_password = request.POST.get('newPassword')
+        confirm_password = request.POST.get('confirmPassword')
+        stored_otp = request.session.get('otp')
+        email = request.session.get('email')
+        print(f"user_otp: {user_otp}, otp: {stored_otp}")
+
         if new_password == confirm_password:
-            if otp == user_otp:
-                try:                                                                                            
-                    user = User.objects.get(username=email)
+            
+            if stored_otp == user_otp:
+                try:
+                    user = User.objects.get(username=email)  
                     user.set_password(new_password)
                     user.save()
+                    messages.success(request, 'Password changed successfully')
                     return redirect('homepage')
                 except Exception as e:
                     print(f"An exception occurred: {e}")
+                    messages.error(request, 'Failed to change password')
+                    
             else:
                 messages.error(request, 'Invalid OTP')
         else:
             messages.error(request, 'Password and confirm password must be the same')
-    return render(request, 'newCompanySetup.html')
+    else:
+        otp = str(random.randint(100000, 999999))
+        request.session['otp'] = otp
+        send_admin_forgot_password_otp(otp, email) 
+        request.session['email'] = email
+        return render(request, 'newCompanySetup.html')
+
+
 
 # Admin Login Page 
 # def adminLogin(request):
