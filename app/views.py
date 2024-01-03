@@ -897,28 +897,37 @@ def viewEmployee(request, id):
 # Edit Employee Details
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))
-def editEmployee(request,id):
+def editEmployee(request, id):
     com = Company.objects.filter(username=request.user.username).first()
     if com is None:
         emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
+    
     data = Employee.objects.get(id=id)
     instance = Employee.objects.get(pk=id)
-    instance1=User.objects.get(pk=instance.user.id)
+    userdata = User.objects.get(id=id)
+    instance1 = User.objects.get(pk=instance.user.id)
     form = EmployeeUpdateForm(request.POST or None, request.FILES or None, instance=instance, com_id=com.id)
-    # form1 = EmployeeUpdateExtraForm(request.POST or None, instance=instance1)
+
     if form.is_valid():
         official_email = request.POST.get('office_email')
+        level = request.POST.get('level')
+        
+        if level == "Level 0":
+            # Ensure that 'HR' group exists
+            group, created = Group.objects.get_or_create(name='HR')
+            # Add the user to the 'HR' group
+            group.user_set.add(instance1)
+        
         instance1.username = official_email
         instance1.save()
         form.save()
 
-        messages.success(request, 'details have been updated.')
-
+        messages.success(request, 'Details have been updated.')
         return redirect('activeEmployee')
 
-    context = {'form':form, 'data':data, 'com':com}
-    return render(request,'editEmployee.html', context) 
+    context = {'form': form, 'data': data, 'com': com}
+    return render(request, 'editEmployee.html', context)
 
 # Admin Change password of Employee
 @login_required(login_url='adminLogin')

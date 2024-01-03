@@ -129,7 +129,7 @@ class Leave(models.Model):
     
 class Quote(models.Model): 
     com_id = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)
-    quotes = models.TextField(max_length=300) 
+    quotes = models.TextField(max_length=5000) 
     tod_date = models.DateField(auto_now=True)
       
 class Event(models.Model): 
