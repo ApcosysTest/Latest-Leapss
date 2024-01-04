@@ -8,7 +8,8 @@
     <title>Leapss - Leave Management System</title>
     {% load static %}
     <link href="{% static 'assets\css\admin.css' %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'assets/css/approvalStatus.css'%}">
+ 
+    <link href="{% static 'assets\css\leaveBasket.css' %}" rel="stylesheet">
    
     <!-- CSS only -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
@@ -96,83 +97,65 @@
                     </ul>
                     
             </nav>
-            <section class="section container pageClass bg-white rounded dashboard">
-                <div class="row" style="margin-top: 1%;">
-                  <div class="col-md-6"><h5 style="color: #009eff;padding: 1%;">Employee Details</h5>
-                    <p>
-                      
-                      <div class="btn-group">
-                        <div class="tw-toggle">
-                        
-                        <a  class="btnnew btn-primary " href="{% url 'activeEmployee' %}">Active</a>		&#160;
-                        <a  class="btnnew btn-default " href="{% url 'inactiveEmployee' %}">Inactive</a>		&#160;
-                        <a  class="btnnew btn-default " href="{% url 'allactiveEmployee' %}">All Employees</a>		
-                          </div>  
-                       </div> 
-                      
-                    </p>
+
+
+            <section class="section container pageClass  bg-white rounded dashboard">
+                <br>
+
+                  <h5 style="color: #009eff; padding: 1% ; ">Leave Section: </h5>
                     
-                  </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-4"style="padding-left:4%;">
-                    <div class="input-group" style="float:inline-end ;margin-bottom: 4%;">
-                    <div id="search-autocomplete" class="form-outline">
-                      <br>
-                      <form method="POST" autocomplete="off" id="search-form" >
-                        {% csrf_token %}
-                        <div class="inputWithIcon">
-                            <input id="search-input" class="search" type="search" placeholder="Search..." autofocus />
-                            <ion-icon name="search-outline"></ion-icon>
+                  <div class="row">
+                    <div class="col-md-4"> 
+                      {% for key,value in dic1.items %}
+                            <div class="basket1">
+                                <a type="button" class="btn btn-primary btn-lg " href="" >{{ value.0 }}/{{ value.1 }}</br>{{key}}</a>
+                            </div>
+                      {% endfor %}
                     </div>
-                    </form>
+                    <div class="col-md-4"> 
+                      {% for key,value in dic2.items %}
+                          <div class="basket3">
+                            <a type="button" class="btn btn-primary btn-lg " href="" >{{ value.0 }}/{{ value.1 }}</br>{{key}}</a>
+                          </div>
+                      {% endfor %}
                     </div>
-                    </div> 
-                    </div> </div>
-                    <div class="table-responsive-lg">
-                  <table class="table  "style=" overflow-x: hidden; ">
-                      <thead style="text-align: center;">
-                        <tr>
-                          <th scope="col">Name</th>
-                          <th scope="col">Department</th>
-                          <th scope="col">Employee Id</th>
-                          <th scope="col">View</th>
-                          <th scope="col">Leave Basket</th>
-                          <th scope="col">Status</th>
+                    <div class="col-md-4"> 
+                      {% for key,value in dic3.items %}
+                          <div class="basket2">
+                            <a type="button" class="btn btn-primary btn-lg " href="" >{{ value.0 }}/{{ value.1 }}<br>{{key}}</a>
+                          </div>
+                      {% endfor %}
+                    </div>
+                  </div>  
+
+                  <h5 style="color: #009eff; padding: 1% ; ">Employee Details: </h5>
+
+                  <div class="client-data row">
+                    <div class="col-6">
+                        <table class="table">
+                            <tr>
+                                <td>Name</td>
+                                <td>{{ emp.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Employee ID</td>
+                                <td>{{ emp.emp_id }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <table class="table">
+                            <td>Department</td>
+                            <td>{{ emp.department }}</td>
                         </tr>
-                      </thead>
-                      <tbody style="text-align: center;">
-                        
-                        {% for emp in emp %}  
-                        <tr class='outers'>  
-                            <td style="text-align:left; margin-left:10%" class='name'>{{ emp.name}}</td>  
-                            <td class='dep'>{{ emp.department }}</td>
-                            <td class='emp_id'>{{ emp.emp_id }}</td>  
-                            <td>  
-                              <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-sm " href="{% url 'viewEmployee' emp.id %}">View</a>
-                              </div>
-                            </td>
-                            <td>  
-                              <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-sm btn-primary " href="{% url 'leaveBasketAdmin' emp.id %}">Leave Basket</a>
-                              </div>
-                            </td>
-                            <td>  
-                              <div class="reject">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-sm " style="width: 80%; background-color: #FF7B5D; border: none ;"href="{% url 'deactivateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Deactivate</a>
-                              </div>
-                            </td>
-                        </tr>  
-                        {% comment %} {% empty %} {% endcomment %}
-                       
-                          {% comment %} <tr><td colspan="4" style="text-align:center;">Nothing found</td></tr>  {% endcomment %}
-                
-                    {% endfor %}  
-                      </tbody>
-                    </table> 
+
+                    </table>
                     </div>
-                      
-            </section>
+    
+                </div>
+
+                </section>
+
         </div>
     </div>
     

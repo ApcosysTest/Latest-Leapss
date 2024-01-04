@@ -86,7 +86,7 @@
                   </ul>
             </nav>
             <section class = "pageClass"> 
-                <div class="empInfoo " style="margin-top:2%; height: 450px ;"> 
+                <div class="empInfoo " style="margin-top:2%;"> 
                     <div class="row justify-content-between"style="margin:auto 2%;" >
                         <p>Reason For Activation</p> 
                     </div> 
@@ -100,6 +100,30 @@
                         </form>
                     </div>  
                 </div> 
+                <div class="client-data row">
+                    <div class="col-6">
+                        <table class="table">
+                            <tr>
+                                <td>Name</td>
+                                <td>{{ client.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Employee ID</td>
+                                <td>{{ client.emp_id }}</td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <table class="table">
+                            <tr>
+                                <td>Department</td>
+                                <td>{{ client.department }}</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
             </section>
         </div>
     </div>

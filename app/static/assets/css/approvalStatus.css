@@ -172,8 +172,6 @@ padding-top: 0%;
 border-color: #009eff;
 border-radius: 4px;
 background-color: #009eff;
-font-size: 18px;
-width: 100%;
 }
 .remove a{
 border-color: #FF7B5D;
@@ -219,8 +217,6 @@ background-color: #52D89C;
   border-color: #FF7B5D;
   border-radius: 4px;
   background-color: #FF7B5D;
-  font-size: 18px;
-  width: 90%;
 }
 .reject a:hover {
   border-color: #FF7B5D;

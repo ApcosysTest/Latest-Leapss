@@ -115,17 +115,22 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     {% for support  in supports  %}
-                    <tr class="outers">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ support.company_id.name }}</td>
-                        <td >{{ support.company_id.website }}</td>
-                        
-                        <td >{{ support.company_id.telephone }}</td>
-                        <td >{{ support.id }}</td>
-                        <td ><a href="{% url 'viewsupportClient' support.id %}" class="btn btn-info" style="width:80px;">View</a></td>
-                    </tr>
+
+                        <tr class="outers {% if not support.resolved %}table-active font-weight-bold{% endif %}">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ support.company_id.name }}</td>
+                            <td >{{ support.company_id.website }}</td>
+                            
+                            <td >{{ support.company_id.telephone }}</td>
+                            <td >{{ support.id }}</td>
+                            <td ><a href="{% url 'viewsupportClient' support.id %}" class="btn btn-info" style="width:80px;">View</a></td>
+                        </tr>
+
                     {% endfor %}
+
+                    
                 </tbody>
             </table>
             

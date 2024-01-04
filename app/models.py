@@ -197,7 +197,8 @@ class Absent(models.Model):
     
 class FeedbackModel(models.Model):
     text = models.TextField()
-    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    emp_id = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
     
     def __str__(self):
         return self.text

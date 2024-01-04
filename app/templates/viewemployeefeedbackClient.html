@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% if not user.is_authenticated %}
-    <script>window.location.href = "{% url 'landingpage' %}"</script>
-{% endif %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,21 +49,17 @@
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
-
                 <li ><a class="list-group-item" href="{% url 'homeDashboard' %}"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
                 <li><a class="list-group-item" href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
                 <li><a class="list-group-item" href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
-{% comment %}                 
                 <li><a class="list-group-item" href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
                 <li><a class="list-group-item" href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
-                 {% endcomment %}
                 <li><a class="list-group-item active" href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span> Feedback</span></a></li>
                 <li><a class="list-group-item" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>
-
              </div>
              <div class="logout">
-              <a class="nav-link"href="{% url 'logout_superuser' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
+              <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
                 logout
                 </span><span style="font-family: 'Segoe UI', sans-serif; position:relative;bottom:3px; ">Log Out</span></a>
             </div>
@@ -74,53 +67,64 @@
         <!-- Page content wrapper-->
         <div id="page-content-wrapper">
             <!-- Top navigation-->
-            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
-                  
-                <h1 style="text-align:center;color:royalblue;">Feedbacks</h1>
-                <form method="POST" autocomplete="off" id="search-form" >
-                    {% csrf_token %}
-                    <div class="inputWithIcon">
-                        <input id="search-input" class="search" type="search" placeholder="Search..."  />
-                        <ion-icon name="search-outline" style="left: 1%;"></ion-icon>
-                    </div>
-                </form>
-                  
-            </nav>
-
-            <div class="d-flex" style="list-style:none; margin-top: 3%;">
-
-                <li ><a class="list-group-item active ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'companyfeedback' %}">Company</a></li>
-                <li><a class="list-group-item ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'employeefeedback' %}">Employees</a></li>
-
-             </div>
-
-
-            <table class="table" style="width: 95%;margin: 30px;">
-                <thead>
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">   
+                <h1 style="text-align:center;color:green;">Our Clients</h1> 
+            </nav><br>
+            <h3 class="text-center">Employee Details</h3>
+            <div class="client-data row">
+                <div class="col-6">
+                    <table class="table">
+                        <tr>
+                            <td>Name</td>
+                            <td>{{ client.name }}</td>
+                        </tr>
+                        <tr>
+                            <td>Employee ID</td>
+                            <td>{{ client.emp_id }}</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ client.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Telephone</td>
+                            <td>{{ client.personal_contact }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date of joining</td>
+                            <td>{{ client.doj }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-6">
+                    <table class="table">
+                        <td>Present Address</td>
+                        <td>{{ client.present_address }}</td>
+                    </tr>
                     <tr>
-                        <th>Sl no </th>
-                        <th>Company Name</th>
-                        <th>Website</th>
-                        
-                        <th>phone</th>
-                        <th>feedback</th>
-                        <th>View</th>
+                        <td>Permanent Address</td>
+                        <td>{{ client.permanent_address }}</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for feedback_entry  in feedback_entries  %}
-                    <tr class="outers">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ feedback_entry.company_id.name }}</td>
-                        <td >{{ feedback_entry.company_id.website }}</td>
-                        
-                        <td >{{ feedback_entry.company_id.telephone }}</td>
-                        <td >{{ feedback_entry.text }}</td>
-                        <td ><a href="{% url 'viewfeedbackClient' feedback_entry.id %}" class="btn btn-info" style="width:80px;">View</a></td>
+                    <tr>
+                        <td>Designation</td>
+                        <td>{{ client.designation }}</td>
                     </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    <tr>
+                        <td>Department</td>
+                        <td>{{ client.department }}</td>
+                    </tr>
+                    <tr>
+                        <td>Level</td>
+                        <td>{{ client.level }}</td>
+                    </tr>
+                </table>
+                </div>
+
+                <div class="col-12">
+                   <h4>Feedback </h4>
+                   <p>{{feedback.text}}</p>
+                </div>
+            </div>
             
         </div>
     </div>
@@ -128,53 +132,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
     <script src="{% static 'assets\js\main.js' %}"></script>
-    <script>
-        const input = document.getElementById('search-input')
-        input.addEventListener('keyup', (e) => {
-            var inputs = e.target.value.toLowerCase(); //do lowercase
-            //loop through outer div and hide it
-            document.querySelectorAll('.outers').forEach(function(el) {
-                el.style.display = 'none';
-            });
-            //loop through outer ->card-title
-            document.querySelectorAll('.outers .name').forEach(function(el) {
-                //compare 
-                if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
-                    el.closest('.outers').style.display = "table-row"; //if match show that div
-                }
-            })
-            document.querySelectorAll('.outers .dep').forEach(function(el) {
-                //compare 
-                if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
-                    el.closest('.outers').style.display = "table-row"; //if match show that div
-                }
-            })
-            document.querySelectorAll('.outers .emp_id').forEach(function(el) {
-                //compare 
-                if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
-                    el.closest('.outers').style.display = "table-row"; //if match show that div
-                }
-             })
-             document.querySelectorAll('.outers .state').forEach(function(el) {
-                //compare 
-                if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
-                    el.closest('.outers').style.display = "table-row"; //if match show that div
-                }
-             })
-             document.querySelectorAll('.outers .country').forEach(function(el) {
-                //compare 
-                if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
-                    el.closest('.outers').style.display = "table-row"; //if match show that div
-                }
-             })
-        })
-    </script>
-    <style>
-        .btn-info {
-            color: #fff;
-            background-color: #009eff;
-            border-color: #009eff;
-        }
-    </style>
 </body>
 </html>

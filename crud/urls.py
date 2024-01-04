@@ -35,9 +35,15 @@ urlpatterns = [
     path('getDashboardData/<int:client_id>/', getDashboardData, name='getDashboardData'), 
     path('superadminlogin', superadminlogin, name='superadminlogin'),
     path('logout_superuser', logout_superuser, name='logout_superuser'),
-     path('companyfeedback', companyfeedback, name='companyfeedback'),
-    path('viewfeedbackClient/<int:client_id>/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'),
+
+    
     path('employeereport', employeereport, name='employeereport'), 
+
+    path('companyfeedback', companyfeedback, name='companyfeedback'),
+    path('employeefeedback', employeefeedback, name='employeefeedback'),
+    path('viewfeedbackClient/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'),
+    path('viewemployeefeedbackClient/<int:feedback_id>/', viewemployeefeedbackClient, name='viewemployeefeedbackClient'), 
+
 
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
@@ -75,6 +81,7 @@ urlpatterns = [
     path('setupPrivacyPolicy', setupPrivacyPolicy, name='setupPrivacyPolicy'),
     path('setupTandC', setupTandC, name='setupTandC'),
     path('feedback', feedback, name='feedback'),
+    path('feedback_emp', feedback_emp, name='feedback_emp'),
     path('supportcompany', supportcompany, name='supportcompany'),
 
     path('admincompanysupport', admincompanysupport, name='admincompanysupport'),
@@ -116,6 +123,7 @@ urlpatterns = [
     path('privacyPolicy', privacyPolicy, name='privacyPolicy'),
     path('termsAndConditions', termsAndConditions, name='termsAndConditions'),
     path('leaveBasket', leaveBasket, name='leaveBasket'),
+    path('leaveBasketAdmin/<int:id>', leaveBasketAdmin, name='leaveBasketAdmin'),
     path("approvalStatus",approvalStatus, name='approvalStatus'),
     path('presentEmployees', presentEmployees, name='presentEmployees'),
     path('reviewEmployeeApplicationEmployee/<int:id>', reviewEmployeeApplicationEmployee, name='reviewEmployeeApplicationEmployee'), 

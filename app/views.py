@@ -41,8 +41,11 @@ import zipfile
 import json, urllib.request, requests
 from django.conf import settings
 import uuid
+
 from django.contrib.auth.models import User
 from datetime import datetime
+
+
 
 # Check is admin
 def is_admin(user):
@@ -384,49 +387,33 @@ def adminForgotPassword(request):
     if request.method == 'POST':
         email = request.POST['email']
         try:
-            valid_email = User.objects.get(username__exact=email).username
-            return redirect('changeAdminPassword', email=valid_email)
+            valid_email = User.objects.get(username=email).username
+            otp = str(random.randint(100000, 999999))
+            send_admin_forgot_password_otp(otp, email)
+            return redirect('changeAdminPassword', otp=otp , email=valid_email)
         except User.DoesNotExist:
             messages.error(request, 'Email was not found')
     return render(request, 'forgotPassword.html')
 
-
-def changeAdminPassword(request, email):
-     
+def changeAdminPassword(request, otp, email):
     if request.method == 'POST':
-        user_otp = request.POST.get('oldPassword')
-        
-        new_password = request.POST.get('newPassword')
-        confirm_password = request.POST.get('confirmPassword')
-        stored_otp = request.session.get('otp')
-        email = request.session.get('email')
-        print(f"user_otp: {user_otp}, otp: {stored_otp}")
-
+        user_otp = request.POST['oldPassword']
+        new_password = request.POST['newPassword']
+        confirm_password = request.POST['confirmPassword']
         if new_password == confirm_password:
-            
-            if stored_otp == user_otp:
-                try:
-                    user = User.objects.get(username=email)  
+            if otp == user_otp:
+                try:                                                                                            
+                    user = User.objects.get(username=email)
                     user.set_password(new_password)
                     user.save()
-                    messages.success(request, 'Password changed successfully')
                     return redirect('homepage')
                 except Exception as e:
                     print(f"An exception occurred: {e}")
-                    messages.error(request, 'Failed to change password')
-                    
             else:
                 messages.error(request, 'Invalid OTP')
         else:
             messages.error(request, 'Password and confirm password must be the same')
-    else:
-        otp = str(random.randint(100000, 999999))
-        request.session['otp'] = otp
-        send_admin_forgot_password_otp(otp, email) 
-        request.session['email'] = email
-        return render(request, 'newCompanySetup.html')
-
-
+    return render(request, 'newCompanySetup.html')
 
 # Admin Login Page 
 # def adminLogin(request):
@@ -704,7 +691,7 @@ def deactivateDetail(request, id):
             return redirect(reverse('activeEmployee'))
     else:
         form=DeactivateForm()
-    context = {'form':form, 'com':com}
+    context = {'form':form, 'com':com, 'client': emp}
     return render(request, 'deactivate.html', context)
 
 # Inactive Employee Detail
@@ -738,7 +725,7 @@ def activateDetail(request, id):
             return redirect(reverse('activeEmployee'))
     else:
         form=ActivateForm()
-    context = {'form':form, 'com':com}
+    context = {'form':form, 'com':com, 'client': emp}
     return render(request, 'activate.html', context)
 
 # Add Employee Detail
@@ -1712,6 +1699,7 @@ class CalendarViewEmp(generic.ListView):
         
         context['dic']=self.dash()
         context['quotes']=self.quote()
+        context['emp'] = emp
         return context
 
 # Employee Profile
@@ -1853,6 +1841,42 @@ def leaveBasket(request):
         dic3[l]= [l.days-cat_count, l.days]
     context = {'leave':leave, 'dic1':dic1, 'dic2':dic2, 'dic3':dic3, 'com':com}
     return render(request, 'leaveBasket.html', context)
+
+
+@login_required(login_url='adminLogin')
+@user_passes_test(is_admin)
+def leaveBasketAdmin(request, id):
+    emp = Employee.objects.get(id=id)
+    com = Company.objects.filter(name=emp.com_id).first()
+    dic1 = {}
+    dic2 = {}
+    dic3 = {}
+    leave = LeavePolicy.objects.filter(com_id=emp.com_id).all().first()
+    count = Leave.objects.filter(com_id=emp.com_id).all().count()
+    l1 = math.ceil(count/3)
+    lea1 = Leave.objects.filter(com_id=emp.com_id).all()[:l1]
+    for l in lea1:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=emp.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic1[l]= [l.days-cat_count, l.days]
+    lea2 = Leave.objects.filter(com_id=emp.com_id).all()[l1:l1*2]
+    for l in lea2:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=emp.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic2[l]= [l.days-cat_count, l.days]
+    lea3 = Leave.objects.filter(com_id=emp.com_id).all()[l1*2:]
+    for l in lea3:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=emp.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic3[l]= [l.days-cat_count, l.days]
+    context = {'leave':leave, 'dic1':dic1, 'dic2':dic2, 'dic3':dic3, 'com':com, 'emp': emp}
+    print(f'Dict1: {dic1}, Dict2: {dic2}, Dict3: {dic3}')
+    return render(request, 'leaveBasketAdmin.html', context)
+
+
 # Employee Approval Status
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
@@ -2101,25 +2125,48 @@ def feedback(request):
         context = {'com': com, 'feedback': feedback}
         return render(request, 'feedback.html', context)
     
+@login_required(login_url='employeeLogin')
+# @user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def feedback_emp(request):
+
+    
+        
+    if request.method == 'POST':
+        feedback_text = request.POST.get('name', '')
+        emp_id = request.POST.get('eid', '')
+        emp = Employee.objects.get(id=emp_id)
+        # company_instance = get_object_or_404(Company, id=company_id)
+        feedback_instance = FeedbackModel.objects.create(text=feedback_text, emp_id=emp)
+        #return HttpResponse("Feedback submitted successfully!")
+        messages.success(request, "Feedback has been sent.")
+        return redirect('sidebar')
+
+    return redirect('sidebar')
+    
     
     
 def companyfeedback(request):
-    feedback_entries = FeedbackModel.objects.all()
+    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=False)
     context = {'feedback_entries': feedback_entries}
     return render(request, 'adminviewfeedback.html', context)
 
+def employeefeedback(request):
+    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True)
+    context = {'feedback_entries': feedback_entries}
+    return render(request, 'adminviewempfeedback.html', context)
+
 
 def admincompanysupport(request):
-    supports = Support.objects.all()
+    supports = Support.objects.all().order_by('-date')
     context = {'supports': supports}
     return render(request, 'adminviewsupport.html', context)
 
 
-def viewfeedbackClient(request, client_id, feedback_id):
+def viewfeedbackClient(request, feedback_id):
     
-    client = get_object_or_404(Company, pk=client_id)
    
     feedback = get_object_or_404(FeedbackModel, pk=feedback_id)
+    client = get_object_or_404(Company, pk=feedback.company_id.id)
 
     context = {
         'feedback': feedback,
@@ -2127,6 +2174,19 @@ def viewfeedbackClient(request, client_id, feedback_id):
     }
 
     return render(request, 'viewfeedbackClient.html', context)
+
+def viewemployeefeedbackClient(request, feedback_id):
+    
+   
+    feedback = get_object_or_404(FeedbackModel, pk=feedback_id)
+    client = get_object_or_404(Employee, pk=feedback.emp_id.id)
+
+    context = {
+        'feedback': feedback,
+        'client': client,
+    }
+
+    return render(request, 'viewemployeefeedbackClient.html', context)
 
 
 def viewsupportClient(request, support_id):

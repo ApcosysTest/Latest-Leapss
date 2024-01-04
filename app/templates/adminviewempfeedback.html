@@ -57,10 +57,8 @@
                 <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
                 <li><a class="list-group-item" href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
                 <li><a class="list-group-item" href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
-{% comment %}                 
                 <li><a class="list-group-item" href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
                 <li><a class="list-group-item" href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
-                 {% endcomment %}
                 <li><a class="list-group-item active" href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span> Feedback</span></a></li>
                 <li><a class="list-group-item" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>
 
@@ -89,8 +87,8 @@
 
             <div class="d-flex" style="list-style:none; margin-top: 3%;">
 
-                <li ><a class="list-group-item active ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'companyfeedback' %}">Company</a></li>
-                <li><a class="list-group-item ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'employeefeedback' %}">Employees</a></li>
+                <li ><a class="list-group-item ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'companyfeedback' %}">Company</a></li>
+                <li><a class="list-group-item active ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'employeefeedback' %}">Employees</a></li>
 
              </div>
 
@@ -99,8 +97,8 @@
                 <thead>
                     <tr>
                         <th>Sl no </th>
-                        <th>Company Name</th>
-                        <th>Website</th>
+                        <th>Employee Name</th>
+                        <th>Employee ID</th>
                         
                         <th>phone</th>
                         <th>feedback</th>
@@ -111,12 +109,12 @@
                     {% for feedback_entry  in feedback_entries  %}
                     <tr class="outers">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ feedback_entry.company_id.name }}</td>
-                        <td >{{ feedback_entry.company_id.website }}</td>
+                        <td>{{ feedback_entry.emp_id.name }}</td>
+                        <td >{{ feedback_entry.emp_id.emp_id }}</td>
                         
-                        <td >{{ feedback_entry.company_id.telephone }}</td>
+                        <td >{{ feedback_entry.emp_id.personal_contact }}</td>
                         <td >{{ feedback_entry.text }}</td>
-                        <td ><a href="{% url 'viewfeedbackClient' feedback_entry.id %}" class="btn btn-info" style="width:80px;">View</a></td>
+                        <td ><a href="{% url 'viewemployeefeedbackClient' feedback_entry.id %}" class="btn btn-info" style="width:80px;">View</a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
