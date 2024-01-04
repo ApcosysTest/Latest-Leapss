@@ -55,8 +55,10 @@
                 <li ><a class="list-group-item" href="{% url 'homeDashboard' %}"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
                 <li><a class="list-group-item" href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
+{% comment %}                 
                 <li><a class="list-group-item " href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
+                 {% endcomment %}
                 <li><a class="list-group-item active" href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Feedback </span></a></li>
                 <li><a class="list-group-item" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>

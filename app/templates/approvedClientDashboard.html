@@ -55,8 +55,10 @@
                 <li ><a class="list-group-item" href="{% url 'homeDashboard' %}"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item" href="{% url 'appRequestDashboard' %}"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Client Requests</span></a></li>
                 <li><a class="list-group-item {% if page == "approvedClient" %}active{% endif %} " href="{% url 'approvedClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Our Clients</span></a></li>
-                <li><a class="list-group-item {% if page == "activeClient" %}active{% endif %} " href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
+                
+                {% comment %} <li><a class="list-group-item {% if page == "activeClient" %}active{% endif %} " href="{% url 'activeClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Active Clients</span></a></li>
                 <li><a class="list-group-item {% if page == "inactiveClient" %}active{% endif %} " href="{% url 'inactiveClientDashboard' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Inactive Clients</span></a></li>
+                 {% endcomment %}
                 <li><a class="list-group-item " href="{% url 'rejectedClientDashboard' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Rejected Clients</span></a></li>
                 <li><a class="list-group-item " href="{% url 'companyfeedback' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span> Feedback</span></a></li>
                 <li><a class="list-group-item" href="{% url 'admincompanysupport' %}"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Support </span></a></li>
@@ -73,6 +75,7 @@
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
                   
                 <h1 style="text-align:center;color:green;">{% if page == 'approvedClient' %}Our Clients{% elif page == 'activeClient' %}Active Clients{% else %}Inactive Clients{% endif %}</h1>
+
                 <form method="POST" autocomplete="off" id="search-form" >
                     {% csrf_token %}
                     <div class="inputWithIcon">
@@ -81,6 +84,65 @@
                     </div>
                 </form>
             </nav>
+            <div class="col-md-6">
+                <p>
+                    <p id="demo" style="display:none;"></p>
+                    
+                    
+                  <div class="btn-group" id="allclients" style="display:none;">
+                    <div class="tw-toggle">
+                    
+                    <a  class="btnnew btn-primary " href="{% url 'approvedClientDashboard' %}">All Clients</a>	&#160;
+                    <a  class="btnnew btn-default " href="{% url 'activeClientDashboard' %}">Active</a>	&#160;
+                    <a  class="btnnew btn-default " href="{% url 'inactiveClientDashboard' %}">Inactive</a>	
+
+                   </div>  
+                  </div> 
+
+                  <div class="btn-group" id="active" style="display:none;">
+                    <div class="tw-toggle">
+                    
+                    <a  class="btnnew btn-default " href="{% url 'approvedClientDashboard' %}">All Clients</a>	&#160;
+                    <a  class="btnnew btn-primary " href="{% url 'activeClientDashboard' %}">Active</a>	&#160;
+                    <a  class="btnnew btn-default " href="{% url 'inactiveClientDashboard' %}">Inactive</a>	
+
+                   </div>  
+                  </div> 
+
+                  <div class="btn-group" id="Inactive" style="display:none;">
+                    <div class="tw-toggle">
+                    
+                    <a  class="btnnew btn-default " href="{% url 'approvedClientDashboard' %}">All Clients</a>	&#160;
+                    <a  class="btnnew btn-default " href="{% url 'activeClientDashboard' %}">Active</a>	&#160;
+                    <a  class="btnnew btn-primary " href="{% url 'inactiveClientDashboard' %}">Inactive</a>	
+
+                   </div>  
+                  </div> 
+
+                  <script>
+                    document.getElementById("demo").innerHTML =  window.location.href;
+                    let news =  window.location.href;
+                    console.log(news);
+                    let newstring = news.replace('http://127.0.0.1:8000/', '');
+                    console.log(newstring);
+                    if(newstring=="approvedClientDashboard")
+                    {
+                    document.getElementById('allclients').style.display = "";
+                    }
+                    if(newstring=="activeClientDashboard")
+                    {
+                    document.getElementById('active').style.display = "";
+                    }
+                    if(newstring=="inactiveClientDashboard")
+                    {
+                    document.getElementById('Inactive').style.display = "";
+                    }
+                    
+                    </script>
+                  
+                </p>
+                
+              </div>
             <table class="table" style="width: 95%;margin: 30px;">
                 <thead>
                     <tr>
@@ -177,5 +239,40 @@
             border-color: #ffc14e;
         }
     </style>
+    <style>
+        .btn-primary {
+            color: #fff;
+            background-color: #009eff;
+            border-color: #009eff;
+            border-radius: 19px;
+        }
+        .tw-toggle {
+          display: flex;
+          align-items: center;
+          height: 46px;
+          padding: 2px 3px;
+          border-radius: 50px;
+          position: relative;
+          border: 2px solid #009eff;
+          margin: 0;
+          flex-flow: wrap;
+          width: 246px;
+      }
+        .btn-default {
+            color: #333;
+            background-color: #fff;
+            border-color: #ccc;
+            border: none;
+        }
+        .btnnew{
+          padding: 5px 10px 5px 10px;
+          text-decoration: none; 
+          border-radius: 20px;
+        
+        }
+        .btnnew:hover { 
+          text-decoration: none; 
+        }
+        </style>
 </body>
 </html>
