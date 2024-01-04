@@ -42,6 +42,10 @@ import json, urllib.request, requests
 from django.conf import settings
 import uuid
 
+from django.contrib.auth.models import User
+from datetime import datetime
+
+
 
 # Check is admin
 def is_admin(user):
@@ -2385,3 +2389,37 @@ def viewquery(request, id):
     com = Company.objects.filter(username=request.user.username).first()
 
     return render(request, 'viewquery.html', {'query': query, 'com': com})
+
+def employeereport(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
+
+    form = PerticularEmployeeForm(request.POST or None, request.FILES or None, com_id=com.id)
+    print(f"com_id: {com.id}")
+
+    context = {'com': com, 'form': form}
+
+    if request.method == 'POST':
+        fromdate = request.POST.get('fromdate', '')
+        todate = request.POST.get('todate', '')
+
+        try:
+            fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+            todate = datetime.strptime(todate, '%Y-%m-%d').date()
+            print(f"from_date: {fromdate}, to_date: {todate},")
+            employees = Employee.objects.filter(
+                com_id_id=com.id,
+                doj__range=(fromdate, todate),
+                
+            )
+            print(employees)
+            
+            context['employees'] = employees
+
+        except ValueError as e:
+            print(f"Error parsing dates: {e}")
+
+    return render(request, 'employeereport.html', context)

@@ -35,10 +35,15 @@ urlpatterns = [
     path('getDashboardData/<int:client_id>/', getDashboardData, name='getDashboardData'), 
     path('superadminlogin', superadminlogin, name='superadminlogin'),
     path('logout_superuser', logout_superuser, name='logout_superuser'),
+
+    
+    path('employeereport', employeereport, name='employeereport'), 
+
     path('companyfeedback', companyfeedback, name='companyfeedback'),
     path('employeefeedback', employeefeedback, name='employeefeedback'),
     path('viewfeedbackClient/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'),
     path('viewemployeefeedbackClient/<int:feedback_id>/', viewemployeefeedbackClient, name='viewemployeefeedbackClient'), 
+
 
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
