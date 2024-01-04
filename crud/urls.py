@@ -36,7 +36,8 @@ urlpatterns = [
     path('superadminlogin', superadminlogin, name='superadminlogin'),
     path('logout_superuser', logout_superuser, name='logout_superuser'),
      path('companyfeedback', companyfeedback, name='companyfeedback'),
-    path('viewfeedbackClient/<int:client_id>/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'), 
+    path('viewfeedbackClient/<int:client_id>/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'),
+    path('employeereport', employeereport, name='employeereport'), 
 
     # Admin
     # path('adminLogin', adminLogin, name='adminLogin'), 
