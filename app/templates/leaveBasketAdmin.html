@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +7,13 @@
     <meta name="description" content="Sversity is the online edu. Tech division of Apcosys Private Limited and Apcosys is a software development and consultancy company with headquarter in Bangalore, India. Sversity online learning destination, offering high-quality courses from the world's best universities and institutions to learners everywhere. In the age of internet, do we really need to spend huge amount on getting degrees? One can equally quench his third for knowledge by joining online classes.">
     <title>Leapss - Leave Management System</title>
     {% load static %}
-    <link href="{% static 'assets\css\admin.css' %}" rel="stylesheet"> 
-
+    <link href="{% static 'assets\css\admin.css' %}" rel="stylesheet">
+ 
+    <link href="{% static 'assets\css\leaveBasket.css' %}" rel="stylesheet">
+   
     <!-- CSS only -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    
     
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
@@ -27,12 +29,14 @@
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
     <!-- bootstrap Icon  -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
-
+    
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -50,12 +54,11 @@
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
-                <!-- <button class="btn" id="sidebarClose"><span class="bi bi-x "></span></button> -->
                 <li ><a class="list-group-item" href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item " href="/leaveApplicationDetails"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Leave Section</span></a></li>
                 <li><a class="list-group-item active" href="{% url 'activeEmployee' %}"><i class="bi bi-people" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Employee</span></a></li>
                 <li><a class="list-group-item " href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
-                <li><a class="list-group-item " href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
+                <li><a class="list-group-item" href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
                 <li><a class="list-group-item " href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
                 <li><a class="list-group-item " href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
              </div>
@@ -69,81 +72,181 @@
         <!-- Page content wrapper-->
         <div id="page-content-wrapper">
             <!-- Top navigation-->
-            <nav class="navbar navbar-expand-lg  align-items-center justify-content-around border-bottom">
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">
                 <!-- <div class="container">
                     <button class="btn" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>
                 </div> -->
                 
-                <div class="logo d-flex align-items-center" style="height:58px;">
+                <div class="logo d-flex align-items-center">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
-                    <span>{% if com is None %}Your Company Name{% else %}{{ com.name }}{% endif %}</span>
-                  </div> 
-                  <div class="input-group col-md-6">
-                     
-                  </div> 
-                <ul class="d-flex align-items-center header-nav">
-                     
-                  </ul>
+                    <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
+                
+                  </div>
+                    <ul class="d-flex align-items-center header-nav">
+                      <li style="list-style: none;margin-right:20px;" class="">
+                          <a type="button" href="/download_employees" style="width:250px;background-" class="btn">
+                            Download Employee Details
+                          </a>
+                      </li>
+                      <li style="list-style: none;"class="addEmp">
+                        <a type="button" href="/addEmployee" class="btn ">
+                          Add Employee
+                        </a>
+                    </li>
+                    </ul>
+                    
             </nav>
-            <section class = "pageClass"> 
 
 
-                <div class="empInfoo " style="margin-top:2%;"> 
-                    <div class="row justify-content-between"style="margin:auto 2%;" >
-                        <p>Reason For Deactivation</p> 
-                    </div> 
-                    <div> 
-                        <form method='POST'>
-                            {% csrf_token %}
-                            {{form.deactivate}}<br> 
-                            <div class="reject" style="text-align:center">
-                                <button type="submit"   class="btn btn-primary btn-lg " style="width: 15%; background-color: #FF7B5D; border: none ;">Deactivate</button>
+            <section class="section container pageClass  bg-white rounded dashboard">
+                <br>
+
+                  <h5 style="color: #009eff; padding: 1% ; ">Leave Section: </h5>
+                    
+                  <div class="row">
+                    <div class="col-md-4"> 
+                      {% for key,value in dic1.items %}
+                            <div class="basket1">
+                                <a type="button" class="btn btn-primary btn-lg " href="" >{{ value.0 }}/{{ value.1 }}</br>{{key}}</a>
                             </div>
-                        </form>
-                    </div>  
-                </div> 
+                      {% endfor %}
+                    </div>
+                    <div class="col-md-4"> 
+                      {% for key,value in dic2.items %}
+                          <div class="basket3">
+                            <a type="button" class="btn btn-primary btn-lg " href="" >{{ value.0 }}/{{ value.1 }}</br>{{key}}</a>
+                          </div>
+                      {% endfor %}
+                    </div>
+                    <div class="col-md-4"> 
+                      {% for key,value in dic3.items %}
+                          <div class="basket2">
+                            <a type="button" class="btn btn-primary btn-lg " href="" >{{ value.0 }}/{{ value.1 }}<br>{{key}}</a>
+                          </div>
+                      {% endfor %}
+                    </div>
+                  </div>  
 
-                <div class="client-data row">
+                  <h5 style="color: #009eff; padding: 1% ; ">Employee Details: </h5>
+
+                  <div class="client-data row">
                     <div class="col-6">
                         <table class="table">
                             <tr>
                                 <td>Name</td>
-                                <td>{{ client.name }}</td>
+                                <td>{{ emp.name }}</td>
                             </tr>
                             <tr>
                                 <td>Employee ID</td>
-                                <td>{{ client.emp_id }}</td>
+                                <td>{{ emp.emp_id }}</td>
                             </tr>
-
                         </table>
                     </div>
                     <div class="col-6">
                         <table class="table">
-                            <tr>
-                                <td>Department</td>
-                                <td>{{ client.department }}</td>
-                            </tr>
-                        </table>
-                    </div>
+                            <td>Department</td>
+                            <td>{{ emp.department }}</td>
+                        </tr>
 
+                    </table>
+                    </div>
+    
                 </div>
 
-            </section>
+                </section>
+
         </div>
     </div>
     
-    <script> 
-      $(document).ready(function() {
-            {
-                $(".search").addClass("shadow-none");
-            }
+    <script>
+        $(document).ready(function () {
+        $('#dtDynamicVerticalScrollExample').DataTable({
+          "scrollY": "50vh",
+          "scrollCollapse": true,
         });
+        $('.dataTables_length').addClass('bs-select');
+      });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-    <script src="{% static 'assets\js\main.js' %}"></script> 
+    <script>
+      $(document).ready(function() {
+      {
+          $(".search").addClass("shadow-none");
+      }
+     });
+    </script>
 
+    <script>
+      const input = document.getElementById('search-input')
+      input.addEventListener('keyup', (e) => {
+          var inputs = e.target.value.toLowerCase(); //do lowercase
+          //loop through outer div and hide it
+          document.querySelectorAll('.outers').forEach(function(el) {
+              el.style.display = 'none';
+          });
+          //loop through outer ->card-title
+          document.querySelectorAll('.outers .name').forEach(function(el) {
+              //compare 
+              if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
+                  el.closest('.outers').style.display = "table-row"; //if match show that div
+              }
+          })
+          document.querySelectorAll('.outers .dep').forEach(function(el) {
+            //compare 
+            if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
+                el.closest('.outers').style.display = "table-row"; //if match show that div
+            }
+        })
+        document.querySelectorAll('.outers .emp_id').forEach(function(el) {
+          //compare 
+          if (el.textContent.toLowerCase().indexOf(inputs) > -1) {
+              el.closest('.outers').style.display = "table-row"; //if match show that div
+          }
+      })
+      })
+  </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script src="{% static 'assets\js\main.js' %}"></script>
+    <script>
+        AOS.init();
+    </script>
+    <style>
+      .btn-primary {
+          color: #fff;
+          background-color: #009eff;
+          border-color: #009eff;
+          border-radius: 19px;
+      }
+      .tw-toggle {
+        display: flex;
+        align-items: center;
+        height: 46px;
+        padding: 2px 3px;
+        border-radius: 50px;
+        position: relative;
+        border: 2px solid #009eff;
+        margin: 0;
+        flex-flow: wrap;
+        width: 283px;
+    }
+      .btn-default {
+          color: #333;
+          background-color: #fff;
+          border-color: #ccc;
+          border: none;
+      }
+      .btnnew{
+        padding: 5px 10px 5px 10px;
+        text-decoration: none; 
+        border-radius: 20px;
+      
+      }
+      .btnnew:hover { 
+        text-decoration: none; 
+      }
+      </style>
+    
 </body>
 </html>

@@ -136,6 +136,7 @@
                           <th scope="col">Department</th>
                           <th scope="col">Employee Id</th>
                           <th scope="col">View</th>
+                          <th scope="col">Leave Basket</th>
                           <th scope="col">Status</th>
                         </tr>
                       </thead>
@@ -148,12 +149,17 @@
                             <td class='emp_id'>{{ emp.emp_id }}</td>  
                             <td>  
                               <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-sm " href="{% url 'viewEmployee' emp.id %}">View</a>
+                              </div>
+                            </td>
+                            <td>  
+                              <div class="edit">
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-sm btn-primary " href="{% url 'leaveBasketAdmin' emp.id %}">Leave Basket</a>
                               </div>
                             </td>
                             <td>  
                               <div class="reject">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " style="width: 80%; background-color: #FF7B5D; border: none ;"href="{% url 'deactivateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Deactivate</a>
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-sm " style="width: 80%; background-color: #FF7B5D; border: none ;"href="{% url 'deactivateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Deactivate</a>
                               </div>
                             </td>
                         </tr>  

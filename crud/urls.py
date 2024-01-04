@@ -118,6 +118,7 @@ urlpatterns = [
     path('privacyPolicy', privacyPolicy, name='privacyPolicy'),
     path('termsAndConditions', termsAndConditions, name='termsAndConditions'),
     path('leaveBasket', leaveBasket, name='leaveBasket'),
+    path('leaveBasketAdmin/<int:id>', leaveBasketAdmin, name='leaveBasketAdmin'),
     path("approvalStatus",approvalStatus, name='approvalStatus'),
     path('presentEmployees', presentEmployees, name='presentEmployees'),
     path('reviewEmployeeApplicationEmployee/<int:id>', reviewEmployeeApplicationEmployee, name='reviewEmployeeApplicationEmployee'), 

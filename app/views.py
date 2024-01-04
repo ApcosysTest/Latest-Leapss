@@ -687,7 +687,7 @@ def deactivateDetail(request, id):
             return redirect(reverse('activeEmployee'))
     else:
         form=DeactivateForm()
-    context = {'form':form, 'com':com}
+    context = {'form':form, 'com':com, 'client': emp}
     return render(request, 'deactivate.html', context)
 
 # Inactive Employee Detail
@@ -721,7 +721,7 @@ def activateDetail(request, id):
             return redirect(reverse('activeEmployee'))
     else:
         form=ActivateForm()
-    context = {'form':form, 'com':com}
+    context = {'form':form, 'com':com, 'client': emp}
     return render(request, 'activate.html', context)
 
 # Add Employee Detail
@@ -1837,6 +1837,42 @@ def leaveBasket(request):
         dic3[l]= [l.days-cat_count, l.days]
     context = {'leave':leave, 'dic1':dic1, 'dic2':dic2, 'dic3':dic3, 'com':com}
     return render(request, 'leaveBasket.html', context)
+
+
+@login_required(login_url='adminLogin')
+@user_passes_test(is_admin)
+def leaveBasketAdmin(request, id):
+    emp = Employee.objects.get(id=id)
+    com = Company.objects.filter(name=emp.com_id).first()
+    dic1 = {}
+    dic2 = {}
+    dic3 = {}
+    leave = LeavePolicy.objects.filter(com_id=emp.com_id).all().first()
+    count = Leave.objects.filter(com_id=emp.com_id).all().count()
+    l1 = math.ceil(count/3)
+    lea1 = Leave.objects.filter(com_id=emp.com_id).all()[:l1]
+    for l in lea1:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=emp.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic1[l]= [l.days-cat_count, l.days]
+    lea2 = Leave.objects.filter(com_id=emp.com_id).all()[l1:l1*2]
+    for l in lea2:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=emp.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic2[l]= [l.days-cat_count, l.days]
+    lea3 = Leave.objects.filter(com_id=emp.com_id).all()[l1*2:]
+    for l in lea3:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=emp.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic3[l]= [l.days-cat_count, l.days]
+    context = {'leave':leave, 'dic1':dic1, 'dic2':dic2, 'dic3':dic3, 'com':com, 'emp': emp}
+    print(f'Dict1: {dic1}, Dict2: {dic2}, Dict3: {dic3}')
+    return render(request, 'leaveBasketAdmin.html', context)
+
+
 # Employee Approval Status
 @login_required(login_url='employeeLogin')
 @user_passes_test(is_employee)
