@@ -163,9 +163,9 @@
                       </div>
                       <div class="input" style="padding-bottom:20px; display: flex; justify-content: space-around;">
                         <script src='https://www.google.com/recaptcha/api.js'></script>
-                        <div class="g-recaptcha" data-sitekey="6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG"></div>
+                        <div class="g-recaptcha" data-sitekey="6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG" data-callback="enableFeedbackBtn"></div>
                       </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary" id='feedbackBtn' disabled='True'>Submit</button>
                   </form>
             </div>
             
@@ -181,6 +181,11 @@
         });
         $('.dataTables_length').addClass('bs-select');
       });
+
+      function enableFeedbackBtn(){
+        document.getElementById("feedbackBtn").disabled = false;
+      }
+
     </script>
     <script>
       $(document).ready(function() {
