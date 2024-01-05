@@ -1700,6 +1700,7 @@ class CalendarViewEmp(generic.ListView):
         context['dic']=self.dash()
         context['quotes']=self.quote()
         context['emp'] = emp
+        context['com'] = com
         return context
 
 # Employee Profile
@@ -2134,11 +2135,25 @@ def feedback_emp(request):
     if request.method == 'POST':
         feedback_text = request.POST.get('name', '')
         emp_id = request.POST.get('eid', '')
+        to_dev = request.POST.get('to_dev', '')
         emp = Employee.objects.get(id=emp_id)
+        print(to_dev)
+
+        if to_dev == 'False':
+            to_dev = False
+        elif to_dev == 'True':
+            to_dev = True
+        
+        print(to_dev)
+        
         # company_instance = get_object_or_404(Company, id=company_id)
-        feedback_instance = FeedbackModel.objects.create(text=feedback_text, emp_id=emp)
-        #return HttpResponse("Feedback submitted successfully!")
-        messages.success(request, "Feedback has been sent.")
+        FeedbackModel.objects.create(text=feedback_text, emp_id=emp, to_devs=to_dev)
+        if to_dev == True:
+            messages.success(request, "Feedback has been sent to the developers.")
+        elif to_dev == False:
+            messages.success(request, "Feedback has been sent to your company Admin.")
+
+
         return redirect('sidebar')
 
     return redirect('sidebar')
@@ -2150,8 +2165,15 @@ def companyfeedback(request):
     context = {'feedback_entries': feedback_entries}
     return render(request, 'adminviewfeedback.html', context)
 
+@login_required(login_url='adminLogin')
+def feedbackEmp(request):
+    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True, to_devs=False)
+    context = {'feedback_entries': feedback_entries}
+    return render(request, 'feedbackEmp.html', context)
+
+
 def employeefeedback(request):
-    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True)
+    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True, to_devs=True)
     context = {'feedback_entries': feedback_entries}
     return render(request, 'adminviewempfeedback.html', context)
 
@@ -2187,6 +2209,17 @@ def viewemployeefeedbackClient(request, feedback_id):
     }
 
     return render(request, 'viewemployeefeedbackClient.html', context)
+
+@login_required(login_url='adminLogin')
+def viewemployeefeedbackCompany(request, id):
+    feedback = FeedbackModel.objects.get(id=id)
+    client = get_object_or_404(Employee, pk=feedback.emp_id.id)
+
+    context = {
+        'feedback': feedback,
+        'client': client,
+    }
+    return render(request, 'feedbackEmp.html', context)
 
 
 def viewsupportClient(request, support_id):
