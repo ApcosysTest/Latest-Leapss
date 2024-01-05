@@ -2423,7 +2423,7 @@ def viewquery(request, id):
 
     return render(request, 'viewquery.html', {'query': query, 'com': com})
 
-
+@login_required(login_url='adminLogin')
 def employeereport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     if emp is not None:
@@ -2485,6 +2485,57 @@ def employeereport(request):
     return render(request, 'employeereport.html', context)
 
 @login_required(login_url='adminLogin')
+def leavereport(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
+    lea = Leave.objects.filter(com_id_id=com.id)
+    
+    dep = Department.objects.filter(com_id_id=com.id)
+   
+    form = PerticularEmployeeForm(request.POST or None, request.FILES or None, com_id=com.id)
+    employees = Employee.objects.filter(
+                    com_id_id=com.id
+                    
+                )
+    print(f"com_id: {com.id}")
+
+    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea,  'employees':employees}
+    
+    if request.method == 'POST':
+        fromdate = request.POST.get('fromdate', '')
+        todate = request.POST.get('todate', '')
+        attandence = request.POST.get('attandence', '')
+        leavetype = request.POST.get('leavetype', '')
+        department = request.POST.get('department', '')
+        employee = request.POST.get('employee', '')
+        level = request.POST.get('level', '')
+        fromemployee = request.POST.get('fromemployee', '')
+        toemployee = request.POST.get('toemployee', '')
+        try:
+            if fromdate and todate:
+                fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+                todate = datetime.strptime(todate, '%Y-%m-%d').date()
+                print(f"from_date: {fromdate}, to_date: {todate}, attandence: {attandence}, leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
+                
+                queryset = Employee.objects.filter(
+                    com_id_id=com.id,
+                    doj__range=(fromdate, todate)
+                )
+                
+                print(queryset)
+                print('all condition is working')
+                context['employees'] = queryset
+                
+        except ValueError as e:
+            print(f"Error parsing dates: {e}")
+        
+    return render(request, 'leavereport.html', context)
+ 
+
+@login_required(login_url='adminLogin')
 def eventreport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     if emp is not None:
@@ -2518,3 +2569,4 @@ def eventreport(request):
             
 
     return render(request, 'eventreport.html', context)
+
