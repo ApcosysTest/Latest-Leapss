@@ -2438,7 +2438,7 @@ def employeereport(request):
                     com_id_id=com.id
                     
                 )
-    print(f"com_id: {com.id}")
+
 
     context = {'com': com, 'form': form, 'dep': dep, 'employees':employees}
 
@@ -2456,8 +2456,7 @@ def employeereport(request):
             if fromdate and todate:
                 fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
                 todate = datetime.strptime(todate, '%Y-%m-%d').date()
-                print(f"from_date: {fromdate}, to_date: {todate}, employee_status: {estatus}, department: {department}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
-                    
+               
                 queryset = Employee.objects.filter(
                     com_id_id=com.id,
                     doj__range=(fromdate, todate)
@@ -2477,12 +2476,45 @@ def employeereport(request):
                     #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
                     queryset = queryset.filter(name__iregex=regex_pattern)
                     
-            
-                print(queryset)
-                print('all condition is working')
+
                 context['employees'] = queryset
             
         except ValueError as e:
             print(f"Error parsing dates: {e}")
 
     return render(request, 'employeereport.html', context)
+
+@login_required(login_url='adminLogin')
+def eventreport(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
+    
+    dep = Department.objects.filter(com_id_id=com.id)
+   
+    events = Event.objects.filter(com_id=com)
+
+    print(f"com_id: {com.id}")
+
+    context = {'com': com, 'dep': dep, 'events':events}
+
+    if request.method == 'POST':
+        fromdate = request.POST.get('fromdate', '')
+        todate = request.POST.get('todate', '')
+
+
+        
+        if fromdate and todate:
+            fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+            todate = datetime.strptime(todate, '%Y-%m-%d').date()
+
+            queryset = Event.objects.filter(com_id=com,
+                date__range=(fromdate, todate)
+            )
+
+            context['events'] = queryset
+            
+
+    return render(request, 'eventreport.html', context)
