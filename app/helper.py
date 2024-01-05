@@ -17,6 +17,14 @@ def send_company_login_credential_mail(company, username, password):
     send_mail(subject, message, email_from, recipient_list)
     return True
 
+def send_otp_for_email_verification(otp, email):
+    subject = 'LEAPSS Email Verification'
+    message = f'One Time Password (OTP) : {otp}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    send_mail(subject, message, email_from, recipient_list)
+    return True
+
 def send_admin_forgot_password_otp(otp, email):
     subject = 'Request For Password Change'
     message = f'One Time Password (OTP) : {otp}'

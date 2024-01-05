@@ -16,6 +16,7 @@ urlpatterns = [
 
     # Apply LEAPSS
     path('requestApplication', requestApplication, name='requestApplication'), 
+    path('email-verification/', emailVerification, name='email_verification'),
     path('successfullyApply', successfullyApply, name='successfullyApply'), 
     path('appRequestDashboard', appRequestDashboard, name='appRequestDashboard'), 
     path('approvedClientDashboard', approvedClientDashboard, name='approvedClientDashboard'),
