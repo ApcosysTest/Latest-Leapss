@@ -950,7 +950,7 @@ def editEmployee(request, id):
     
     data = Employee.objects.get(id=id)
     instance = Employee.objects.get(pk=id)
-    userdata = User.objects.get(id=id)
+    # userdata = User.objects.get(id=id)
     instance1 = User.objects.get(pk=instance.user.id)
     form = EmployeeUpdateForm(request.POST or None, request.FILES or None, instance=instance, com_id=com.id)
 
