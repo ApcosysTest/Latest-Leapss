@@ -32,7 +32,23 @@
 
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
-
+    <style>
+        .back-btn2{
+          background-color: #009eff;
+          border: 1px solid #009eff;
+          color: white;
+          padding: 5px 9px; 
+          border-radius: 20px;
+          text-decoration: none;
+          transition: all 0.2s;
+          margin-left:20px;
+        }
+        .back-btn2:hover{
+          background-color: white;
+          border: 1px solid #009eff;
+          text-decoration: none;
+        }
+      </style>
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -86,49 +102,41 @@
                      
                   </ul>
             </nav>
-            <section class = "pageClass"> 
+            <section class = "pageClass"><br>
+                <a class="back-btn2" href="/activeEmployee"><i class="bi bi-box-arrow-left" style="font-size:18px; width: min-content;"></i><span></i> <span>Back</span></a>
+              <br><br>
+                <h5 style="color: #009eff; padding: 1% 2% ; ">Employee Details: </h5>
 
+                  <div class="client-data row">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex justify-content-center">
+                        <span style="font-weight: bold; margin-right: 20px;">Employee ID :</span>
+                        <span>{{ client.emp_id }}</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex justify-content-center">
+                        <span style="font-weight: bold; margin-right: 20px;">Name :</span>
+                        <span>{{ client.name }}</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex justify-content-center">
+                        <span style="font-weight: bold; margin-right: 20px;">Department :</span>
+                        <span>{{ client.department }}</span>
+                    </div>
+                </div>
 
                 <div class="empInfoo " style="margin-top:2%;"> 
                     <div class="row justify-content-between"style="margin:auto 2%;" >
-                        <p>Reason For Deactivation</p> 
+                        <h5 style="color: #009eff; padding: 1% ; ">Reason For Deactivation: </h5>
                     </div> 
                     <div> 
                         <form method='POST'>
                             {% csrf_token %}
                             {{form.deactivate}}<br> 
-                            <div class="reject" style="text-align:center">
-                                <button type="submit"   class="btn btn-primary btn-lg " style="width: 15%; background-color: #FF7B5D; border: none ;">Deactivate</button>
+                            <div class="d-flex justify-content-center"><br>
+                                <a class="btn" href="/companySetup" style="margin-right: 20px;background-color: tomato;color:white;">Cancel</a>
+                                <button type="submit" class="btn btn-primary btn-lg " style="width: 15%; background-color: #FF7B5D; border: none ;">Deactivate</button>
                             </div>
                         </form>
                     </div>  
                 </div> 
-
-                <div class="client-data row">
-                    <div class="col-6">
-                        <table class="table">
-                            <tr>
-                                <td>Name</td>
-                                <td>{{ client.name }}</td>
-                            </tr>
-                            <tr>
-                                <td>Employee ID</td>
-                                <td>{{ client.emp_id }}</td>
-                            </tr>
-
-                        </table>
-                    </div>
-                    <div class="col-6">
-                        <table class="table">
-                            <tr>
-                                <td>Department</td>
-                                <td>{{ client.department }}</td>
-                            </tr>
-                        </table>
-                    </div>
-
-                </div>
-
             </section>
         </div>
     </div>

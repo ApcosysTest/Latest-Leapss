@@ -50,12 +50,14 @@
                 </li>
             </ul>
             <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
-                <li ><a class="list-group-item " href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
+                <li><a class="list-group-item " href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
                 <li><a class="list-group-item " href="/leaveApplicationDetails"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Leave Section</span></a></li>
                 <li><a class="list-group-item " href="{% url 'activeEmployee' %}"><i class="bi bi-people" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Employee</span></a></li>
                 <li><a class="list-group-item " href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
                 <li><a class="list-group-item " href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
                 <li><a class="list-group-item active" href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
+                <li><a class="list-group-item" href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
+
              </div>
              <div class="logout">
               <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
@@ -67,24 +69,36 @@
         <!-- Page content wrapper-->
         <div id="page-content-wrapper">
             <!-- Top navigation-->
-            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">
-                  
-                <div class="logo d-flex align-items-center">
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">                
+                <div class="logo d-flex align-items-center" style="height:58px;">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
-                    <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
                     <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
-                  </div> 
+                  </div>  
             </nav>
             <section class="section container pageClass  bg-white rounded dashboard">
                 <div class="row justify-content-between">
                 <h5 style="color: #009eff; padding: 2%;">Add Leave Category</h5> 
 
                 </div> 
-                <div class="empInfo" style="padding: 0%; height: 100px ;"> 
+                <div> 
                 <form method='POST' class="justify-content-around">
                     {% csrf_token %}
-                    {{form}}
-                    <button type="Submit" id="addLeave" style="margin-left: 5%;">Submit</button>
+                    <div class="row" style="margin:2% 0 0 40px;">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <label for="id_dep_code">Name:</label>
+                            {{form.name}}
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <label for="id_department">Days:</label>
+                            {{form.days}}
+                        </div>
+                    </div>
+                    {{form.com_id}}
+                    <br><br><br>
+                    <div class="d-flex justify-content-center">
+                        <a class="btn" href="/leavePolicySetting" style="margin-right: 20px;background-color: tomato;color:white;width:100px;">Cancel</a>
+                        <button type='submit' class="btn btn-primary" style= "width:100px;">Submit</button>
+                    </div>
                 </form>
                 </div>
             </section>

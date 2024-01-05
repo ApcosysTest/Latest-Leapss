@@ -20,7 +20,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.models import Group, Permission
 from django.contrib.auth.forms import SetPasswordForm
 from django.db.models import Q, Count, Sum
-from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp, send_mail_about_client_request
+from .helper import send_account_creation_mail, send_company_login_credential_mail, send_admin_forgot_password_otp, send_mail_about_client_request, send_otp_for_email_verification
 import json
 import os
 import io
@@ -73,11 +73,16 @@ def requestApplication(request):
         form = AppRequestForm(request.POST)
         if form.is_valid():
             instance = form.save(commit=False)            
-            instance.active_status = True
-            instance.username = instance.email
-            instance.save()
-            send_mail_about_client_request(instance.company_name)
-            return render(request, 'successfullyApply.html')
+            # instance.active_status = True
+            # instance.username = instance.email
+            # request.session['app_request_data'] = form.cleaned_data
+            otp = str(random.randint(100000, 999999))
+            request.session['app_request_data'] = {
+                'form_data': form.cleaned_data,
+                'otp': otp
+            }
+            send_otp_for_email_verification(otp, instance.email)
+            return redirect('email_verification')
         else:
             if 'company_name' in form.errors:
                 messages.error(request, 'Company Name already exists.')
@@ -94,6 +99,40 @@ def requestApplication(request):
         'form':form
     }
     return render(request, 'applyApplication.html', context)
+
+def emailVerification(request):
+    if 'app_request_data' not in request.session:
+        return HttpResponse("No application data found in session.")
+
+    if request.method == 'POST':
+        verification_code = request.POST['verification_code']
+        app_data = request.session['app_request_data']
+        generated_otp = app_data.get('otp')
+        if verification_code == generated_otp:
+            form_data = app_data.get('form_data')
+            # instance = get_object_or_404(AllRequest, email=form_data['email'])
+            # instance.active_status = True
+            # instance.username = instance.email
+            # instance.save()
+            instance = AllRequest.objects.create (
+                company_name=form_data['company_name'],
+                website=form_data['website'],
+                email=form_data['email'],
+                telephone=form_data['telephone'],
+                telephone1=form_data['telephone1'],
+                country=form_data['country'],
+                state=form_data['state'],
+                city=form_data['city'],
+                address=form_data['address'],
+                pincode=form_data['pincode'],
+                active_status=True,
+                username=form_data['email'] 
+            )
+            send_mail_about_client_request(instance.company_name)
+            del request.session['app_request_data']
+            return render(request, 'successfullyApply.html')
+
+    return render(request, 'emailVerification.html')
 
 def successfullyApply(request):
     return render(request, 'successfullyApply.html')
@@ -1097,7 +1136,7 @@ def leavePolicySetting(request):
             form = LeavePolicyUpdateForm(request.POST or None, instance=instance, initial={'com_id': com.id})
             if form.is_valid():
                 form.save()
-                messages.success(request, "Privacy policy is updated.")
+                messages.success(request, "Leave policy is updated.")
                 return redirect('leavePolicySetting')
             else:
                 print(form.errors)
@@ -1205,7 +1244,10 @@ def addLeave(request):
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def editLeave(request,id):
-    com = Company.objects.all().first()
+    com = Company.objects.filter(username=request.user.username).first()
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     instance = Leave.objects.get(id=id)
     form = EditLeaveForm(request.POST or None, request.FILES or None, instance=instance)
     if form.is_valid():

@@ -35,6 +35,10 @@
       .options{
         display: none;
       }
+      #leavePolicyt{
+        user-select: none;
+        pointer-events: none;
+      }
     </style>
 </head>
 <body id="body-pd">
@@ -122,7 +126,7 @@
                     </div>
                 </div><br>
                 <div class="container">
-                    <textarea name="leavePolicy" id="leavePolicyt" cols="30" rows="9" disabled >{{leave.leavepolicy}}</textarea>
+                    <div name="leavePolicy" id="leavePolicyt" cols="30" rows="15" disabled >{{leave.leavepolicy | safe}}</div>
 
                 </div>
               </section>

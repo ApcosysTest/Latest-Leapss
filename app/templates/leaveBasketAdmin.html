@@ -36,7 +36,22 @@
 
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
-    
+    <style>
+      .back-btn2{
+        background-color: #009eff;
+        border: 1px solid #009eff;
+        color: white;
+        padding: 5px 9px; 
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+      .back-btn2:hover{
+        background-color: white;
+        border: 1px solid #009eff;
+        text-decoration: none;
+      }
+    </style>
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -85,11 +100,11 @@
                   </div>
                     <ul class="d-flex align-items-center header-nav">
                       <li style="list-style: none;margin-right:20px;" class="">
-                          <a type="button" href="/download_employees" style="width:250px;background-" class="btn">
+                          <a type="button" href="/download_employees" style="width:250px;" class="btn">
                             Download Employee Details
                           </a>
                       </li>
-                      <li style="list-style: none;"class="addEmp">
+                      <li style="list-style: none;" class="addEmp">
                         <a type="button" href="/addEmployee" class="btn ">
                           Add Employee
                         </a>
@@ -99,8 +114,26 @@
             </nav>
 
 
-            <section class="section container pageClass  bg-white rounded dashboard">
+            <section class="section container pageClass  bg-white rounded dashboard"><br>
+              <a class="back-btn2" href="/activeEmployee"><i class="bi bi-box-arrow-left" style="font-size:18px; width: min-content;"></i><span></i> <span>Back</span></a>
+              <br>
                 <br>
+                <h5 style="color: #009eff; padding: 1% ; ">Employee Details: </h5>
+
+                  <div class="client-data row">
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex justify-content-center">
+                        <span style="font-weight: bold; margin-right: 20px;">Employee ID :</span>
+                        <span>{{ emp.emp_id }}</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex justify-content-center">
+                        <span style="font-weight: bold; margin-right: 20px;">Name :</span>
+                        <span>{{ emp.name }}</span>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 d-flex justify-content-center">
+                        <span style="font-weight: bold; margin-right: 20px;">Department :</span>
+                        <span>{{ emp.department }}</span>
+                    </div>
+                </div>
 
                   <h5 style="color: #009eff; padding: 1% ; ">Leave Section: </h5>
                     
@@ -127,32 +160,6 @@
                       {% endfor %}
                     </div>
                   </div>  
-
-                  <h5 style="color: #009eff; padding: 1% ; ">Employee Details: </h5>
-
-                  <div class="client-data row">
-                    <div class="col-6">
-                        <table class="table">
-                            <tr>
-                                <td>Name</td>
-                                <td>{{ emp.name }}</td>
-                            </tr>
-                            <tr>
-                                <td>Employee ID</td>
-                                <td>{{ emp.emp_id }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-6">
-                        <table class="table">
-                            <td>Department</td>
-                            <td>{{ emp.department }}</td>
-                        </tr>
-
-                    </table>
-                    </div>
-    
-                </div>
 
                 </section>
 

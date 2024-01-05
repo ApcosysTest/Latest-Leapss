@@ -32,6 +32,8 @@
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
 
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.3.0/classic/ckeditor.js"></script>
+
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -147,6 +149,7 @@
                         <div class="container">
                             {{form.leavepolicy}}
                         </div>
+                        <br>
                         <div class=" row justify-content-center addEmp">
                             <button class="btn " type="submit"> Update</button>
                         </div>
@@ -218,6 +221,38 @@
     <script>
         AOS.init();
     </script>
-
+    <script>
+        ClassicEditor.create(document.querySelector("#tarea"), {
+            toolbar: {
+                items: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    '|',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'link',
+                    'insertTable',
+                    '|',
+                    'undo',
+                    'redo'
+                ],
+                removeItems: 'imageUpload' // Remove the image upload option
+            }
+        })
+        .then((editor) => {
+            window.editor = editor;
+            console.log("CKEditor initialized without image upload option");
+            const x = document.querySelector("#privacyPolicyValue").value;
+            editor.setData(x);
+            const data = editor.getData();
+            console.log(data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    </script>
 </body>
 </html>
