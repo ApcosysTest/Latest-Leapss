@@ -196,15 +196,14 @@ class Absent(models.Model):
     
     
 class FeedbackModel(models.Model):
-    text = models.TextField()
-    company_id = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
-    emp_id = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
+    text        = models.TextField()
+    company_id  = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    emp_id      = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
+    to_devs     = models.BooleanField(default=True)
     
     def __str__(self):
         return self.text
     
-
-
 
 class Support(models.Model):
     text = models.TextField()

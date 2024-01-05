@@ -93,8 +93,8 @@
             <section class="section container pageClass bg-white rounded dashboard">
                 <div class="d-flex" style="list-style:none; margin-top: 3%;">
 
-                  <li ><a class="list-group-item ml-2 active" style="text-decoration: none; border-radius: 20px;" href="">Your Feedbacks</a></li>
-                  <li><a class="list-group-item ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'feedbackEmp' %}">Employee Feedbacks</a></li>
+                  <li ><a class="list-group-item ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url "feedback" %}">Your Feedbacks</a></li>
+                  <li><a class="list-group-item ml-2 active" style="text-decoration: none; border-radius: 20px;" href="">Employee Feedbacks</a></li>
     
                 </div>
                 <div class="row" style="margin-top: 1%;">
@@ -113,25 +113,35 @@
                     </div>
 
                     <div class="table-responsive-lg">
-                  <table class="table  "style=" overflow-x: hidden; ">
-                      <thead style="text-align: center;">
-                        <tr>
-                          <th scope="col">Sl No</th>
-                          <th scope="col">Feedback Details</th>
-                          
-                        </tr>
-                      </thead>
-                      <tbody style="text-align: center;">
-                        
-                        {% for feed in feedback %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ feed.text }}</td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table> 
-                    </div>
+
+                    <table class="table" style="width: 95%;margin: 30px;">
+                        <thead>
+                            <tr>
+                                <th>Sl no </th>
+                                <th>Employee Name</th>
+                                <th>Employee ID</th>
+                                
+                                <th>phone</th>
+                                <th>feedback</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for feedback_entry  in feedback_entries  %}
+                            <tr class="outers">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ feedback_entry.emp_id.name }}</td>
+                                <td >{{ feedback_entry.emp_id.emp_id }}</td>
+                                
+                                <td >{{ feedback_entry.emp_id.personal_contact }}</td>
+                                <td >{{ feedback_entry.text }}</td>
+                                <td ><a href="{% url 'viewemployeefeedbackCompany' feedback_entry.id %}" class="btn btn-info" style="width:80px;">View</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
                       
             </section>
         </div>

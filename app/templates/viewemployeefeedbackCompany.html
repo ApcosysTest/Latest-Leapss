@@ -91,47 +91,62 @@
             
 
             <section class="section container pageClass bg-white rounded dashboard">
-                <div class="d-flex" style="list-style:none; margin-top: 3%;">
+                
+                <h3 class="text-center">Employee Details</h3>
+                <div class="client-data row">
+                    <div class="col-6">
+                        <table class="table">
+                            <tr>
+                                <td>Name</td>
+                                <td>{{ client.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Employee ID</td>
+                                <td>{{ client.emp_id }}</td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td>{{ client.email }}</td>
+                            </tr>
+                            <tr>
+                                <td>Telephone</td>
+                                <td>{{ client.personal_contact }}</td>
+                            </tr>
+                            <tr>
+                                <td>Date of joining</td>
+                                <td>{{ client.doj }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <table class="table">
+                            <td>Present Address</td>
+                            <td>{{ client.present_address }}</td>
+                        </tr>
+                        <tr>
+                            <td>Permanent Address</td>
+                            <td>{{ client.permanent_address }}</td>
+                        </tr>
+                        <tr>
+                            <td>Designation</td>
+                            <td>{{ client.designation }}</td>
+                        </tr>
+                        <tr>
+                            <td>Department</td>
+                            <td>{{ client.department }}</td>
+                        </tr>
+                        <tr>
+                            <td>Level</td>
+                            <td>{{ client.level }}</td>
+                        </tr>
+                    </table>
+                    </div>
 
-                  <li ><a class="list-group-item ml-2 active" style="text-decoration: none; border-radius: 20px;" href="">Your Feedbacks</a></li>
-                  <li><a class="list-group-item ml-2" style="text-decoration: none; border-radius: 20px;" href="{% url 'feedbackEmp' %}">Employee Feedbacks</a></li>
-    
+                    <div class="col-12">
+                    <h4>Feedback </h4>
+                    <p>{{feedback.text}}</p>
+                    </div>
                 </div>
-                <div class="row" style="margin-top: 1%;">
-                  <div class="col-md-6">
-                    <h5 style="color: #009eff;padding: 1%;">Feedback Details</h5>
-                   
-                    
-                  </div>
-                  <div class="col-md-6" >
-                    
-                    <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#exampleModalCenter" style="float:right">Give a Feedback</button>
-                    
-                  </div>
-                    <div class="col-md-2"></div>
-                   
-                    </div>
-
-                    <div class="table-responsive-lg">
-                  <table class="table  "style=" overflow-x: hidden; ">
-                      <thead style="text-align: center;">
-                        <tr>
-                          <th scope="col">Sl No</th>
-                          <th scope="col">Feedback Details</th>
-                          
-                        </tr>
-                      </thead>
-                      <tbody style="text-align: center;">
-                        
-                        {% for feed in feedback %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ feed.text }}</td>
-                        </tr>
-                        {% endfor %}
-                      </tbody>
-                    </table> 
-                    </div>
                       
             </section>
         </div>
