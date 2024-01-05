@@ -2549,11 +2549,14 @@ def eventreport(request):
 
     print(f"com_id: {com.id}")
 
-    context = {'com': com, 'dep': dep, 'events':events}
+    categories = Event.objects.values_list('category', flat=True).distinct()
+
+    context = {'com': com, 'dep': dep, 'events':events, 'categories': categories}
 
     if request.method == 'POST':
         fromdate = request.POST.get('fromdate', '')
         todate = request.POST.get('todate', '')
+        category = request.POST.get('category', '')
 
 
         
@@ -2564,6 +2567,9 @@ def eventreport(request):
             queryset = Event.objects.filter(com_id=com,
                 date__range=(fromdate, todate)
             )
+
+            if category != 'All':
+                queryset = queryset.filter(category=category)
 
             context['events'] = queryset
             

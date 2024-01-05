@@ -133,7 +133,7 @@
                 <li><a class="list-group-item " href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
                 <li><a class="list-group-item" href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
                 <li><a class="list-group-item " href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
-                <li><a class="list-group-item " data-toggle="modal" data-target="#reportModal"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports</span></a></li>
+                <li><a class="list-group-item " style="cursor: pointer;" data-toggle="modal" data-target="#reportModal"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports</span></a></li>
                 <li><a class="list-group-item " href="/reportPrinting"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
              </div>
              <div class="logout">
@@ -366,12 +366,9 @@
           </div>
           <div class="modal-body">
               <a type="button" href="{% url 'employeereport' %}" class="btn">Employees Report</a><br>
-              <a type="button" href="" class="btn">Leaves Report</a><br>
+              <a type="button" href="{% url 'leavereport' %}" class="btn">Leaves Report</a><br>
               <a type="button" href="{% url 'eventreport' %}" class="btn">Events Report</a><br>
               
-          </div>
-          <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
       </div>
       </div>
