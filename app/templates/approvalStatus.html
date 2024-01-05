@@ -89,7 +89,7 @@
               </a>
                 <h5 style="color: #009eff; padding: 1% ; ">Approval Status</h5>
                 <div class="table-responsive-md">
-                <table class="table "style=" overflow-x: hidden; height: 450px; ">
+                <table class="table "style=" overflow-x: hidden;">
                     <thead>
                       <tr>
                         <th scope="col">Leave Type</th>
@@ -134,7 +134,7 @@
                     </tbody>
                   </table>
                 </div>
-                  <div style="text-align:center;">
+                  <div style="text-align:center; bottom: 0; position: absolute;" class="mb-2">
                     <span class="">
                     {% if leaves.has_previous %}
                     <a href="?page={{ leaves.previous_page_number }}">Previous</a>

@@ -1700,6 +1700,7 @@ class CalendarViewEmp(generic.ListView):
         context['dic']=self.dash()
         context['quotes']=self.quote()
         context['emp'] = emp
+        context['com'] = com
         return context
 
 # Employee Profile
@@ -2218,7 +2219,7 @@ def viewemployeefeedbackCompany(request, id):
         'feedback': feedback,
         'client': client,
     }
-    return render(request, 'viewemployeefeedbackCompany.html', context)
+    return render(request, 'feedbackEmp.html', context)
 
 
 def viewsupportClient(request, support_id):
