@@ -112,30 +112,54 @@
                     <div style="background-color : #e9e8e8; border-radius: 10px;     padding: 5px;" id="filterElement" >
                         <div class="row justify-content-center">
                           <div class="col-lg-12">
-                            <h4 class="mb-3">Filter </h4>
+                            
                             <form method="post" action="">
                              {% csrf_token %}
                               <div class="row g-3">
                                 <div class="col-md-3">
-                                  <label for="your-name" class="form-label">From Date</label>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="your-name" class="form-label">From </label>
+                                    
+                                  </div>
+                                  <div class="col-md-4">
+                                    <label for="your-surname" class="form-label">To  </label>
+                                    
+                                  </div>
+                                <div class="col-md-3">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Date Range</label>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                  
                                   <input type="date" class="form-control" id="from-date" name="fromdate" required>
                                 </div>
-                                <div class="col-md-3">
-                                  <label for="your-surname" class="form-label">To Date </label>
+                                <div class="col-md-4">
+                                  
                                   <input type="date" class="form-control" id="to-date" name="todate" required>
                                 </div>
                                 <div class="col-md-3">
-                                  <label for="your-email" class="form-label">Employee Status</label>
-                                  <select class="form-control" name="estatus">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Status</label>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    
+                                  {% comment %} <label for="your-email" class="form-label">Employee Status</label> {% endcomment %}
+                                  <select class="form-control" name="estatus" style="margin-bottom: 5px;">
                                     <option value="All">All</option>
                                     <option value="true">Active</option>
                                     <option value="false">Inactive</option>
                                   </select>
                                 </div>
-                                
                                 <div class="col-md-3">
-                                    <label for="your-subject" class="form-label">Department</label>
-                                    <select class="form-control" name="department">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Department </label>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    
+                                    {% comment %} <label for="your-subject" class="form-label">Department</label> {% endcomment %}
+                                    <select class="form-control" name="department" style="margin-bottom: 5px;">
                                       <option value="All">All</option>
                                       {% for dp in dep %}
                                       <option value="{{dp.id}}">{{dp.department}}</option>
@@ -144,8 +168,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="your-subject" class="form-label">Level vice</label>
-                                    <select class="form-control" name="level">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Level  </label>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    
+                                    {% comment %} <label for="your-subject" class="form-label">Level vice</label> {% endcomment %}
+                                    <select class="form-control" name="level" style="margin-bottom: 5px;">
                                       <option value="All">All</option>
                                       <option value="Level 0">HR</option>
                                       <option value="Level 1">Senior Offical</option>
@@ -154,8 +183,13 @@
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="your-subject" class="form-label">From Employee </label>
-                                    <select class="form-control" name="fromemployee" id="fromemployee">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Employee Range  </label>
+                                    
+                                </div>
+                                <div class="col-md-4">
+                                    
+                                    {% comment %} <label for="your-subject" class="form-label">From Employee </label> {% endcomment %}
+                                    <select class="form-control" name="fromemployee" id="fromemployee" style="margin-bottom: 5px;">
                                       <option value="All">All</option>
                                       <option value="a">A</option>
                                       <option value="c">C</option>
@@ -185,10 +219,11 @@
                                       <option value="z">Z</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="your-subject" class="form-label">To Employee </label>
+                                <div class="col-md-4">
                                     
-                                    <select class="form-control" name="toemployee" id="toemployee">
+                                    {% comment %} <label for="your-subject" class="form-label">To Employee </label> {% endcomment %}
+                                    
+                                    <select class="form-control" name="toemployee" id="toemployee" style="margin-bottom: 5px;">
                                         <option value="All">All</option>
                                         <option value="a">A</option>
                                         <option value="c">C</option>
@@ -324,6 +359,12 @@
     <script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js'></script>
     <script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js'></script>
     <script src='https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js'></script>
+    <style>
+        label {
+            display: inline-block;
+            margin: 0.5rem;
+        }
+    </style>
 <script>
     $(document).ready(function() {
         var table = $('#example').DataTable({
