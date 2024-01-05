@@ -139,16 +139,17 @@
                     </div> </div>
                     <div class="table-responsive-lg">
                   <table class="table  "style=" overflow-x: hidden; ">
-                      <thead style="text-align: center;">
+                      <thead>
                         <tr>
                           <th scope="col">Name</th>
                           <th scope="col">Department</th>
                           <th scope="col">Employee Id</th>
                           <th scope="col">View</th>
+                          <th scope="col">Leave Basket</th>
                           <th scope="col">Status</th>
                         </tr>
                       </thead>
-                      <tbody style="text-align: center;">
+                      <tbody>
                         
                         {% for emp in emp %}  
                         <tr class='outers'>  
@@ -157,24 +158,26 @@
                             <td class='emp_id'>{{ emp.emp_id }}</td>  
                             <td>  
                               <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-sm " href="{% url 'viewEmployee' emp.id %}">View</a>
                               </div>
                             </td>
-                            {% comment %} <td>  
+
+                            <td>  
+                              <div class="edit">
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-sm btn-primary " href="{% url 'leaveBasketAdmin' emp.id %}">Leave Basket</a>
+                              </div>
+                            </td>
+
+                            <td>
+                              {% if emp.status %}
                                 <div class="edit">
-                                    <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " >{{emp.status}}</a>
+                                    <a class="btn btn-success btn-sm" style="position: relative; top: -10px; background-color : #218838; border-color: #218838;" href="#">Active</a>
                                 </div>
-                              </td> {% endcomment %}
-                              <td>
-                                {% if emp.status %}
+                              {% else %}
                                 <div class="edit">
-                                    <a class="btn btn-success btn-lg" style="position: relative; top: -10px; background-color : #218838; border-color: #218838;" href="#">Active</a>
+                                    <a class="btn btn-danger btn-sm" style="position: relative; top: -10px; background-color: #bd2130; border-color: #bd2130;" href="#">Inactive</a>
                                 </div>
-                                {% else %}
-                                <div class="edit">
-                                    <a class="btn btn-danger btn-lg" style="position: relative; top: -10px; background-color: #bd2130; border-color: #bd2130;" href="#">Inactive</a>
-                                </div>
-                                {% endif %}
+                              {% endif %}
                             </td> 
                             
                         </tr>  

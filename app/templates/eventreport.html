@@ -96,7 +96,7 @@
             <section class="section container bg-white rounded dashboard">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 style="color: #009eff;padding: 1%;">Employees Report</h5>
+                        <h5 style="color: #009eff;padding: 1%;">Events Report</h5>
                        
                         
                     </div>
@@ -139,120 +139,6 @@
                                   
                                   <input type="date" class="form-control" id="to-date" name="todate" required>
                                 </div>
-                                <div class="col-md-3">
-                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Status</label>
-                                    
-                                </div>
-                                <div class="col-md-8">
-                                    
-                                  {% comment %} <label for="your-email" class="form-label">Employee Status</label> {% endcomment %}
-                                  <select class="form-control" name="estatus" style="margin-bottom: 5px;">
-                                    <option value="All">All</option>
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                  </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Department </label>
-                                    
-                                </div>
-                                <div class="col-md-8">
-                                    
-                                    {% comment %} <label for="your-subject" class="form-label">Department</label> {% endcomment %}
-                                    <select class="form-control" name="department" style="margin-bottom: 5px;">
-                                      <option value="All">All</option>
-                                      {% for dp in dep %}
-                                      <option value="{{dp.id}}">{{dp.department}}</option>
-                                      {% endfor %}
-                                      
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Level  </label>
-                                    
-                                </div>
-                                <div class="col-md-8">
-                                    
-                                    {% comment %} <label for="your-subject" class="form-label">Level vice</label> {% endcomment %}
-                                    <select class="form-control" name="level" style="margin-bottom: 5px;">
-                                      <option value="All">All</option>
-                                      <option value="Level 0">HR</option>
-                                      <option value="Level 1">Senior Offical</option>
-                                      <option value="Level 2">Team Lead</option>
-                                      <option value="Level 3">Employee</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3">
-                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Employee Range  </label>
-                                    
-                                </div>
-                                <div class="col-md-4">
-                                    
-                                    {% comment %} <label for="your-subject" class="form-label">From Employee </label> {% endcomment %}
-                                    <select class="form-control" name="fromemployee" id="fromemployee" style="margin-bottom: 5px;">
-                                      <option value="All">All</option>
-                                      <option value="a">A</option>
-                                      <option value="c">C</option>
-                                      <option value="b">B</option>
-                                      <option value="d">D</option>
-                                      <option value="e">E</option>
-                                      <option value="f">F</option>
-                                      <option value="g">G</option>
-                                      <option value="h">H</option>
-                                      <option value="i">I</option>
-                                      <option value="j">J</option>
-                                      <option value="k">K</option>
-                                      <option value="l">L</option>
-                                      <option value="m">M</option>
-                                      <option value="n">N</option>
-                                      <option value="o">O</option>
-                                      <option value="p">P</option>
-                                      <option value="q">Q</option>
-                                      <option value="r">R</option>
-                                      <option value="s">S</option>
-                                      <option value="t">T</option>
-                                      <option value="u">U</option>
-                                      <option value="v">V</option>
-                                      <option value="w">W</option>
-                                      <option value="x">X</option>
-                                      <option value="y">Y</option>
-                                      <option value="z">Z</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    
-                                    {% comment %} <label for="your-subject" class="form-label">To Employee </label> {% endcomment %}
-                                    
-                                    <select class="form-control" name="toemployee" id="toemployee" style="margin-bottom: 5px;">
-                                        <option value="All">All</option>
-                                        <option value="a">A</option>
-                                        <option value="c">C</option>
-                                        <option value="b">B</option>
-                                        <option value="d">D</option>
-                                        <option value="e">E</option>
-                                        <option value="f">F</option>
-                                        <option value="g">G</option>
-                                        <option value="h">H</option>
-                                        <option value="i">I</option>
-                                        <option value="j">J</option>
-                                        <option value="k">K</option>
-                                        <option value="l">L</option>
-                                        <option value="m">M</option>
-                                        <option value="n">N</option>
-                                        <option value="o">O</option>
-                                        <option value="p">P</option>
-                                        <option value="q">Q</option>
-                                        <option value="r">R</option>
-                                        <option value="s">S</option>
-                                        <option value="t">T</option>
-                                        <option value="u">U</option>
-                                        <option value="v">V</option>
-                                        <option value="w">W</option>
-                                        <option value="x">X</option>
-                                        <option value="y">Y</option>
-                                        <option value="z">Z</option>
-                                      </select>
-                                </div>
                                 
                                 <div class="col-12">
                                   <div class="row">
@@ -273,44 +159,27 @@
                         <thead >
                             <tr >
                                 <th>Sl no</th>
-                                <th>Employee ID</th>
-                                <th>Name</th>
-                                <th>Company Contact no</th>
-                                <th>Personal Contact No </th>
-                                <th>Presesnt Address</th>
-                                <th>DOB</th>
-                                <th>DOJ</th>
-                                <th>Gender </th>
-                                <th>Email </th>
-                                <th>Office Email </th>
-                                <th>Active </th>
-                                <th>Designation </th>
-                                <th>Level </th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Visibility</th>
+
                             </tr>
                         </thead>
                         <tbody>
-                            {% for emp in employees %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ emp.emp_id }}</td>
-                            <td>{{ emp.name }}</td>
-                            <td>{{ emp.company_contact }}</td>
-                            <td>{{ emp.personal_contact }}</td>
-                            <td>{{ emp.present_address }}</td>
-                            <td>{{ emp.dob }}</td>
-                            <td>{{ emp.doj }}</td>
-                            <td>{{ emp.gender }}</td>
-                            <td>{{ emp.email }}</td>
-                            <td>{{ emp.office_email }}</td>
-                            {% if emp.status %}
-                            <td style="color: green; font-weight: 700;">Active</td>
-                            {% else %}
-                            <td style="color: red; font-weight: 700;">Inactive</td>
-                            {% endif %} 
-                            <td>{{ emp.designation }}</td>
-                            <td>{{ emp.level }}</td>
-                            
-                        </tr>
+                        {% for event in events %}
+                        
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ event.title }}</td>
+                                <td>{{ event.category }}</td>
+                                <td>{{ event.description }}</td>
+                                <td>{{ event.date }}</td>
+                                <td>{{ event.visibility }}</td>
+                                
+                            </tr>
+
                         {% endfor %}
                             
                         </tbody>

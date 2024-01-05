@@ -38,12 +38,18 @@ urlpatterns = [
 
     
     path('employeereport', employeereport, name='employeereport'), 
+
     path('leavereport', leavereport, name='leavereport'), 
 
+    path('eventreport', eventreport, name='eventreport'), 
+
+
     path('companyfeedback', companyfeedback, name='companyfeedback'),
+    path('feedbackEmp', feedbackEmp, name='feedbackEmp'),
     path('employeefeedback', employeefeedback, name='employeefeedback'),
     path('viewfeedbackClient/<int:feedback_id>/', viewfeedbackClient, name='viewfeedbackClient'),
     path('viewemployeefeedbackClient/<int:feedback_id>/', viewemployeefeedbackClient, name='viewemployeefeedbackClient'), 
+    path('viewemployeefeedbackCompany/<int:id>/', viewemployeefeedbackCompany, name='viewemployeefeedbackCompany'), 
 
 
     # Admin
