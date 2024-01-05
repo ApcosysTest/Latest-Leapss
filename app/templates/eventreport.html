@@ -139,6 +139,22 @@
                                   
                                   <input type="date" class="form-control" id="to-date" name="todate" required>
                                 </div>
+
+                                <div class="col-md-3">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;">Category</label>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    
+                        
+                                    <select class="form-control" name="category" style="margin-bottom: 5px;">
+                                      <option value="All">All</option>
+                                      {% for cat in categories %}
+                                      <option value="{{cat}}">{{cat}}</option>
+                                      {% endfor %}
+                                      
+                                    </select>
+                                </div>
                                 
                                 <div class="col-12">
                                   <div class="row">
@@ -169,7 +185,7 @@
                         </thead>
                         <tbody>
                         {% for event in events %}
-                        
+
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ event.title }}</td>
