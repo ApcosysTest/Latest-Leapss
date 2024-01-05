@@ -80,6 +80,11 @@
               
                 </div>
                   <ul class="d-flex align-items-center header-nav">
+                    <li style="list-style: none;margin-right:20px;" class="">
+                      <a type="button" href="/download_employees" style="width:250px;background-" class="btn">
+                        Download Employee Details
+                      </a>
+                    </li>
                     <li style="list-style: none;"class="addEmp">
                         <a type="button" href="/addEmployee" class="btn ">
                           Add Employee
@@ -128,16 +133,17 @@
                     </div> </div>
                     <div class="table-responsive-lg">
                   <table class="table  "style=" overflow-x: hidden;">
-                      <thead style="text-align: center;">
+                      <thead>
                         <tr>
                           <th scope="col">Name</th>
                           <th scope="col">Department</th>
                           <th scope="col">Employee Id</th>
-                          <th scope="col">Edit</th>
-                          <th scope="col">Status</th>
+                          <th scope="col">View</th>
+                          <th scope="col">Leave Basket</th>
+                          <th scope="col">Status</th
                         </tr>
                       </thead>
-                      <tbody style="text-align: center;">
+                      <tbody>
                         
                         {% for emp in emp %}  
                         <tr class='outers'>  
@@ -146,12 +152,17 @@
                             <td class='emp_id'>{{ emp.emp_id }}</td>  
                             <td>  
                               <div class="edit">
-                                  <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-lg " href="{% url 'viewEmployee' emp.id %}">View</a>
+                                <a type="button" style="position: relative; top:-10px" class="btn btn-primary btn-sm " href="{% url 'viewEmployee' emp.id %}">View</a>
+                              </div>
+                            </td>
+                            <td>  
+                              <div class="edit">
+                                  <a type="button" style="position: relative; top:-10px" class="btn btn-sm btn-primary " href="{% url 'leaveBasketAdmin' emp.id %}">Leave Basket</a>
                               </div>
                             </td>
                             <td>  
                                 <div class="edit">
-                                    <a type="button" style="position: relative; top:-10px; background-color: #52D89C; border: #52D89C 1px solid;" class="btn btn-primary btn-lg" href="{% url 'activateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Activate</a>
+                                    <a type="button" style="position: relative; top:-10px; background-color: #52D89C; border: #52D89C 1px solid;" class="btn btn-primary btn-sm" href="{% url 'activateDetail' emp.id %}" onclick="return confirm('Are You Sure?')">Activate</a>
                                 </div>
                               </td>
                         </tr>  

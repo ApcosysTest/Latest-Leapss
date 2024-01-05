@@ -1700,6 +1700,7 @@ class CalendarViewEmp(generic.ListView):
         context['dic']=self.dash()
         context['quotes']=self.quote()
         context['emp'] = emp
+        context['com'] = com
         return context
 
 # Employee Profile
@@ -2134,11 +2135,25 @@ def feedback_emp(request):
     if request.method == 'POST':
         feedback_text = request.POST.get('name', '')
         emp_id = request.POST.get('eid', '')
+        to_dev = request.POST.get('to_dev', '')
         emp = Employee.objects.get(id=emp_id)
+        print(to_dev)
+
+        if to_dev == 'False':
+            to_dev = False
+        elif to_dev == 'True':
+            to_dev = True
+        
+        print(to_dev)
+        
         # company_instance = get_object_or_404(Company, id=company_id)
-        feedback_instance = FeedbackModel.objects.create(text=feedback_text, emp_id=emp)
-        #return HttpResponse("Feedback submitted successfully!")
-        messages.success(request, "Feedback has been sent.")
+        FeedbackModel.objects.create(text=feedback_text, emp_id=emp, to_devs=to_dev)
+        if to_dev == True:
+            messages.success(request, "Feedback has been sent to the developers.")
+        elif to_dev == False:
+            messages.success(request, "Feedback has been sent to your company Admin.")
+
+
         return redirect('sidebar')
 
     return redirect('sidebar')
@@ -2150,8 +2165,15 @@ def companyfeedback(request):
     context = {'feedback_entries': feedback_entries}
     return render(request, 'adminviewfeedback.html', context)
 
+@login_required(login_url='adminLogin')
+def feedbackEmp(request):
+    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True, to_devs=False)
+    context = {'feedback_entries': feedback_entries}
+    return render(request, 'feedbackEmp.html', context)
+
+
 def employeefeedback(request):
-    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True)
+    feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True, to_devs=True)
     context = {'feedback_entries': feedback_entries}
     return render(request, 'adminviewempfeedback.html', context)
 
@@ -2187,6 +2209,17 @@ def viewemployeefeedbackClient(request, feedback_id):
     }
 
     return render(request, 'viewemployeefeedbackClient.html', context)
+
+@login_required(login_url='adminLogin')
+def viewemployeefeedbackCompany(request, id):
+    feedback = FeedbackModel.objects.get(id=id)
+    client = get_object_or_404(Employee, pk=feedback.emp_id.id)
+
+    context = {
+        'feedback': feedback,
+        'client': client,
+    }
+    return render(request, 'feedbackEmp.html', context)
 
 
 def viewsupportClient(request, support_id):
@@ -2390,7 +2423,7 @@ def viewquery(request, id):
 
     return render(request, 'viewquery.html', {'query': query, 'com': com})
 
-
+@login_required(login_url='adminLogin')
 def employeereport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     if emp is not None:
@@ -2405,7 +2438,7 @@ def employeereport(request):
                     com_id_id=com.id
                     
                 )
-    print(f"com_id: {com.id}")
+
 
     context = {'com': com, 'form': form, 'dep': dep, 'employees':employees}
 
@@ -2423,8 +2456,7 @@ def employeereport(request):
             if fromdate and todate:
                 fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
                 todate = datetime.strptime(todate, '%Y-%m-%d').date()
-                print(f"from_date: {fromdate}, to_date: {todate}, employee_status: {estatus}, department: {department}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
-                    
+               
                 queryset = Employee.objects.filter(
                     com_id_id=com.id,
                     doj__range=(fromdate, todate)
@@ -2444,9 +2476,7 @@ def employeereport(request):
                     #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
                     queryset = queryset.filter(name__iregex=regex_pattern)
                     
-            
-                print(queryset)
-                print('all condition is working')
+
                 context['employees'] = queryset
             
         except ValueError as e:
@@ -2454,6 +2484,7 @@ def employeereport(request):
 
     return render(request, 'employeereport.html', context)
 
+@login_required(login_url='adminLogin')
 def leavereport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     if emp is not None:
@@ -2502,4 +2533,40 @@ def leavereport(request):
             print(f"Error parsing dates: {e}")
         
     return render(request, 'leavereport.html', context)
+ 
+
+@login_required(login_url='adminLogin')
+def eventreport(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
     
+    dep = Department.objects.filter(com_id_id=com.id)
+   
+    events = Event.objects.filter(com_id=com)
+
+    print(f"com_id: {com.id}")
+
+    context = {'com': com, 'dep': dep, 'events':events}
+
+    if request.method == 'POST':
+        fromdate = request.POST.get('fromdate', '')
+        todate = request.POST.get('todate', '')
+
+
+        
+        if fromdate and todate:
+            fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+            todate = datetime.strptime(todate, '%Y-%m-%d').date()
+
+            queryset = Event.objects.filter(com_id=com,
+                date__range=(fromdate, todate)
+            )
+
+            context['events'] = queryset
+            
+
+    return render(request, 'eventreport.html', context)
+
