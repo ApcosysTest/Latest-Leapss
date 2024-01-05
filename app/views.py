@@ -2390,7 +2390,7 @@ def viewquery(request, id):
 
     return render(request, 'viewquery.html', {'query': query, 'com': com})
 
-
+@login_required(login_url='adminLogin')
 def employeereport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     if emp is not None:
@@ -2454,6 +2454,7 @@ def employeereport(request):
 
     return render(request, 'employeereport.html', context)
 
+@login_required(login_url='adminLogin')
 def leavereport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     if emp is not None:
