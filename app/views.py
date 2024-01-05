@@ -2500,6 +2500,7 @@ def leavereport(request):
                     com_id_id=com.id
                     
                 )
+      
     print(f"com_id: {com.id}")
 
     context = {'com': com, 'form': form, 'dep': dep, 'lea': lea,  'employees':employees}
@@ -2524,7 +2525,17 @@ def leavereport(request):
                     com_id_id=com.id,
                     doj__range=(fromdate, todate)
                 )
-                
+                if department != 'All':
+                    queryset = queryset.filter(department_id=department)
+                if level != 'All':
+                    queryset = queryset.filter(level=level)
+                if employee != 'All':
+                    queryset = queryset.filter(id=employee) 
+                if fromemployee !='All' and toemployee !='All':
+                    regex_pattern = f'^[{fromemployee}-{toemployee}{fromemployee.upper()}-{toemployee.upper()}]'
+                    #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
+                    queryset = queryset.filter(name__iregex=regex_pattern)
+                    
                 print(queryset)
                 print('all condition is working')
                 context['employees'] = queryset
@@ -2555,8 +2566,6 @@ def eventreport(request):
         fromdate = request.POST.get('fromdate', '')
         todate = request.POST.get('todate', '')
 
-
-        
         if fromdate and todate:
             fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
             todate = datetime.strptime(todate, '%Y-%m-%d').date()
