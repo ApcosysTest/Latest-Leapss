@@ -38,8 +38,7 @@
     <link rel='stylesheet' href='https://cdn.datatables.net/1.10.19/css/dataTables.jqueryui.min.css'>
     <link rel='stylesheet' href='https://cdn.datatables.net/buttons/1.5.2/css/buttons.jqueryui.min.css'>
     <link rel='stylesheet' href='https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css'>
-    <link rel='stylesheet' href='https://cdn.datatables.net/responsive/2.2.5/css/responsive.dataTables.min.css'>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.datatables.net/responsive/2.2.5/css/responsive.dataTables.min.css'>    
 
     <style>
         /* Add your styles here */
@@ -103,14 +102,14 @@
                     </div>
                     <div class="col-md-6" >
                         
-                    <button type="button" class="btn btn-primary btn-sm"  style="float:right; position: relative;top: 3px;" onclick="toggleFilter()">  Filter</button>
-                        
+                    {% comment %} <button type="button" class="btn btn-primary btn-sm"  style="float:right; position: relative;top: 3px;" onclick="toggleFilter()">  Filter</button>
+                         {% endcomment %}
                     </div>
                        
                     </div>
                     <br>
 
-                    <div style="background-color : #e9e8e8; border-radius: 10px;     padding: 5px;" id="filterElement" class="hidden">
+                    <div style="background-color : #e9e8e8; border-radius: 10px;     padding: 5px;" id="filterElement" >
                         <div class="row justify-content-center">
                           <div class="col-lg-12">
                             <h4 class="mb-3">Filter </h4>
@@ -129,54 +128,95 @@
                                   <label for="your-email" class="form-label">Employee Status</label>
                                   <select class="form-control" name="estatus">
                                     <option value="All">All</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Inactive">Inactive</option>
+                                    <option value="true">Active</option>
+                                    <option value="false">Inactive</option>
                                   </select>
                                 </div>
-                                <div class="col-md-3">
-                                  <label for="your-subject" class="form-label">Employee Vice</label>
-                                  <select class="form-control" name="evice">
-                                    <option value="All">All</option>
-                                    <option value="Girish">Girish</option>
-                                    <option value="Zain">Zain</option>
-                                    <option value="saswat">saswat</option>
-                                  </select>
-                                </div>
+                                
                                 <div class="col-md-3">
                                     <label for="your-subject" class="form-label">Department</label>
                                     <select class="form-control" name="department">
                                       <option value="All">All</option>
-                                      <option value="HR">HR</option>
-                                      <option value="Team Lead">Team Lead</option>
-                                      <option value="Project Manager">Project Manager</option>
+                                      {% for dp in dep %}
+                                      <option value="{{dp.id}}">{{dp.department}}</option>
+                                      {% endfor %}
+                                      
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="your-subject" class="form-label">Level vice</label>
                                     <select class="form-control" name="level">
                                       <option value="All">All</option>
-                                      <option value="Level 0">Level 0</option>
-                                      <option value="Level 2">Level 1</option>
-                                      <option value="Level 2">Level 2</option>
+                                      <option value="Level 0">HR</option>
+                                      <option value="Level 1">Senior Offical</option>
+                                      <option value="Level 2">Team Lead</option>
+                                      <option value="Level 3">Employee</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="your-subject" class="form-label">From Employee </label>
-                                    <select class="form-control" name="fromemployee">
+                                    <select class="form-control" name="fromemployee" id="fromemployee">
                                       <option value="All">All</option>
-                                      <option value="Level 0">Level 0</option>
-                                      <option value="Level 2">Level 1</option>
-                                      <option value="Level 2">Level 2</option>
+                                      <option value="a">A</option>
+                                      <option value="c">C</option>
+                                      <option value="b">B</option>
+                                      <option value="d">D</option>
+                                      <option value="e">E</option>
+                                      <option value="f">F</option>
+                                      <option value="g">G</option>
+                                      <option value="h">H</option>
+                                      <option value="i">I</option>
+                                      <option value="j">J</option>
+                                      <option value="k">K</option>
+                                      <option value="l">L</option>
+                                      <option value="m">M</option>
+                                      <option value="n">N</option>
+                                      <option value="o">O</option>
+                                      <option value="p">P</option>
+                                      <option value="q">Q</option>
+                                      <option value="r">R</option>
+                                      <option value="s">S</option>
+                                      <option value="t">T</option>
+                                      <option value="u">U</option>
+                                      <option value="v">V</option>
+                                      <option value="w">W</option>
+                                      <option value="x">X</option>
+                                      <option value="y">Y</option>
+                                      <option value="z">Z</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="your-subject" class="form-label">To Employee </label>
-                                    <select class="form-control" name="toemployee">
-                                      <option value="All">All</option>
-                                      <option value="Level 0">Level 0</option>
-                                      <option value="Level 2">Level 1</option>
-                                      <option value="Level 2">Level 2</option>
-                                    </select>
+                                    
+                                    <select class="form-control" name="toemployee" id="toemployee">
+                                        <option value="All">All</option>
+                                        <option value="a">A</option>
+                                        <option value="c">C</option>
+                                        <option value="b">B</option>
+                                        <option value="d">D</option>
+                                        <option value="e">E</option>
+                                        <option value="f">F</option>
+                                        <option value="g">G</option>
+                                        <option value="h">H</option>
+                                        <option value="i">I</option>
+                                        <option value="j">J</option>
+                                        <option value="k">K</option>
+                                        <option value="l">L</option>
+                                        <option value="m">M</option>
+                                        <option value="n">N</option>
+                                        <option value="o">O</option>
+                                        <option value="p">P</option>
+                                        <option value="q">Q</option>
+                                        <option value="r">R</option>
+                                        <option value="s">S</option>
+                                        <option value="t">T</option>
+                                        <option value="u">U</option>
+                                        <option value="v">V</option>
+                                        <option value="w">W</option>
+                                        <option value="x">X</option>
+                                        <option value="y">Y</option>
+                                        <option value="z">Z</option>
+                                      </select>
                                 </div>
                                 
                                 <div class="col-12">
@@ -193,7 +233,7 @@
                         </div>
                         
                     </div>
-                    
+                    <br>
                     <table id="example" class="display nowrap" style="width:100%">
                         <thead >
                             <tr >
@@ -227,8 +267,11 @@
                             <td>{{ emp.gender }}</td>
                             <td>{{ emp.email }}</td>
                             <td>{{ emp.office_email }}</td>
-                            <td>{{ emp.status }}</td>
-                            <td>{{ emp.designation }}</td>
+                            {% if emp.status %}
+                            <td style="color: green; font-weight: 700;">Active</td>
+                            {% else %}
+                            <td style="color: red; font-weight: 700;">Inactive</td>
+                            {% endif %} 
                             <td>{{ emp.designation }}</td>
                             <td>{{ emp.level }}</td>
                             
@@ -270,17 +313,17 @@
      
     <!-- DataTable js-->
     <script src='https://code.jquery.com/jquery-3.5.1.js'></script>
-<script src='https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js'></script>
-<script src='https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js'></script>
-<script src='https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js'></script>
-<script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.jqueryui.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js'></script>
-<script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js'></script>
-<script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js'></script>
-<script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js'></script>
-<script src='https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js'></script>
+    <script src='https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/1.10.19/js/dataTables.jqueryui.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.jqueryui.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js'></script>
+    <script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js'></script>
+    <script src='https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js'></script>
+    <script src='https://cdn.datatables.net/responsive/2.2.5/js/dataTables.responsive.min.js'></script>
 <script>
     $(document).ready(function() {
         var table = $('#example').DataTable({
