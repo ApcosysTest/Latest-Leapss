@@ -38,6 +38,7 @@ urlpatterns = [
 
     
     path('employeereport', employeereport, name='employeereport'), 
+    path('eventreport', eventreport, name='eventreport'), 
 
     path('companyfeedback', companyfeedback, name='companyfeedback'),
     path('feedbackEmp', feedbackEmp, name='feedbackEmp'),
