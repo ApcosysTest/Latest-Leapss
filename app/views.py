@@ -2495,14 +2495,18 @@ def employeereport(request):
         
 
         try:
-            if fromdate and todate:
-                fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
-                todate = datetime.strptime(todate, '%Y-%m-%d').date()
+            
+                
                
                 queryset = Employee.objects.filter(
-                    com_id_id=com.id,
-                    doj__range=(fromdate, todate)
+                    com_id_id=com.id                    
                 )
+                if fromdate !='' and todate !='':
+                    fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+                    todate = datetime.strptime(todate, '%Y-%m-%d').date()
+                    queryset = queryset.filter(
+                    doj__range=(fromdate, todate)
+                    )
                 if estatus != 'all':
                     if estatus == 'true':
                         estatus = True
