@@ -217,17 +217,19 @@
                                 <div class="col-md-8">
                                     
                                   {% comment %} <label for="your-email" class="form-label">Employee Status</label> {% endcomment %}
-                                  <select class="form-control" name="attandence" style="margin-bottom: 5px;">
-                                    <option value="All">All</option>
+                                  <select class="form-control" name="attendance" style="margin-bottom: 5px;" id="attendance" onchange="val()">
+                                    
                                     <option value="Present">Present</option>
                                     <option value="Absent">Absent</option>
+                                    <option value="On Leave">On Leave</option>
+                                    
                                   </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-3 leavetype" style="display : none;" >
                                     <label for="your-name" class="form-label" style="font-weight:bold;"> Type of Leave</label>
                                     
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-8 leavetype" style="display:none;" >
                                     
                                   {% comment %} <label for="your-email" class="form-label">Employee Status</label> {% endcomment %}
                                   <select class="form-control" name="leavetype" style="margin-bottom: 5px;">
@@ -368,12 +370,52 @@
                         </div>
                         
                     </div>
+                    
                     <br>
-                    <table id="example" class="display nowrap" style="width:100%">
+                    <!-- Attendance tabel  -->
+                    <table id="example" class="nowrap attendancetable" >
                         <thead >
                             <tr >
                                 <th>Sl no</th>
                                 <th>Employee ID</th>
+                                <th>Name</th>
+                                
+                                <th>Personal Contact No </th>
+                               
+                                <th>DOJ</th>
+                                <th>Gender </th>
+                                <th>Email </th>
+                                <th>Office Email </th>
+                                
+                                <th>Designation </th>
+                                <th>Level </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for emp in employees %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ emp.emp_id }}</td>
+                            <td>{{ emp.name }}</td>
+                            <td>{{ emp.personal_contact }}</td>
+                            <td>{{ emp.doj }}</td>
+                            <td>{{ emp.gender }}</td>
+                            <td>{{ emp.email }}</td>
+                            <td>{{ emp.office_email }}</td>
+                            <td>{{ emp.designation }}</td>
+                            <td>{{ emp.level }}</td>
+                        </tr>
+                        {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                     <!-- On Leave Tabel  -->
+                    <table id="example1" class="nowrap leave" style="width:100%; display:none;">
+                        <thead >
+                            <tr >
+                                <th>Sl no</th>
+                                <th>Leave</th>
                                 <th>Name</th>
                                 
                                 <th>Personal Contact No </th>
@@ -474,51 +516,113 @@
             margin: 0.5rem;
         }
     </style>
-<script>
-    $(document).ready(function() {
-        var table = $('#example').DataTable({
-            lengthChange: false,
-            buttons: [
+   
+        <script>
+            $(document).ready(function() {
+
+                initializeDataTable('example'); 
+
+            });
+        </script>
+
+         <script>
+
+            function initializeDataTable(tableId) {
+                var table = $('#' + tableId).DataTable({
+                    lengthChange: false,
+                    buttons: [
+                        {
+                            extend: 'excel',
+                        },
+                        {
+                            extend: 'colvis',
+                        },
+                        {
+                            extend: 'pdf',
+                            customize: function (doc) {
+                                doc.pageSize = 'A3'; // Set the page size to A3
+                                doc.orientation = 'landscape'; // Set the orientation to landscape
+                            }
+                        }
+                    ],
+                    responsive: {
+                        details: {
+                            renderer: function(api, rowIdx, columns) {
+                                var data = $.map(columns, function(col, i) {
+                                    return col.hidden ?
+                                        '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                        '<td>' + col.title + ':' + '</td> ' +
+                                        '<td>' + col.data + '</td>' +
+                                        '</tr>' :
+                                        '';
+                                }).join('');
+    
+                                return data ?
+                                    $('<table/>').append(data) :
+                                    false;
+                            }
+                        }
+                    }
+                });
+    
+                table.buttons().container().insertBefore('#' + tableId + '_filter');
+            }
+
+
+            function deInitializeDataTable(tableId) {
+                var table = $('#' + tableId).DataTable({
+                    lengthChange: false,
+                    buttons: [
+                    ],
+                    responsive: {
+                    }
+                });
+    
+                //table.buttons().container().insertBefore('#' + tableId + '_filter');
+            }
+
+
+            function val() {
+                d = document.getElementById("attendance").value;
+                attendancetable = document.getElementsByClassName("attendancetable")[0];
+                leave = document.getElementsByClassName("leave")[0];
+
+                if(d=='On Leave')
                 {
-                    extend: 'excel',
-                },
-                {
-                    extend: 'colvis',
-                },
-                {
-                    extend: 'pdf',
-                    customize: function (doc) {
-                        // Customize the PDF document
-                        doc.pageSize = 'A3'; // Set the page size to A2
-                        doc.orientation = 'landscape'; // Set the orientation to landscape
-                       
-                        
+                    elements = document.querySelectorAll(".leavetype");
+                    attendancetable.style.display="none";
+                    leave.style.display="block";
+                    $('#example').DataTable().destroy();
+                    initializeDataTable('example1');
+                    
+                    console.log(elements);
+                    for (var i=0;i<elements.length;i+=1){
+                        elements[i].style.display = 'block';
                     }
                 }
-            ],
-            responsive: {
-                details: {
-                    renderer: function(api, rowIdx, columns) {
-                        var data = $.map(columns, function(col, i) {
-                            return col.hidden ?
-                                '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                                '<td>' + col.title + ':' + '</td> ' +
-                                '<td>' + col.data + '</td>' +
-                                '</tr>' :
-                                '';
-                        }).join('');
+                if(d=='Present' || d=='Absent' )
+                {
+                    elements = document.querySelectorAll(".leavetype");
+                    leave.style.display="none";
+                    if(attendancetable.style.display == 'none'){
+                        attendancetable.style.display="block";
+                        $('#example1').DataTable().destroy();
+                        initializeDataTable('example'); 
+                        
+                        
+                    }
+                    
+                    
+                    
 
-                        return data ?
-                            $('<table/>').append(data) :
-                            false;
+                    console.log(elements);
+                    for (var i=0;i<elements.length;i+=1){
+                        elements[i].style.display = 'none';
                     }
                 }
             }
-        });
-
-        table.buttons().container().insertBefore('#example_filter');
-    });
-</script>
+        </script>
+        
 
 </body>
 </html>
