@@ -36,6 +36,8 @@
     <!-- Google Icon -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,200,0,0" />
     
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeJ3UcpAAAAAPVkTwK-j2I1cxhz2P4a9emXSa19"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -162,7 +164,8 @@
                         <textarea class="form-control" placeholder="Give a Feedback" row="10" name="name" required=""></textarea>
                       </div>
                       <div class="input" style="padding-bottom:20px; display: flex; justify-content: space-around;">
-                        <script src='https://www.google.com/recaptcha/api.js'></script>
+        
+                       
                         <div class="g-recaptcha" data-sitekey="6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG" data-callback="enableFeedbackBtn"></div>
                       </div>
                     <button type="submit" class="btn btn-primary" id='feedbackBtn' disabled='True'>Submit</button>

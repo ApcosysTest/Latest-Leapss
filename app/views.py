@@ -2496,8 +2496,6 @@ def employeereport(request):
 
         try:
             
-                
-               
                 queryset = Employee.objects.filter(
                     com_id_id=com.id                    
                 )
