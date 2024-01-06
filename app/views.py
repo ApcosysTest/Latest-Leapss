@@ -2615,18 +2615,17 @@ def eventreport(request):
         todate = request.POST.get('todate', '')
         category = request.POST.get('category', '')
 
+        queryset = Event.objects.filter(com_id=com)
+
         if fromdate and todate:
             fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
             todate = datetime.strptime(todate, '%Y-%m-%d').date()
+            queryset = queryset.filter(date__range=(fromdate, todate))
 
-            queryset = Event.objects.filter(com_id=com,
-                date__range=(fromdate, todate)
-            )
+        if category != 'All':
+            queryset = queryset.filter(category=category)
 
-            if category != 'All':
-                queryset = queryset.filter(category=category)
-
-            context['events'] = queryset
+        context['events'] = queryset
             
 
     return render(request, 'eventreport.html', context)
