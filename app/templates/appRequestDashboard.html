@@ -73,7 +73,7 @@
         <div id="page-content-wrapper">
             <!-- Top navigation-->
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
-                  
+                <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                 <h1 style="text-align:center;color:royalblue;">Clients</h1>
                 <form method="POST" autocomplete="off" id="search-form" >
                     {% csrf_token %}
@@ -84,6 +84,7 @@
                 </form>
                   
             </nav>
+            <div style="overflow-x:auto;">
             <table class="table" style="width: 95%;margin: 30px;">
                 <thead>
                     <tr>
@@ -106,13 +107,17 @@
                         <td class='state'>{{ client.state }}</td>
                         <td class='country'>{{ client.country }}</td>
                         <td>
-                            <a href="{% url 'ApproveClient' client.id %}" class="btn btn-primary">Approve</a>
-                            <a href="{% url 'RejectClient' client.id %}" class="btn btn-danger">Decline</a>
+                            <div class="btn-group">
+                                <a href="{% url 'ApproveClient' client.id %}" class="btn btn-primary">Approve</a>
+                                <a href="{% url 'RejectClient' client.id %}" class="btn btn-danger">Decline</a>
+                            </div>
+                            
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
