@@ -64,7 +64,26 @@
         chart.draw(data, options);
       }
     </script>
-
+    <style>
+      #piechart_3d{
+          width: 600px; 
+          height: 350px;
+        }
+      #newChart{
+          width: 600px; 
+          height: 450px;
+      }
+      @media screen and (max-width: 600px) {
+        #piechart_3d{
+          width: 130%; 
+          height: 350px;
+        }
+        #newChart{
+          width: 130%; 
+          height: 450px;
+        }
+      }
+     </style>
    
     
     
@@ -184,7 +203,7 @@
                           
                           <!-- Default Pie Chart -->
                           <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" id="defaultdata">
-                              <div id="piechart_3d" style="width: 600px; height: 350px;"></div>
+                              <div id="piechart_3d"></div>
                           </div>
                           <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded" id="defaultbar">
                             <canvas id="myChartnew" style="width:100%;max-width:600px"></canvas>
@@ -192,7 +211,7 @@
 
                           <!-- New Pie Chart (Initially Hidden) -->
                           <div class="col-sm-6 shadow-lg p-3 mb-5 bg-white rounded " id="newdata">
-                            <div id="newChart" style="width: 600px; height: 450px;"></div>
+                            <div id="newChart"></div>
                           </div>
 
                           <!-- Bar Chart -->
@@ -247,6 +266,8 @@
     </script>
 
     <script>
+      $("#newdata").hide();
+      $("#newbar").hide();
       jQuery.noConflict();
       jQuery(document).ready(function($) {
           // Initialize the bar chart once when the page loads
@@ -257,10 +278,13 @@
               console.log("Selected Client: " + selectedClient);
               if (selectedClient !== '0') {
                   $("#newdata").show();
+                  $("#newbar").show();
                   $("#defaultdata").hide();
                   $("#defaultbar").hide();
               } else {
                   $("#newdata").hide();
+                  $("#newbar").hide();
+                  $("#defaultbar").show();
                   $("#defaultdata").show();
               }
               $.ajax({

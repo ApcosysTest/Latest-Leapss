@@ -79,13 +79,38 @@
                 <h5 style="color: #009eff; padding: 2%;">Edit Leave Category</h5> 
 
                 </div> 
-                <div class="empInfo" style="padding: 0%; height: 100px ;"> 
-                    <form method='POST'>
+                <div class="" style="padding: 0%; height: 100px ;"> 
+                    {% comment %} <form method='POST'>
                         {% csrf_token %}
                         {{form}}
                         <button type="Submit" id="addLeave">Submit</button>
                         <a class="btn btn-danger" id="deleteButton" href="{% url 'deleteLeave' dep_id %}" style="margin-top: -4px; height: 40px;">Delete</a>
+                    </form> {% endcomment %}
+
+
+
+                    <form method='POST' class="justify-content-around">
+                        {% csrf_token %}
+                        <div class="row" style="margin:2% 0 0 40px;">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <label for="id_dep_code">Name:</label>
+                                {{form.name}}
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <label for="id_department">Days:</label>
+                                {{form.days}}
+                            </div>
+                        </div>
+                        {{form.com_id}}
+                        <br><br><br>
+                        <div class="d-flex justify-content-center">
+                            <a class="btn" href="/leavePolicySetting" style="margin-right: 20px;background-color: tomato;color:white;width:100px;">Cancel</a>
+                            <button type='submit' class="btn btn-primary" style= "width:100px;">Submit</button>
+                            <a class="btn btn-danger" id="deleteButton" href="{% url 'deleteLeave' dep_id %}" style="margin-left: 20px;width:100px;">Delete</a>
+                        </div>
                     </form>
+
+
                     <script>
                         document.getElementById('deleteButton').addEventListener('click', function(event) {
                             event.preventDefault();

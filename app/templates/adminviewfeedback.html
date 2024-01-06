@@ -75,7 +75,7 @@
         <div id="page-content-wrapper">
             <!-- Top navigation-->
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
-                  
+                <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                 <h1 style="text-align:center;color:royalblue;">Feedbacks</h1>
                 <form method="POST" autocomplete="off" id="search-form" >
                     {% csrf_token %}
@@ -94,7 +94,7 @@
 
              </div>
 
-
+            <div style="overflow-x:auto;">
             <table class="table" style="width: 95%;margin: 30px;">
                 <thead>
                     <tr>
@@ -121,7 +121,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

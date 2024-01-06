@@ -73,7 +73,7 @@
         <div id="page-content-wrapper">
             <!-- Top navigation-->
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between  ">
-                  
+                <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                 <h1 style="text-align:center;color:green;">{% if page == 'approvedClient' %}Our Clients{% elif page == 'activeClient' %}Active Clients{% else %}Inactive Clients{% endif %}</h1>
 
                 <form method="POST" autocomplete="off" id="search-form" >
@@ -143,6 +143,7 @@
                 </p>
                 
               </div>
+            <div style="overflow-x:auto;">
             <table class="table" style="width: 95%;margin: 30px;">
                 <thead>
                     <tr>
@@ -166,9 +167,9 @@
                                 <div class="btn-group">
                                 <a href="{% url 'viewClient' client.id %}" class="btn btn-info mr-2" style="width:80px;">View</a>
                                 {% if client.active_status == True %}
-                                    <a href="{% url 'disableClient' client.id %}" class="btn btn-success" id='disable_client' style="width:130px;">Disable Client</a>
+                                    <a href="{% url 'disableClient' client.id %}" id='disable_client'><button style="width:130px;" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter">Disable Client</button></a>
                                 {% else %}
-                                    <a href="{% url 'enableClient' client.id %}" class="btn btn-warning" id='disable_client' style="width:130px;">Enable Client</a>
+                                    <a href="{% url 'enableClient' client.id %}" id='disable_client'><button style="width:130px;" class="btn btn-warning" data-toggle="modal" data-target="#exampleModalCenter2">Enable Client</button></a>
                                 {% endif %}
                             </div>
                             </td>
@@ -176,6 +177,37 @@
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
+
+            <!-- Modal for Dissable -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <br>
+                        <div class="text-center" style="width: 100%;"><img src="{% static 'assets/img/dissable.jpg'%}" style="width: 20%;" alt=""></div>
+                        <div style="font-size:30px;margin:20px 50px;color:red;font-weight:bold;text-align:center;">Client is Dissabled Successfully</div>
+                        <br>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <!-- Modal for Enable -->
+            <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <br>
+                        <div class="text-center" style="width: 100%;"><img src="{% static 'assets/img/enable.jpg'%}" style="width: 20%;" alt=""></div>
+                        <div style="font-size:30px;margin:20px 50px;color:green;font-weight:bold;text-align:center;">Client is Enabled Successfully</div>
+                        <br>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
