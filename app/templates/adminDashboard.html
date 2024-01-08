@@ -108,8 +108,23 @@
       }
       .modal-body a{
           width:75%;
-      } 
-  </style>
+      }
+      .back-btn2{
+        background-color: #009eff;
+        border: 1px solid #009eff;
+        color: white;
+        padding: 5px 9px; 
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.2s;
+        margin: 40px;
+      }
+      .back-btn2:hover{
+        background-color: white;
+        border: 1px solid #009eff;
+        text-decoration: none;
+      }
+    </style>
 </head>
 <body id="body-pd">
     <div class="d-flex" id="wrapper">
@@ -149,9 +164,11 @@
                   
                 <div class="logo d-flex align-items-center">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
-                    <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
+                    {% comment %} <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> {% endcomment %}
                     <span>{% if dic.com is None %}Your Company Name{% else %}{{ dic.com }}{% endif %}</span>
+                    
                   </div>
+                  
                   <ul class="d-flex align-items-center header-nav">
                     <li style="list-style: none; "class="addEmp">
                         <a type="button" style="margin-right:30px" href="/feedback" class="btn ">
@@ -164,10 +181,11 @@
                   <li style="list-style: none; "class="addEmp">
                     <button type="button" class="btn" style="margin-right:30px; position: relative; top: 8px;" data-toggle="modal" data-target="#viewqueries" >view queries</button>
                 </li>
-                  
-                    
-                  </ul>
-            </nav>
+               </ul>
+            </nav><div style="font-size:8px;">&nbsp;</div>
+            {% if dic.is_employee is True %}
+              <a class="back-btn2" href="/sidebar"><i class="bi bi-box-arrow-left" style="font-size:18px; width: min-content;"></i><span></i> <span>Back</span></a>
+            {% endif %}
             <section class="section container pageClass  bg-white rounded dashboard">
                 <div class="row">
                   <div class="col-md-3">
@@ -368,6 +386,7 @@
               <a type="button" href="{% url 'leavereport' %}" class="btn">Leaves Report</a><br>
               <a type="button" href="{% url 'attendancereport' %}" class="btn">Attendance Report</a><br>
               <a type="button" href="{% url 'eventreport' %}" class="btn">Events Report</a><br>
+              <a type="button" href="{% url 'create_backup' %}" class="btn">Take Company Data Backup</a><br>
               
           </div>
       </div>

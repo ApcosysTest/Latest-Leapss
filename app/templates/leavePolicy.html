@@ -77,7 +77,7 @@
                 <div class="logo d-flex">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
-                    <span><span>{% if com is None %}Your Company Name{% else %}{{ com.name }}{% endif %}</span></span>
+                    <a href="/sidebar" style="text-decoration:none;"><span>{% if com is None %}Your Company Name{% else %}{{ com.name }}{% endif %}</span></a>
                 </div> 
                   <ul class="d-flex">
                     <li style="list-style: none;"class="logOut" style="margin:0%;padding:0%;position: relative; top:10px;">

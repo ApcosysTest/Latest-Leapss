@@ -45,6 +45,9 @@
       .color3{
         background-color: #FFC14E;
       }
+      .feedbackSwitch{
+        width:180px;
+      }
     </style>
 </head>
 <body id="body-pd">
@@ -86,7 +89,7 @@
                     <span>{{ dic.com }}</span>
                     {% if request.user.employee.level == 'Level 1' or request.user.employee.level == 'Level 2' %}<a class="adminSwitch" href="{% url 'leaveStatus' %}">Admin</a>{% else %} {% endif %}
                     {% if request.user.employee.level == 'Level 0'%}<a class="adminSwitch" href="{% url 'adminDashboard' %}">Admin</a>{% else %} {% endif %}
-                    <button class="adminSwitch ml-2" data-toggle="modal" data-target="#feedbackModalCenter" data-dismiss="modal">Feedback</button>
+                    <button class="adminSwitch feedbackSwitch ml-2" data-toggle="modal" data-target="#feedbackModalCenter" data-dismiss="modal">Feedback</button>
                     
                 </div> 
                   <ul class="d-flex">

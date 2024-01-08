@@ -12,7 +12,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', landingpage, name='landingpage'),
     path('homepage', homepage, name='homepage'),
-    path('logout',LogoutView.as_view(next_page='/'),name='logout'),
+    path('logout',LogoutView.as_view(next_page='/homepage'),name='logout'),
 
     # Apply LEAPSS
     path('requestApplication', requestApplication, name='requestApplication'), 
