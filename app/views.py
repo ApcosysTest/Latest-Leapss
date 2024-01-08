@@ -43,7 +43,8 @@ from django.conf import settings
 import uuid
 
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, date, timedelta
+import itertools
 
 
 
@@ -2591,7 +2592,6 @@ def leavereport(request):
  
 
 
-
 @login_required(login_url='adminLogin')
 def attendancereport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
@@ -2604,53 +2604,123 @@ def attendancereport(request):
     dep = Department.objects.filter(com_id_id=com.id)
    
     form = PerticularEmployeeForm(request.POST or None, request.FILES or None, com_id=com.id)
-    employees = Employee.objects.filter(
-                    com_id_id=com.id
-                    
-                )
+
+    employee_queryset = Employee.objects.filter(com_id_id=com.id)
+    employees = Employee.objects.filter(com_id_id=com.id)
+    
+    data = []
+    end_date = datetime.today().date()
+    start_date = end_date - timedelta(days=30)
+    dates = []
+    event_list = list(Event.objects.filter(com_id=com, category='Public Holiday').values_list("date", flat=True))
+    absent_list = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+
+    while start_date <= end_date:
+        dates.append(start_date)
+        start_date += timedelta(days=1)
+
+    for dt in dates:
+        if dt.weekday() == 6 or (dt in event_list):          
+            dates.remove(dt)
+
+    
+    for emp in employee_queryset:
+                absent_list = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+
+                for dt in dates:
+                    dates_emp_present = []
+                    dates_emp_present = dates
+                    if dt in absent_list:
+                        dates_emp_present.remove(dt)
+                data.append([dates_emp_present, emp, 'Present'])
+                dates_emp_absent = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+                data.append([dates_emp_absent, emp, 'Absent'])
+
       
     print(f"com_id: {com.id}")
 
-    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea,  'employees':employees}
+    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea, 'employees': employees}
     
     if request.method == 'POST':
-        fromdate = request.POST.get('fromdate', '')
-        todate = request.POST.get('todate', '')
-        attandence = request.POST.get('attandence', '')
-        leavetype = request.POST.get('leavetype', '')
         department = request.POST.get('department', '')
         employee = request.POST.get('employee', '')
         level = request.POST.get('level', '')
         fromemployee = request.POST.get('fromemployee', '')
         toemployee = request.POST.get('toemployee', '')
-        try:
-            if fromdate and todate:
-                fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
-                todate = datetime.strptime(todate, '%Y-%m-%d').date()
-                print(f"from_date: {fromdate}, to_date: {todate}, attandence: {attandence}, leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
-                
-                queryset = LeaveApplication.objects.filter(
-                    user_id__employee__com_id_id=com.id,
-                    apply_on__range=(fromdate, todate)
-                )
-                if department != 'All':
-                    queryset = queryset.filter(department_id=department)
-                if level != 'All':
-                    queryset = queryset.filter(level=level)
-                if employee != 'All':
-                    queryset = queryset.filter(id=employee) 
-                if fromemployee !='All' and toemployee !='All':
-                    regex_pattern = f'^[{fromemployee}-{toemployee}{fromemployee.upper()}-{toemployee.upper()}]'
-                    #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
-                    queryset = queryset.filter(name__iregex=regex_pattern)
-                    
-                print(queryset)
-                print('all condition is working')
-                context['employees'] = queryset
-                
-        except ValueError as e:
-            print(f"Error parsing dates: {e}")
+        fromdate = request.POST.get('fromdate', '')
+        todate = request.POST.get('todate', '')
+        status = request.POST.get('status', '')
+
         
+        if department != 'All':
+            employee_queryset = employee_queryset.filter(department_id=department)
+        if level != 'All':
+            employee_queryset = employee_queryset.filter(level=level)
+        if employee != 'All':
+            employee_queryset = employee_queryset.filter(id=employee)
+        if fromemployee !='All' and toemployee !='All':
+            regex_pattern = f'^[{fromemployee}-{toemployee}{fromemployee.upper()}-{toemployee.upper()}]'
+            #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
+            employee_queryset = employee_queryset.filter(name__iregex=regex_pattern)
+                
+            print(employee_queryset)
+            print('all condition is working')
+            context['employee_queryset'] = employee_queryset
+
+        if fromdate and todate:
+            dates = []
+            fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+            todate = datetime.strptime(todate, '%Y-%m-%d').date()
+            print(f"from_date: {fromdate}, to_date: {todate}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
+            delta = timedelta(days=1)
+
+            while fromdate <= todate:
+                dates.append(fromdate)
+                fromdate += delta
+            
+            for dt in dates:
+                if dt.weekday() == 6 or (dt in event_list):          
+                    dates.remove(dt)
+
+        if status == 'Present':
+            data = []
+            for emp in employee_queryset:
+                absent_list = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+
+                for dt in dates:
+                    dates_emp = []
+                    dates_emp = dates
+                    if dt in absent_list:
+                        dates_emp.remove(dt)
+                data.append([dates_emp, emp, 'Present'])
+
+
+        if status == 'Absent':
+            data = []
+
+            for emp in employee_queryset:
+                dates_emp = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+
+                data.append([dates_emp, emp, 'Absent'])
+        
+        if status == 'All':
+            data = []
+            for emp in employee_queryset:
+                absent_list = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+
+                for dt in dates:
+                    dates_emp_present = []
+                    dates_emp_present = dates
+                    if dt in absent_list:
+                        dates_emp_present.remove(dt)
+                data.append([dates_emp_present, emp, 'Present'])
+                dates_emp_absent = list(Absent.objects.filter(user=emp).values_list("absent_on", flat=True))
+                data.append([dates_emp_absent, emp, 'Absent'])
+      
+    context['data'] = data
+    context['employee_queryset'] = employee_queryset
+    
+    
     return render(request, 'attendancereport.html', context)
  
  
@@ -2691,4 +2761,3 @@ def eventreport(request):
             
 
     return render(request, 'eventreport.html', context)
-
