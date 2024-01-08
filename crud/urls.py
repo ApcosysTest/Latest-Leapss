@@ -43,6 +43,7 @@ urlpatterns = [
     path('leavereport', leavereport, name='leavereport'), 
 
     path('eventreport', eventreport, name='eventreport'), 
+    path('attendancereport', attendancereport, name='attendancereport'), 
 
 
     path('companyfeedback', companyfeedback, name='companyfeedback'),

@@ -2565,9 +2565,9 @@ def leavereport(request):
                 todate = datetime.strptime(todate, '%Y-%m-%d').date()
                 print(f"from_date: {fromdate}, to_date: {todate}, attandence: {attandence}, leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
                 
-                queryset = Employee.objects.filter(
-                    com_id_id=com.id,
-                    doj__range=(fromdate, todate)
+                queryset = LeaveApplication.objects.filter(
+                    user_id__employee__com_id_id=com.id,
+                    apply_on__range=(fromdate, todate)
                 )
                 if department != 'All':
                     queryset = queryset.filter(department_id=department)
@@ -2590,6 +2590,70 @@ def leavereport(request):
     return render(request, 'leavereport.html', context)
  
 
+
+
+@login_required(login_url='adminLogin')
+def attendancereport(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
+    lea = Leave.objects.filter(com_id_id=com.id)
+    
+    dep = Department.objects.filter(com_id_id=com.id)
+   
+    form = PerticularEmployeeForm(request.POST or None, request.FILES or None, com_id=com.id)
+    employees = Employee.objects.filter(
+                    com_id_id=com.id
+                    
+                )
+      
+    print(f"com_id: {com.id}")
+
+    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea,  'employees':employees}
+    
+    if request.method == 'POST':
+        fromdate = request.POST.get('fromdate', '')
+        todate = request.POST.get('todate', '')
+        attandence = request.POST.get('attandence', '')
+        leavetype = request.POST.get('leavetype', '')
+        department = request.POST.get('department', '')
+        employee = request.POST.get('employee', '')
+        level = request.POST.get('level', '')
+        fromemployee = request.POST.get('fromemployee', '')
+        toemployee = request.POST.get('toemployee', '')
+        try:
+            if fromdate and todate:
+                fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
+                todate = datetime.strptime(todate, '%Y-%m-%d').date()
+                print(f"from_date: {fromdate}, to_date: {todate}, attandence: {attandence}, leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
+                
+                queryset = LeaveApplication.objects.filter(
+                    user_id__employee__com_id_id=com.id,
+                    apply_on__range=(fromdate, todate)
+                )
+                if department != 'All':
+                    queryset = queryset.filter(department_id=department)
+                if level != 'All':
+                    queryset = queryset.filter(level=level)
+                if employee != 'All':
+                    queryset = queryset.filter(id=employee) 
+                if fromemployee !='All' and toemployee !='All':
+                    regex_pattern = f'^[{fromemployee}-{toemployee}{fromemployee.upper()}-{toemployee.upper()}]'
+                    #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
+                    queryset = queryset.filter(name__iregex=regex_pattern)
+                    
+                print(queryset)
+                print('all condition is working')
+                context['employees'] = queryset
+                
+        except ValueError as e:
+            print(f"Error parsing dates: {e}")
+        
+    return render(request, 'attendancereport.html', context)
+ 
+ 
 @login_required(login_url='adminLogin')
 def eventreport(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()

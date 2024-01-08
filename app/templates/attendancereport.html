@@ -167,7 +167,7 @@
             <section class="section container bg-white rounded dashboard">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 style="color: #009eff;padding: 1%;">Leave Reports</h5>
+                        <h5 style="color: #009eff;padding: 1%;">Attendance Reports</h5>
                        
                         
                     </div>
@@ -228,6 +228,19 @@
                                   </select>
                                 </div>
                                 <div class="col-md-3">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Status </label>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    
+                                    {% comment %} <label for="your-subject" class="form-label">Department</label> {% endcomment %}
+                                    <select class="form-control" name="department" style="margin-bottom: 5px;">
+                                      <option value="Present">Present</option>
+                                      <option value="Absent">Absent</option>
+                                    
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
                                     <label for="your-name" class="form-label" style="font-weight:bold;"> Department </label>
                                     
                                 </div>
@@ -242,6 +255,7 @@
                                       
                                     </select>
                                 </div>
+                                
                                 <div class="col-md-3">
                                     <label for="your-name" class="form-label" style="font-weight:bold;"> Employee  </label>
                                     
@@ -366,12 +380,13 @@
                             <tr >
                                 <th>Sl no</th>
                                 <th>Name</th>
-                                <th>From date</th>
+                                <th>status</th>
                                 
-                                <th>To date </th>
+                                <th>date </th>
                                
-                                <th>Days</th>
-                                <th>Type of Leave </th>
+                                <th>Emp ID</th>
+                                <th>Department </th>
+                                <th>Level </th>
                                 
                             </tr>
                         </thead>
@@ -384,7 +399,7 @@
                             <td>{{ emp.personal_contact }}</td>
                             <td>{{ emp.doj }}</td>
                             <td>{{ emp.gender }}</td>
-                            
+                            <td>{{ emp.gender }}</td>
                         </tr>
                         {% endfor %}
                             
