@@ -386,5 +386,41 @@
     });
 </script>
 
+
+<script>
+    $(function () {
+        var startDateInput = $('#from-date');
+        var endDateInput = $('#to-date');
+
+        startDateInput.on('input', function () {
+            validateDates();
+        });
+
+        endDateInput.on('input', function () {
+            validateDates();
+        });
+
+        function validateDates() {
+            var startDate = new Date(startDateInput.val());
+            var endDate = new Date(endDateInput.val());
+            var today = new Date();
+
+            if (startDate > endDate) {
+                alert('End Date should be equal or greater than Start Date');
+                endDateInput.val("");
+            }
+
+            if (endDate > today) {
+                alert('End Date should not be greater than today');
+                endDateInput.val("");
+            }
+            if (startDate > today) {
+                alert('From Date should not be greater than today');
+                startDateInput.val("");
+            }
+        }
+    });
+</script>
+
 </body>
 </html>

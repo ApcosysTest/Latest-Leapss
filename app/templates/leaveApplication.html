@@ -199,7 +199,7 @@
         let get= document.getElementById("datepicker-to")
         get.disabled = false;
       } 
-  </script>
+    </script>
 
 
   <script>
@@ -209,31 +209,64 @@
     });
   </script>
 
-<script>
-document.getElementById('datepicker-from').addEventListener('change', function() {
-  var From = document.getElementById('datepicker-from').value
-  var to = document.getElementById('datepicker-to').value
-  var date1 = new Date(From);
-  var date2 = new Date(to);
-  var Difference_In_Time = date2.getTime() - date1.getTime();
-  var Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24))+1;
-  document.getElementById('id_leave_count').value = Difference_In_Days; 
-});
+  <script>
+    function restrictWeekends(inputElement) {
+      inputElement.addEventListener('input', function(e) {
+        var day = new Date(this.value).getUTCDay();
+        if ([7, 0].includes(day)) {
+          e.preventDefault();
+          this.value = '';
+          alert('Weekends not allowed');
+        }
+      });
+    }
+    
+    const from = document.getElementById('datepicker-from');
+    const too = document.getElementById('datepicker-to');
+    
+    restrictWeekends(from);
+    restrictWeekends(too);
+    
 
-document.getElementById('datepicker-to').addEventListener('change', function() {
-  var From = document.getElementById('datepicker-from').value
-  var to = document.getElementById('datepicker-to').value
-  var date1 = new Date(From);
-  var date2 = new Date(to);
-  var Difference_In_Time = date2.getTime() - date1.getTime();
-  var Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24))+1;
-  document.getElementById('id_leave_count').value = Difference_In_Days;    
-  document.getElementById('id_leave').innerHTML = Difference_In_Days;    
-});   
-</script>
+    document.getElementById('datepicker-from').addEventListener('change', function() {
+      updateLeaveCount();
+    });
+    
+    document.getElementById('datepicker-to').addEventListener('change', function() {
+      updateLeaveCount();
+    });
+    
+    function updateLeaveCount() {
+      var From = document.getElementById('datepicker-from').value;
+      var to = document.getElementById('datepicker-to').value;
+      var date1 = new Date(From);
+      var date2 = new Date(to);
+    
+      // Calculate total days
+      var Difference_In_Time = date2.getTime() - date1.getTime();
+      var totalDays = (Difference_In_Time / (1000 * 3600 * 24)) + 1;
+    
+      // Calculate Sundays within the date range
+      var countSundays = 0;
+      for (var i = 0; i < totalDays; i++) {
+        var currentDate = new Date(date1);
+        currentDate.setDate(date1.getDate() + i);
+        if (currentDate.getDay() === 0) {  // 0 represents Sunday
+          countSundays++;
+        }
+      }
+    
+      // Adjust leave count by subtracting Sundays
+      var leaveCount = totalDays - countSundays;
+    
+      document.getElementById('id_leave_count').value = leaveCount;
+      document.getElementById('id_leave').innerHTML = leaveCount;
+    }
+  </script>
+    
 
          
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
