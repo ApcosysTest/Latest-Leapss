@@ -78,6 +78,8 @@
                 <div class="logo d-flex align-items-center">
                     <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                     <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
+                    <img src="{{com.logo.url}}" alt="logo">
+                
                     <span style=width:300px;>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
                 </div>
                   <section class="container dashboard" style="box-shadow:none;">
