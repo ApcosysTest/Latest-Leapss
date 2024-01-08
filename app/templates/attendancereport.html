@@ -204,37 +204,21 @@
                                 </div>
                                 <div class="col-md-4">
                                   
-                                  <input type="date" class="form-control" id="from-date" name="fromdate" required>
+                                  <input type="date" class="form-control" id="from-date" name="fromdate">
                                 </div>
                                 <div class="col-md-4">
                                   
-                                  <input type="date" class="form-control" id="to-date" name="todate" required>
+                                  <input type="date" class="form-control" id="to-date" name="todate">
                                 </div>
                                 
-                                
-                                <div class="col-md-3 leavetype" style="display : none;" >
-                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Type of Leave</label>
-                                    
-                                </div>
-                                <div class="col-md-8 leavetype" style="display:none;" >
-                                    
-                                  {% comment %} <label for="your-email" class="form-label">Employee Status</label> {% endcomment %}
-                                  <select class="form-control" name="leavetype" style="margin-bottom: 5px;">
-                                    <option value="All">All</option>
-                                    {% for le in lea %}
-                                      <option value="{{le.id}}">{{le.name}}</option>
-                                      {% endfor %}
-                                    
-                                  </select>
-                                </div>
                                 <div class="col-md-3">
                                     <label for="your-name" class="form-label" style="font-weight:bold;"> Status </label>
                                     
                                 </div>
                                 <div class="col-md-8">
-                                    
-                                    {% comment %} <label for="your-subject" class="form-label">Department</label> {% endcomment %}
-                                    <select class="form-control" name="department" style="margin-bottom: 5px;">
+
+                                    <select class="form-control" name="status" style="margin-bottom: 5px;">
+                                        <option value="All">All</option>
                                       <option value="Present">Present</option>
                                       <option value="Absent">Absent</option>
                                     
@@ -246,7 +230,6 @@
                                 </div>
                                 <div class="col-md-8">
                                     
-                                    {% comment %} <label for="your-subject" class="form-label">Department</label> {% endcomment %}
                                     <select class="form-control" name="department" style="margin-bottom: 5px;">
                                       <option value="All">All</option>
                                       {% for dp in dep %}
@@ -378,11 +361,10 @@
                     <table id="example" class="nowrap leave" style="width:100%; ">
                         <thead >
                             <tr >
-                                <th>Sl no</th>
                                 <th>Name</th>
                                 <th>status</th>
                                 
-                                <th>date </th>
+                                <th>date</th>
                                
                                 <th>Emp ID</th>
                                 <th>Department </th>
@@ -391,16 +373,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for emp in employees %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ emp.emp_id }}</td>
-                            <td>{{ emp.name }}</td>
-                            <td>{{ emp.personal_contact }}</td>
-                            <td>{{ emp.doj }}</td>
-                            <td>{{ emp.gender }}</td>
-                            <td>{{ emp.gender }}</td>
-                        </tr>
+                        {% for element in data %}
+
+                            {% for date in element.0 %}
+                                <tr>
+                                    <td>{{ element.1.name }}</td>
+                                    <td>{{element.2}}</td>
+                                    <td>{{ date }}</td>
+                                    <td>{{ element.1.emp_id }}</td>
+                                    <td>{{ element.1.department }}</td>
+                                    <td>{{ element.1.level }}</td>
+                                </tr>
+                            {% endfor %}
+
                         {% endfor %}
                             
                         </tbody>
@@ -409,7 +394,7 @@
                    
             </section>
         </div>
-    </div>
+    </div> <br><br>
     <!-- reports modal  -->
     <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
