@@ -58,6 +58,7 @@ class CompanyUpdateForm(forms.ModelForm):
     country = forms.CharField(widget=forms.TextInput())
     state = forms.CharField(widget=forms.TextInput())
     city = forms.CharField(widget=forms.TextInput())
+    logo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control','id':'fileUp'}), required=False)
 
     class Meta:
         model = Company 
