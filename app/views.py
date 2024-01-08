@@ -496,9 +496,11 @@ class CalendarView(generic.ListView):
     
     def dash(self):
         com = Company.objects.filter(username=self.request.user.username).first()
+        is_employee = False
         if com is None:
             emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
+            is_employee = True
         emails = Employee.objects.filter(com_id=com).values_list('office_email', flat=True)
         today = datetime.today().strftime("%Y-%m-%d")
         total_emp = Employee.objects.filter(status=True, com_id = com).count()
@@ -508,7 +510,7 @@ class CalendarView(generic.ListView):
         total_leave = onleave + absent_count
         apply_leav = LeaveApplication.objects.filter(status_approve=False, status_reject=False, level1_approve=True, user__username__in=emails).count()
 
-        dic ={'com':com, 'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav}       
+        dic ={'com':com, 'total_emp':total_emp, 'present_today':present_today, 'onleave':onleave, 'total_leave':total_leave, 'apply_leav':apply_leav, 'is_employee':is_employee}       
         return dic 
     
     def quotesub(self): 
@@ -1889,7 +1891,7 @@ def leaveBasket(request):
 
 
 @login_required(login_url='adminLogin')
-@user_passes_test(is_admin)
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
 def leaveBasketAdmin(request, id):
     emp = Employee.objects.get(id=id)
     com = Company.objects.filter(name=emp.com_id).first()
@@ -1957,15 +1959,17 @@ def leaveStatus(request):
 # Leave Applications
 @login_required(login_url='adminLogin')
 @user_passes_test(lambda u: is_admin(u) or is_hr(u))
-def leaveApplicationDetails(request):
+def leaveApplicationDetails(request):    
     com = Company.objects.filter(username=request.user.username).first()
+    is_employee = False
     if com is None:
         emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
+        is_employee = True
     emps = Employee.objects.filter(com_id=com)
     emp_emails = emps.values_list('office_email', flat=True)
     leave= LeaveApplication.objects.filter(level1_approve=True, user__username__in=emp_emails)
-    context = {'leave':leave,'com':com}
+    context = {'leave':leave,'com':com,'is_employee':is_employee}
     return render(request,'leaveApplicationDetails.html', context)
 
 

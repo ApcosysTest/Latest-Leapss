@@ -102,6 +102,21 @@
         .modal-body a{
             width:75%;
         } 
+        .back-btn2{
+            background-color: #009eff;
+            border: 1px solid #009eff;
+            color: white;
+            padding: 5px 9px; 
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.2s;
+            margin: 15px;
+          }
+          .back-btn2:hover{
+            background-color: white;
+            border: 1px solid #009eff;
+            text-decoration: none;
+          }
     </style>
 
 </head>
@@ -167,7 +182,12 @@
                 </section>
                     
             </nav>
+            
             <section class="section container bg-white rounded dashboard">
+                <div style="font-size:8px;">&nbsp;</div>
+                {% if is_employee is True %}
+                <a class="back-btn2" href="/sidebar"><i class="bi bi-box-arrow-left" style="font-size:18px; width: min-content;"></i><span></i> <span>Back</span></a>
+                {% endif %}
                 <div class="row">
                     <div class="col-md-6"><h5 style="color: #009eff;padding: 3%;">Review Leave Application</h5></div>
                     <div class="col-md-2"></div>
