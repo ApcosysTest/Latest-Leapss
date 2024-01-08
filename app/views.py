@@ -1022,15 +1022,20 @@ def companySetup(request):
 @login_required(login_url='adminLogin')
 @user_passes_test(is_admin)
 def editCompany(request, id):
-    com = Company.objects.filter(username=request.user.username).first()
-    instance = Company.objects.get(pk=id)
-    form = CompanyUpdateForm(request.POST or None, instance=instance)
-    if form.is_valid():
-        form.save()
-        return redirect('companySetup')
+    com = get_object_or_404(Company, username=request.user.username)
+    instance = get_object_or_404(Company, pk=id)
+    
+    if request.method == 'POST':
+        form = CompanyUpdateForm(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect('companySetup')
+        else:
+            print(form.errors)  # Check form errors in your console for debugging
     else:
-        print(form.errors)
-    context = {'form':form, 'com':com}
+        form = CompanyUpdateForm(instance=instance)
+    
+    context = {'form': form, 'com': com}
     return render(request, 'editCompany.html', context)
 
 # Department
