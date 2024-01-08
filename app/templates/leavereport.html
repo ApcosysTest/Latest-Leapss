@@ -21,6 +21,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Ionic Icon -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -372,18 +375,22 @@
                                
                                 <th>Days</th>
                                 <th>Type of Leave </th>
+                                <th>Department</th>
+                                <th>Level</th>
                                 
                             </tr>
                         </thead>
                         <tbody>
-                            {% for emp in employees %}
+                            {% for lea in leaves %}
                         <tr>
                             <td>{{ forloop.counter }}</td>
-                            <td>{{ emp.emp_id }}</td>
-                            <td>{{ emp.name }}</td>
-                            <td>{{ emp.personal_contact }}</td>
-                            <td>{{ emp.doj }}</td>
-                            <td>{{ emp.gender }}</td>
+                            <td>{{ lea.user.employee.name }}</td>
+                            <td>{{ lea.date_from }}</td>
+                            <td>{{ lea.date_to }}</td>
+                            <td>{{ lea.leave_count }}</td>
+                            <td>{{ lea.category.name }}</td>
+                            <td>{{ lea.user.employee.department }}</td>
+                            <td>{{ lea.user.employee.level }}</td>
                             
                         </tr>
                         {% endfor %}
@@ -507,7 +514,40 @@
     </script>
 
          
-        
+    <script>
+        $(function () {
+            var startDateInput = $('#from-date');
+            var endDateInput = $('#to-date');
+    
+            startDateInput.on('input', function () {
+                validateDates();
+            });
+    
+            endDateInput.on('input', function () {
+                validateDates();
+            });
+    
+            function validateDates() {
+                var startDate = new Date(startDateInput.val());
+                var endDate = new Date(endDateInput.val());
+                var today = new Date();
+    
+                if (startDate > endDate) {
+                    alert('End Date should be equal or greater than Start Date');
+                    endDateInput.val("");
+                }
+    
+                if (endDate > today) {
+                    alert('End Date should not be greater than today');
+                    endDateInput.val("");
+                }
+                if (startDate > today) {
+                    alert('From Date should not be greater than today');
+                    startDateInput.val("");
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>

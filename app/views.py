@@ -2547,15 +2547,19 @@ def leavereport(request):
                     com_id_id=com.id
                     
                 )
+    leaves = LeaveApplication.objects.filter(
+                    user_id__employee__com_id_id=com.id
+                    
+                ).select_related('user__employee','category')
       
     print(f"com_id: {com.id}")
+    print(leaves)
 
-    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea,  'employees':employees}
+    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea, 'employees': employees, 'leaves': leaves}
     
     if request.method == 'POST':
         fromdate = request.POST.get('fromdate', '')
         todate = request.POST.get('todate', '')
-        attandence = request.POST.get('attandence', '')
         leavetype = request.POST.get('leavetype', '')
         department = request.POST.get('department', '')
         employee = request.POST.get('employee', '')
@@ -2566,26 +2570,27 @@ def leavereport(request):
             if fromdate and todate:
                 fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
                 todate = datetime.strptime(todate, '%Y-%m-%d').date()
-                print(f"from_date: {fromdate}, to_date: {todate}, attandence: {attandence}, leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
+                print(f"from_date: {fromdate}, to_date: {todate},  leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
                 
                 queryset = LeaveApplication.objects.filter(
                     user_id__employee__com_id_id=com.id,
                     apply_on__range=(fromdate, todate)
-                )
+                ).select_related('user__employee','category')
+                
                 if department != 'All':
-                    queryset = queryset.filter(department_id=department)
+                    queryset = queryset.filter(user_id__employee__department=department)
                 if level != 'All':
-                    queryset = queryset.filter(level=level)
+                    queryset = queryset.filter(user_id__employee__level=level)
                 if employee != 'All':
-                    queryset = queryset.filter(id=employee) 
+                    queryset = queryset.filter(user_id__employee__id=employee)
                 if fromemployee !='All' and toemployee !='All':
                     regex_pattern = f'^[{fromemployee}-{toemployee}{fromemployee.upper()}-{toemployee.upper()}]'
                     #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
-                    queryset = queryset.filter(name__iregex=regex_pattern)
-                    
+                    queryset = queryset.filter(user_id__employee__name__iregex=regex_pattern)
+                
                 print(queryset)
                 print('all condition is working')
-                context['employees'] = queryset
+                context['leaves'] = queryset
                 
         except ValueError as e:
             print(f"Error parsing dates: {e}")
@@ -2694,4 +2699,27 @@ def eventreport(request):
             
 
     return render(request, 'eventreport.html', context)
+
+
+
+@login_required(login_url='adminLogin')
+def report(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
+    
+    dep = Department.objects.filter(com_id_id=com.id)
+   
+    events = Event.objects.filter(com_id=com)
+
+    print(f"com_id: {com.id}")
+
+    categories = Event.objects.values_list('category', flat=True).distinct()
+
+    context = {'com': com, 'dep': dep, 'events':events, 'categories': categories}
+    
+
+    return render(request, 'report.html', context)
 
