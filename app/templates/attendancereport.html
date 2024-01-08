@@ -21,11 +21,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
-        
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
     <!-- Ionic Icon -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
@@ -172,7 +167,7 @@
             <section class="section container bg-white rounded dashboard">
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 style="color: #009eff;padding: 1%;">Employees Report</h5>
+                        <h5 style="color: #009eff;padding: 1%;">Attendance Reports</h5>
                        
                         
                     </div>
@@ -209,24 +204,25 @@
                                 </div>
                                 <div class="col-md-4">
                                   
-                                  <input type="date" class="form-control" id="from-date" name="fromdate" >
+                                  <input type="date" class="form-control" id="from-date" name="fromdate">
                                 </div>
                                 <div class="col-md-4">
                                   
-                                  <input type="date" class="form-control" id="to-date" name="todate" >
+                                  <input type="date" class="form-control" id="to-date" name="todate">
                                 </div>
+                                
                                 <div class="col-md-3">
-                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Status</label>
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Status </label>
                                     
                                 </div>
                                 <div class="col-md-8">
+
+                                    <select class="form-control" name="status" style="margin-bottom: 5px;">
+                                        <option value="All">All</option>
+                                      <option value="Present">Present</option>
+                                      <option value="Absent">Absent</option>
                                     
-                                  {% comment %} <label for="your-email" class="form-label">Employee Status</label> {% endcomment %}
-                                  <select class="form-control" name="estatus" style="margin-bottom: 5px;">
-                                    <option value="All">All</option>
-                                    <option value="true">Active</option>
-                                    <option value="false">Inactive</option>
-                                  </select>
+                                    </select>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="your-name" class="form-label" style="font-weight:bold;"> Department </label>
@@ -234,13 +230,27 @@
                                 </div>
                                 <div class="col-md-8">
                                     
-                                    {% comment %} <label for="your-subject" class="form-label">Department</label> {% endcomment %}
                                     <select class="form-control" name="department" style="margin-bottom: 5px;">
                                       <option value="All">All</option>
                                       {% for dp in dep %}
                                       <option value="{{dp.id}}">{{dp.department}}</option>
                                       {% endfor %}
                                       
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-3">
+                                    <label for="your-name" class="form-label" style="font-weight:bold;"> Employee  </label>
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    
+                                    {% comment %} <label for="your-subject" class="form-label">Level vice</label> {% endcomment %}
+                                    <select class="form-control" name="employee" style="margin-bottom: 5px;">
+                                      <option value="All">All</option>
+                                      {% for emp in employees %}
+                                      <option value="{{emp.id}}">{{emp.name}}</option>
+                                      {% endfor %}
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -344,58 +354,47 @@
                         </div>
                         
                     </div>
+                    
                     <br>
-                    <table id="example" class="display nowrap" style="width:100%">
+                    
+                     <!-- On Leave Tabel  -->
+                    <table id="example" class="nowrap leave" style="width:100%; ">
                         <thead >
                             <tr >
-                                <th>Sl no</th>
-                                <th>Employee ID</th>
                                 <th>Name</th>
-                                <th>Company Contact no</th>
-                                <th>Personal Contact No </th>
-                                <th>Presesnt Address</th>
-                                <th>DOB</th>
-                                <th>DOJ</th>
-                                <th>Gender </th>
-                                <th>Email </th>
-                                <th>Office Email </th>
-                                <th>Active </th>
-                                <th>Designation </th>
+                                <th>status</th>
+                                
+                                <th>date</th>
+                               
+                                <th>Emp ID</th>
+                                <th>Department </th>
                                 <th>Level </th>
+                                
                             </tr>
                         </thead>
                         <tbody>
-                            {% for emp in employees %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td>{{ emp.emp_id }}</td>
-                            <td>{{ emp.name }}</td>
-                            <td>{{ emp.company_contact }}</td>
-                            <td>{{ emp.personal_contact }}</td>
-                            <td>{{ emp.present_address }}</td>
-                            <td>{{ emp.dob }}</td>
-                            <td>{{ emp.doj }}</td>
-                            <td>{{ emp.gender }}</td>
-                            <td>{{ emp.email }}</td>
-                            <td>{{ emp.office_email }}</td>
-                            {% if emp.status %}
-                            <td style="color: green; font-weight: 700;">Active</td>
-                            {% else %}
-                            <td style="color: red; font-weight: 700;">Inactive</td>
-                            {% endif %} 
-                            <td>{{ emp.designation }}</td>
-                            <td>{{ emp.level }}</td>
-                            
-                        </tr>
+                        {% for element in data %}
+
+                            {% for date in element.0 %}
+                                <tr>
+                                    <td>{{ element.1.name }}</td>
+                                    <td>{{element.2}}</td>
+                                    <td>{{ date }}</td>
+                                    <td>{{ element.1.emp_id }}</td>
+                                    <td>{{ element.1.department }}</td>
+                                    <td>{{ element.1.level }}</td>
+                                </tr>
+                            {% endfor %}
+
                         {% endfor %}
                             
                         </tbody>
                         
                     </table>
                    
-            </section> </br></br>
+            </section>
         </div>
-    </div>
+    </div> <br><br>
     <!-- reports modal  -->
     <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -460,87 +459,88 @@
             margin: 0.5rem;
         }
     </style>
-<script>
-    $(document).ready(function() {
-        var table = $('#example').DataTable({
-            lengthChange: false,
-            buttons: [
-                {
-                    extend: 'excel',
-                },
-                {
-                    extend: 'colvis',
-                },
-                {
-                    extend: 'pdf',
-                    customize: function (doc) {
-                        // Customize the PDF document
-                        doc.pageSize = 'A3'; // Set the page size to A2
-                        doc.orientation = 'landscape'; // Set the orientation to landscape
-                       
-                        
+   
+    <script>
+        $(document).ready(function() {
+            var table = $('#example').DataTable({
+                lengthChange: false,
+                buttons: [
+                    {
+                        extend: 'excel',
+                    },
+                    {
+                        extend: 'colvis',
+                    },
+                    {
+                        extend: 'pdf',
+                        customize: function (doc) {
+                            // Customize the PDF document
+                            doc.pageSize = 'A3'; // Set the page size to A2
+                            doc.orientation = 'landscape'; // Set the orientation to landscape
+                           
+                            
+                        }
+                    }
+                ],
+                responsive: {
+                    details: {
+                        renderer: function(api, rowIdx, columns) {
+                            var data = $.map(columns, function(col, i) {
+                                return col.hidden ?
+                                    '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                    '<td>' + col.title + ':' + '</td> ' +
+                                    '<td>' + col.data + '</td>' +
+                                    '</tr>' :
+                                    '';
+                            }).join('');
+    
+                            return data ?
+                                $('<table/>').append(data) :
+                                false;
+                        }
                     }
                 }
-            ],
-            responsive: {
-                details: {
-                    renderer: function(api, rowIdx, columns) {
-                        var data = $.map(columns, function(col, i) {
-                            return col.hidden ?
-                                '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
-                                '<td>' + col.title + ':' + '</td> ' +
-                                '<td>' + col.data + '</td>' +
-                                '</tr>' :
-                                '';
-                        }).join('');
-
-                        return data ?
-                            $('<table/>').append(data) :
-                            false;
-                    }
+            });
+    
+            table.buttons().container().insertBefore('#example_filter');
+        });
+    </script>
+    <script>
+        $(function () {
+            var startDateInput = $('#from-date');
+            var endDateInput = $('#to-date');
+    
+            startDateInput.on('input', function () {
+                validateDates();
+            });
+    
+            endDateInput.on('input', function () {
+                validateDates();
+            });
+    
+            function validateDates() {
+                var startDate = new Date(startDateInput.val());
+                var endDate = new Date(endDateInput.val());
+                var today = new Date();
+    
+                if (startDate > endDate) {
+                    alert('End Date should be equal or greater than Start Date');
+                    endDateInput.val("");
+                }
+    
+                if (endDate > today) {
+                    alert('End Date should not be greater than today');
+                    endDateInput.val("");
+                }
+                if (startDate > today) {
+                    alert('From Date should not be greater than today');
+                    startDateInput.val("");
                 }
             }
         });
-
-        table.buttons().container().insertBefore('#example_filter');
-    });
-</script>
-
-<script>
-    $(function () {
-        var startDateInput = $('#from-date');
-        var endDateInput = $('#to-date');
-
-        startDateInput.on('input', function () {
-            validateDates();
-        });
-
-        endDateInput.on('input', function () {
-            validateDates();
-        });
-
-        function validateDates() {
-            var startDate = new Date(startDateInput.val());
-            var endDate = new Date(endDateInput.val());
-            var today = new Date();
-
-            if (startDate > endDate) {
-                alert('End Date should be equal or greater than Start Date');
-                endDateInput.val("");
-            }
-
-            if (endDate > today) {
-                alert('End Date should not be greater than today');
-                endDateInput.val("");
-            }
-            if (startDate > today) {
-                alert('From Date should not be greater than today');
-                startDateInput.val("");
-            }
-        }
-    });
-</script>
-
+    </script>
+         
+        
 
 </body>
 </html>

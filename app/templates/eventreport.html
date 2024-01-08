@@ -231,7 +231,7 @@
                                   <div class="row">
                                     <div class="col-md-4">
                                         <br>
-                                      <button  type="submit" class="btn btn-primary w-100 fw-bold" >Send</button>
+                                      <button  type="submit" class="btn btn-primary w-100 fw-bold" >Filter</button>
                                     </div>
                                   </div>
                                 </div>
@@ -250,7 +250,6 @@
                                 <th>Category</th>
                                 <th>Description</th>
                                 <th>Date</th>
-                                <th>Visibility</th>
 
                             </tr>
                         </thead>
@@ -263,7 +262,6 @@
                                 <td>{{ event.category }}</td>
                                 <td>{{ event.description }}</td>
                                 <td>{{ event.date }}</td>
-                                <td>{{ event.visibility }}</td>
                                 
                             </tr>
 
@@ -383,6 +381,42 @@
         });
 
         table.buttons().container().insertBefore('#example_filter');
+    });
+</script>
+
+
+<script>
+    $(function () {
+        var startDateInput = $('#from-date');
+        var endDateInput = $('#to-date');
+
+        startDateInput.on('input', function () {
+            validateDates();
+        });
+
+        endDateInput.on('input', function () {
+            validateDates();
+        });
+
+        function validateDates() {
+            var startDate = new Date(startDateInput.val());
+            var endDate = new Date(endDateInput.val());
+            var today = new Date();
+
+            if (startDate > endDate) {
+                alert('End Date should be equal or greater than Start Date');
+                endDateInput.val("");
+            }
+
+            if (endDate > today) {
+                alert('End Date should not be greater than today');
+                endDateInput.val("");
+            }
+            if (startDate > today) {
+                alert('From Date should not be greater than today');
+                startDateInput.val("");
+            }
+        }
     });
 </script>
 
