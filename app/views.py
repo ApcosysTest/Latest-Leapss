@@ -43,8 +43,11 @@ from django.conf import settings
 import uuid
 
 from django.contrib.auth.models import User
+
 from datetime import datetime, date, timedelta
-import itertools
+
+from django.utils import timezone
+
 
 
 
@@ -497,9 +500,9 @@ class CalendarView(generic.ListView):
     def dash(self):
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
-        emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
+        emails = Employee.objects.filter(com_id=com).values_list('office_email', flat=True)
         today = datetime.today().strftime("%Y-%m-%d")
         total_emp = Employee.objects.filter(status=True, com_id = com).count()
         onleave = LeaveApplication.objects.filter(user__employee__status=True,status_approve=True, date_from__lte=today, date_to__gte=today, user__username__in=emails).count()
@@ -514,7 +517,7 @@ class CalendarView(generic.ListView):
     def quotesub(self): 
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         quote = Quote.objects.all().last() 
         form = QuoteForm()
@@ -539,7 +542,7 @@ class CalendarView(generic.ListView):
     def quote(self):    
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         if self.request.method == "GET":  
             current_date = 0 
@@ -561,7 +564,8 @@ class CalendarView(generic.ListView):
         com = Company.objects.filter(username=self.request.user.username).first()
         queries = Support.objects.filter(company_id=com)
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            print(self.request.user.username)
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         # use today's date for the calendar
         adminStatus = True
@@ -1927,8 +1931,9 @@ def leaveBasketAdmin(request, id):
 def approvalStatus(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
+    today_date = timezone.now().date()
     leave = LeaveApplication.objects.filter(user=request.user)
-    context ={'leave':leave, 'com':com}
+    context ={'leave':leave, 'com':com, 'today':today_date}
     return render(request,'approvalStatus.html', context)
 
 #$#$#$ EMPLOYEE Level 1 & 2 #$#$#$
@@ -1961,7 +1966,7 @@ def leaveApplicationDetails(request):
         emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emps = Employee.objects.filter(com_id=com)
-    emp_emails = emps.values_list('email', flat=True)
+    emp_emails = emps.values_list('office_email', flat=True)
     leave= LeaveApplication.objects.filter(level1_approve=True, user__username__in=emp_emails)
     context = {'leave':leave,'com':com}
     return render(request,'leaveApplicationDetails.html', context)
@@ -2545,15 +2550,19 @@ def leavereport(request):
                     com_id_id=com.id
                     
                 )
+    leaves = LeaveApplication.objects.filter(
+                    user_id__employee__com_id_id=com.id
+                    
+                ).select_related('user__employee','category')
       
     print(f"com_id: {com.id}")
+    print(leaves)
 
-    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea,  'employees':employees}
+    context = {'com': com, 'form': form, 'dep': dep, 'lea': lea, 'employees': employees, 'leaves': leaves}
     
     if request.method == 'POST':
         fromdate = request.POST.get('fromdate', '')
         todate = request.POST.get('todate', '')
-        attandence = request.POST.get('attandence', '')
         leavetype = request.POST.get('leavetype', '')
         department = request.POST.get('department', '')
         employee = request.POST.get('employee', '')
@@ -2564,26 +2573,27 @@ def leavereport(request):
             if fromdate and todate:
                 fromdate = datetime.strptime(fromdate, '%Y-%m-%d').date()
                 todate = datetime.strptime(todate, '%Y-%m-%d').date()
-                print(f"from_date: {fromdate}, to_date: {todate}, attandence: {attandence}, leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
+                print(f"from_date: {fromdate}, to_date: {todate},  leavetype: {leavetype}, department: {department}, employee: {employee}, level: {level}, fromemployee: {fromemployee}, toemployee: {toemployee}")
                 
                 queryset = LeaveApplication.objects.filter(
                     user_id__employee__com_id_id=com.id,
                     apply_on__range=(fromdate, todate)
-                )
+                ).select_related('user__employee','category')
+                
                 if department != 'All':
-                    queryset = queryset.filter(department_id=department)
+                    queryset = queryset.filter(user_id__employee__department=department)
                 if level != 'All':
-                    queryset = queryset.filter(level=level)
+                    queryset = queryset.filter(user_id__employee__level=level)
                 if employee != 'All':
-                    queryset = queryset.filter(id=employee) 
+                    queryset = queryset.filter(user_id__employee__id=employee)
                 if fromemployee !='All' and toemployee !='All':
                     regex_pattern = f'^[{fromemployee}-{toemployee}{fromemployee.upper()}-{toemployee.upper()}]'
                     #queryset = queryset.filter(name__iregex=r'^[a-dA-D]')
-                    queryset = queryset.filter(name__iregex=regex_pattern)
-                    
+                    queryset = queryset.filter(user_id__employee__name__iregex=regex_pattern)
+                
                 print(queryset)
                 print('all condition is working')
-                context['employees'] = queryset
+                context['leaves'] = queryset
                 
         except ValueError as e:
             print(f"Error parsing dates: {e}")
@@ -2761,3 +2771,26 @@ def eventreport(request):
             
 
     return render(request, 'eventreport.html', context)
+
+
+@login_required(login_url='adminLogin')
+def report(request):
+    emp = Employee.objects.filter(office_email=request.user.username).first()
+    if emp is not None:
+        com = Company.objects.filter(name=emp.com_id).first()
+    else:
+        com = Company.objects.filter(username=request.user.username).first()
+    
+    dep = Department.objects.filter(com_id_id=com.id)
+   
+    events = Event.objects.filter(com_id=com)
+
+    print(f"com_id: {com.id}")
+
+    categories = Event.objects.values_list('category', flat=True).distinct()
+
+    context = {'com': com, 'dep': dep, 'events':events, 'categories': categories}
+    
+
+    return render(request, 'report.html', context)
+

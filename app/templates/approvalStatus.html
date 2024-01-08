@@ -112,7 +112,12 @@
                           <td> 
                                 {% if l.status_approve == True %}
                                 <div class="approve">
+                                  {% if l.date_from > today %}
+                                  <a type="button" class="btn btn-primary btn-lg" style="width:49%;" href="/reviewEmployeeApplicationEmployee/{{ l.id }}">Approved</a>
+                                  <a type="button" class="btn btn-danger btn-lg" style="width:49%;background-color:#FF4C4C ;" href="/withdrawLeaveApplication/{{ l.id }}">Withdraw</a>
+                                  {% else %}
                                   <a type="button" class="btn btn-primary btn-lg" href="/reviewEmployeeApplicationEmployee/{{ l.id }}">Approved</a>
+                                  {% endif %}
                                 </div>  
                                 {% elif l.status_reject == True %}
                                 <div class="rejected">
