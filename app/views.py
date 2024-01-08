@@ -44,6 +44,7 @@ import uuid
 
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.utils import timezone
 
 
 
@@ -496,9 +497,9 @@ class CalendarView(generic.ListView):
     def dash(self):
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
-        emails = Employee.objects.filter(com_id=com).values_list('email', flat=True)
+        emails = Employee.objects.filter(com_id=com).values_list('office_email', flat=True)
         today = datetime.today().strftime("%Y-%m-%d")
         total_emp = Employee.objects.filter(status=True, com_id = com).count()
         onleave = LeaveApplication.objects.filter(user__employee__status=True,status_approve=True, date_from__lte=today, date_to__gte=today, user__username__in=emails).count()
@@ -513,7 +514,7 @@ class CalendarView(generic.ListView):
     def quotesub(self): 
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         quote = Quote.objects.all().last() 
         form = QuoteForm()
@@ -538,7 +539,7 @@ class CalendarView(generic.ListView):
     def quote(self):    
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         if self.request.method == "GET":  
             current_date = 0 
@@ -560,7 +561,8 @@ class CalendarView(generic.ListView):
         com = Company.objects.filter(username=self.request.user.username).first()
         queries = Support.objects.filter(company_id=com)
         if com is None:
-            emp = Employee.objects.filter(email=self.request.user.username).first()
+            print(self.request.user.username)
+            emp = Employee.objects.filter(office_email=self.request.user.username).first()
             com = Company.objects.filter(name=emp.com_id).first()
         # use today's date for the calendar
         adminStatus = True
@@ -1926,8 +1928,9 @@ def leaveBasketAdmin(request, id):
 def approvalStatus(request):
     emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first()
+    today_date = timezone.now().date()
     leave = LeaveApplication.objects.filter(user=request.user)
-    context ={'leave':leave, 'com':com}
+    context ={'leave':leave, 'com':com, 'today':today_date}
     return render(request,'approvalStatus.html', context)
 
 #$#$#$ EMPLOYEE Level 1 & 2 #$#$#$
@@ -1960,7 +1963,7 @@ def leaveApplicationDetails(request):
         emp = Employee.objects.filter(office_email=request.user.username).first()
         com = Company.objects.filter(name=emp.com_id).first()
     emps = Employee.objects.filter(com_id=com)
-    emp_emails = emps.values_list('email', flat=True)
+    emp_emails = emps.values_list('office_email', flat=True)
     leave= LeaveApplication.objects.filter(level1_approve=True, user__username__in=emp_emails)
     context = {'leave':leave,'com':com}
     return render(request,'leaveApplicationDetails.html', context)
