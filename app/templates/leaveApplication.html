@@ -241,10 +241,33 @@
       var to = document.getElementById('datepicker-to').value;
       var date1 = new Date(From);
       var date2 = new Date(to);
+      var event_dates = [];
+
+      {% for event in event_list %}
+        event_dates.push(new Date("{{ event.isoformat }}"))
+      {% endfor %}
+
+      console.log(event_dates)
+      dates = [];
+      while (date1 <= date2) {
+        dates.push(new Date(date1));
+        date1.setDate(date1.getDate() + 1);
+      }
+
+      console.log(dates);
+      days = 0;
+
+      for(var i=0; i<dates.length; i++){
+        if(event_dates.indexOf(dates[i]) === -1){
+          days = days+1;
+        }
+      }
     
       // Calculate total days
       var Difference_In_Time = date2.getTime() - date1.getTime();
-      var totalDays = (Difference_In_Time / (1000 * 3600 * 24)) + 1;
+      //var totalDays = (Difference_In_Time / (1000 * 3600 * 24)) + 1;
+      var totalDays = days;
+      console.log(totalDays);
     
       // Calculate Sundays within the date range
       var countSundays = 0;

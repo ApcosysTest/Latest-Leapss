@@ -1791,6 +1791,7 @@ def leaveApplication(request):
     dic={}
     emp = Employee.objects.filter(office_email=request.user.username).first()
     com = Company.objects.filter(name=emp.com_id).first() 
+    event_list = list(Event.objects.filter(com_id=com, category='Public Holiday').values_list("date", flat=True))
     leave = Leave.objects.filter(com_id=emp.com_id).all()
     for l in leave:
         cat_count = LeaveApplication.objects.filter(category__name=l, user=request.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
@@ -1808,7 +1809,7 @@ def leaveApplication(request):
     else:
          form = LeaveApplyForm(com_id=com.id)
 
-    context ={'form':form, 'dic':dic, 'com':com}
+    context ={'form':form, 'dic':dic, 'com':com, 'event_list': event_list}
     return render(request,'leaveApplication.html', context)
 
 # Withdraw Leave Applications
