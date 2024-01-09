@@ -133,8 +133,9 @@
                     <div class="row">
                       <div class="col-md-12">
                         <label >Select Status</label>
-                        <select class="form-control" name="status"> 
-                          <option value="Full Day" selected>Full Day</option>
+                        <select class="form-control" name="status" id="status"> 
+                          <option value="" >Select Status</option>
+                          <option value="Full Day" >Full Day</option>
                           <option value="First Half">First Half</option>
                           <option value="Second Half">Second Half</option>
                         </select>
@@ -242,6 +243,9 @@
     restrictWeekends(from);
     restrictWeekends(too);
     
+    document.getElementById('status').addEventListener('change', function() {
+      updateLeaveCount();
+    });
 
     document.getElementById('datepicker-from').addEventListener('change', function() {
       updateLeaveCount();
@@ -254,7 +258,17 @@
     function updateLeaveCount() {
       var From = document.getElementById('datepicker-from').value;
       var to = document.getElementById('datepicker-to').value;
-      var date1 = new Date(From);
+      var status = document.getElementById('status').value;
+      console.log(status);
+      if(status=='First Half' || status=='Second Half')
+      {
+        document.getElementById('datepicker-to').readOnly = true;
+        document.getElementById('datepicker-to').value = From;
+        leaveCount=0.5;
+      }
+      if(status=='Full Day'){
+        document.getElementById('datepicker-to').readOnly = false;
+        var date1 = new Date(From);
       var date2 = new Date(to);
       var event_dates = [];
 
@@ -296,9 +310,11 @@
     
       // Adjust leave count by subtracting Sundays
       var leaveCount = totalDays - countSundays;
-    
+
+      }
       document.getElementById('id_leave_count').value = leaveCount;
       document.getElementById('id_leave').innerHTML = leaveCount;
+      
     }
   </script>
     
