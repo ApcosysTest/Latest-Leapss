@@ -143,9 +143,10 @@
                           <div class="list">
                            
                             <div class="row clickable-row"data-href="{% url 'reviewEmployeeApplication' l.id %}">
-                                <div class="col-md-4 texts" style="color:#009eff">{{l.user.employee.name}}<br>{{l.user.employee.emp_id}} </div>
-                                <div class="col-md-4 texts">{{l.user.employee.department}}</div>
-                                <div class="col-md-4 texts">{{l.user.employee.designation}}</div>
+                                <div class="col-md-3 texts" style="color:#009eff">{{l.user.employee.name}}<br>{{l.user.employee.emp_id}} </div>
+                                <div class="col-md-3 texts">{{l.user.employee.department}}</div>
+                                <div class="col-md-3 texts">{{l.user.employee.designation}}</div>
+                                <div class="col-md-3 texts">{{l.status}}</div>
                             </div>
                            
                          </div>

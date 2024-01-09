@@ -312,7 +312,7 @@
                                 <th>Type of Leave </th>
                                 <th>Department</th>
                                 <th>Level</th>
-                                
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -326,6 +326,7 @@
                             <td>{{ lea.category.name }}</td>
                             <td>{{ lea.user.employee.department }}</td>
                             <td>{{ lea.user.employee.level }}</td>
+                            <td>{{ lea.status }}</td>
                             
                         </tr>
                         {% endfor %}
