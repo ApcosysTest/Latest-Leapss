@@ -58,11 +58,11 @@ class CompanyUpdateForm(forms.ModelForm):
     country = forms.CharField(widget=forms.TextInput())
     state = forms.CharField(widget=forms.TextInput())
     city = forms.CharField(widget=forms.TextInput())
-    logo = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control','id':'fileUp'}), required=False)
+    company_image = forms.ImageField(widget=forms.ClearableFileInput(attrs={'class':'form-control','id':'fileUp'}), required=False) 
 
     class Meta:
         model = Company 
-        fields = ['name', 'email', 'website', 'telephone', 'telephone1', 'telephone2', 'address', 'pincode', 'city', 'state', 'country', 'logo']
+        fields = ['name', 'email', 'website', 'telephone', 'telephone1', 'telephone2', 'address', 'pincode', 'city', 'state', 'country', 'company_image']
 
 # Company Department Form
 class CompanyDepForm(forms.ModelForm):

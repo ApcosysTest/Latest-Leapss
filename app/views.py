@@ -1025,6 +1025,8 @@ def editCompany(request, id):
     if request.method == 'POST':
         form = CompanyUpdateForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
+            print(form.cleaned_data['company_image'])
+            print(form.cleaned_data['website'])
             form.save()
             return redirect('companySetup')
         else:
@@ -1033,7 +1035,7 @@ def editCompany(request, id):
         form = CompanyUpdateForm(instance=instance)
     
     context = {'form': form, 'com': com}
-    return render(request, 'editCompany.html', context)
+    return render(request, 'editCompany2.html', context)
 
 # Department
 @login_required(login_url='adminLogin')
