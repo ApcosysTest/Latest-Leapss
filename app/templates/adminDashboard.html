@@ -25,6 +25,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css">
  
     <!-- bootstrap Icon  -->
@@ -320,10 +321,9 @@
                       <textarea class="form-control" placeholder="Submit any inquiry, and our team will contact you soon." row="10" name="namecontent" required=""></textarea>
                     </div>
                     <div class="input" style="padding-bottom:20px; display: flex; justify-content: space-around;">
-                      <script src='https://www.google.com/recaptcha/api.js'></script>
-                      <div class="g-recaptcha" data-sitekey="6LeXkGYkAAAAABgBJJ6nTKwXNYrQUojnL2SKodIG"></div>
+                      <div class="g-recaptcha" data-sitekey="6Le-u0opAAAAANNFI3mpSMT3u10XMvxjkB9mU-TW" data-callback="enableSupportBtn"></div>
                     </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary" id='supportBtn' disabled='True'>Submit</button>
                 </form>
           </div>
           
@@ -361,7 +361,7 @@
       </div>
     </div>
 
-
+    <!-- view queries lable  -->
     <div class="modal fade" id="viewqueries" tabindex="-1" role="dialog" aria-labelledby="viewqueriesLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -420,7 +420,13 @@
           $('#exampleModalCenterNew').modal('show');
         }
       });
+
+      function enableSupportBtn(){
+        document.getElementById("supportBtn").disabled = false;
+      }
+
     </script>
+
     <style>
       .success {
           height: 300px;
