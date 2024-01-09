@@ -359,7 +359,7 @@ class LeaveApplyForm(forms.ModelForm):
     date_from = forms.DateField(widget=forms.DateInput(attrs={'class': 'datepicker-from', 'id':'datepicker-from', 'type': 'date','onclick':"enableTo()"}))
     date_to = forms.DateField(widget=forms.DateInput(attrs={'class': 'datepicker-to', 'id':'datepicker-to', 'type': 'date','disabled':'True','onclick':"minDate()"}))
     reason = forms.CharField(widget=forms.Textarea(attrs={'placeholder':"Reason"}))
-    leave_count = forms.IntegerField()
+    leave_count = forms.FloatField()
 
     def __init__(self, *args, **kwargs):
         com = kwargs.pop('com_id', None)

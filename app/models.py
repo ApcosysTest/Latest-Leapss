@@ -173,7 +173,7 @@ class LeaveApplication(models.Model):
     date_to = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Full Day')
     reason = models.CharField(max_length=250, blank=True)
-    leave_count = models.IntegerField(null=True, blank=True)
+    leave_count = models.FloatField(null=True, blank=True)
     level0_reject = models.BooleanField(default=False)
     level0_approve = models.BooleanField(default=False)
     level0_comm =  models.CharField(max_length=100, blank=True)
