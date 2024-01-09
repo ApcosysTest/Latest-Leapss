@@ -72,6 +72,11 @@
             <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">                
                 <div class="logo d-flex align-items-center" style="height:58px;">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
+                  {% if com.logo %}
+                  <img src="{{ com.logo.url }}" alt="logo">
+                  {% else %}
+                  <img src="{% static 'assets/img/dummylogo.png' %}" alt="logo" style="width: 43px;">
+                  {% endif %}
                     <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
                   </div>  
             </nav>

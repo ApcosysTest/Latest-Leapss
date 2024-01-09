@@ -76,8 +76,12 @@
                 
                 <div class="logo d-flex align-items-center">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
-                    {% comment %} <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> {% endcomment %}
-                    <img src="{{com.logo.url}}" alt="logo">
+                  {% if com.logo %}
+                  <img src="{{ com.logo.url }}" alt="logo">
+                  {% else %}
+                  <img src="{% static 'assets/img/dummylogo.png' %}" alt="logo" style="width: 43px;">
+                  {% endif %}
+                  
                     <span>{% if com is None %}Your Company Name{% else %}{{ com }}{% endif %}</span>
                     
                 </div>
