@@ -1816,6 +1816,47 @@ def leaveApplication(request):
     context ={'form':form, 'dic':dic, 'com':com, 'event_list': event_list}
     return render(request,'leaveApplication.html', context)
 
+@login_required(login_url='adminLogin')
+@user_passes_test(lambda u: is_admin(u) or is_hr(u))
+def leaveApplicationAdmin(request, id):
+    dic={}
+    com = Company.objects.filter(username=request.user.username).first()
+    emp_id = Employee.objects.get(pk = id)
+    user_id = User.objects.get(username = emp_id.office_email)
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+
+    event_list = list(Event.objects.filter(com_id=com, category='Public Holiday').values_list("date", flat=True))
+    leave = Leave.objects.filter(com_id=com).all()
+    for l in leave:
+        cat_count = LeaveApplication.objects.filter(category__name=l, user=request.user, status_approve = True).aggregate(Sum('leave_count'))['leave_count__sum']
+        if cat_count is None:
+            cat_count = 0
+        dic[l.name]= l.days-cat_count 
+    dic = sorted(dic.items(), key=lambda x:x[1], reverse=True)  
+    if request.method == 'POST':
+        form = LeaveApplyForm(request.POST, com_id=com.id)
+        status = request.POST.get('status')
+        # print(status)
+        print(form.errors)
+        if form.is_valid():
+            print(status)
+            obj = form.save(commit = False)
+            obj.user = user_id
+            obj.status = status
+            obj.level1_approve = True
+            obj.level1_comm = obj.level2_comm = obj.level0_comm = "Approved by HR"
+            obj.level2_approve = True
+            obj.status_approve = True
+            obj.save()
+            return redirect('activeEmployee')
+    else:
+         form = LeaveApplyForm(com_id=com.id)
+
+    context ={'form':form, 'dic':dic, 'emp_id':id , 'com':com, 'event_list': event_list}
+    return render(request,'leaveApplicationAdmin.html', context)
+
 # Withdraw Leave Applications
 @login_required(login_url='adminLogin')
 @user_passes_test(is_employee)

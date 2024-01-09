@@ -92,6 +92,8 @@ urlpatterns = [
     path('feedback', feedback, name='feedback'),
     path('feedback_emp', feedback_emp, name='feedback_emp'),
     path('supportcompany', supportcompany, name='supportcompany'),
+    path('leaveApplicationAdmin/<int:id>/', leaveApplicationAdmin, name='leaveApplicationAdmin'),
+
 
     path('admincompanysupport', admincompanysupport, name='admincompanysupport'),
     path('viewsupportClient/<int:support_id>/', viewsupportClient, name='viewsupportClient'),
