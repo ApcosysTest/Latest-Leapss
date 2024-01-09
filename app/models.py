@@ -44,7 +44,7 @@ class Company(models.Model):
     country = models.CharField(max_length=500)
     username = models.CharField(max_length=500,unique=True,default='admin')
     password = models.CharField(max_length=500, default='12345678')
-    logo = models.ImageField(upload_to='logo/', default='logo.png')
+    company_image = models.ImageField(upload_to='company_image/')
     setup_completed = models.BooleanField(default=True) 
     creation_date = models.DateField(auto_now=True)
 
