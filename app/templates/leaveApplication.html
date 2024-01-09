@@ -130,7 +130,17 @@
                 <form method="post" style="padding: 2%;">
                   {% csrf_token %}
                     {{form.category}}
-
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label >Select Status</label>
+                        <select class="form-control" name="status"> 
+                          <option value="Full Day" selected>Full Day</option>
+                          <option value="First Half">First Half</option>
+                          <option value="Second Half">Second Half</option>
+                        </select>
+                      </div>
+                      
+                    </div>
                     <div class="row">
                       <div class="col-md-6">
                         <label for="datepicker-from">From</label>
