@@ -412,6 +412,12 @@ def newCompanySetup(request, otp, username):
                             com_id=company
                         )
 
+                        #Creating dummy Leave Policy
+                        LeavePolicy.objects.create(
+                            leavepolicy=f'<p>Leave Policy Of of</p><h2>{company.name}</h2>',
+                            com_id=company
+                        )
+
                         response = redirect('homepage')
                         response.set_cookie('company_id', company.id)
                         return response
