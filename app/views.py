@@ -1021,24 +1021,24 @@ def companySetup(request):
 # Edit company
 @login_required(login_url='adminLogin')
 @user_passes_test(is_admin)
-def editCompany(request, id):
+def editCompany(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
     com = get_object_or_404(Company, username=request.user.username)
-    instance = get_object_or_404(Company, pk=id)
     
     if request.method == 'POST':
-        form = CompanyUpdateForm(request.POST, request.FILES, instance=instance)
+        form = CompanyUpdateForm2(request.POST, request.FILES, instance=company)
         if form.is_valid():
-            print(form.cleaned_data['company_image'])
-            print(form.cleaned_data['website'])
             form.save()
             return redirect('companySetup')
-        else:
-            print(form.errors)  # Check form errors in your console for debugging
     else:
-        form = CompanyUpdateForm(instance=instance)
+        form = CompanyUpdateForm2(instance=company)
     
-    context = {'form': form, 'com': com}
-    return render(request, 'editCompany2.html', context)
+    context = {
+        'form': form,
+        'company': company,
+        'com': com,
+    }
+    return render(request, 'editCompany.html', context)
 
 # Department
 @login_required(login_url='adminLogin')
