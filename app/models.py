@@ -162,13 +162,16 @@ class Event(models.Model):
         # return f'<br><button id="primaryButton{cot}" href="{urls}" ></button>' 
         # return f'<br> <a data-bs-toggle="modal" data-bs-target="#sureModal"> <span class ="options" style="  margin-top:20px;color:#707070;" > <img class="img2"style="width:20px; margin-top:10px;color:#707070;"src="../static/assets/img/delete.png" alt="delete"/> </span></a><div class="modal fade" id="sureModal" tabindex="-1" aria-labelledby="sureModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"><h5 class="modal-title" id="sureModalLabel">Are you Sure?</h5></div> <div class="modal-footer"><button type="button" style="background-color:red;" class="btn btn-danger" data-bs-dismiss="modal">No</button><a href="{urls}" class="btn btn-primary">Yes</a></div></div></div></div>'
         # return f'<br><button hidden id="primaryButton" href="{urls}"></button><a data-bs-toggle="modal" data-bs-target="#sureModal"> <span class ="options" style="  margin-top:20px;color:#707070;" > <img class="img2"style="width:20px; margin-top:10px;color:#707070;"src="../static/assets/img/delete.png" alt="delete"/> </span></a><div class="modal fade" id="sureModal" tabindex="-1" aria-labelledby="sureModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"><h5 class="modal-title" id="sureModalLabel">Are you Sure?</h5></div> <div class="modal-footer"><button type="button" style="background-color:red;" class="btn btn-danger" data-bs-dismiss="modal">No</button><button type="button" id='"secondaryButton"' class="btn btn-primary" onclick="document.getElementById("primaryButton").click()">Yes</button></div></div></div></div>'
-    
+
+STATUS_CHOICES = [ ('Full Day', 'Full Day'), ('First Half', 'First Half'), ('Second Half', 'Second Half')]
+
 class LeaveApplication(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     apply_on = models.DateField(auto_now=True)
     category = models.ForeignKey(Leave, on_delete=models.CASCADE)
     date_from = models.DateField()
-    date_to = models.DateField()
+    date_to = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Full Day')
     reason = models.CharField(max_length=250, blank=True)
     leave_count = models.IntegerField(null=True, blank=True)
     level0_reject = models.BooleanField(default=False)
