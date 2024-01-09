@@ -143,6 +143,7 @@
                           <th scope="col">Employee Id</th>
                           <th scope="col">View</th>
                           <th scope="col">Leave Basket</th>
+                          <th scope="col">Add Leave</th>
                           <th scope="col">Status</th>
                         </tr>
                       </thead>
@@ -161,6 +162,11 @@
                             <td>  
                               <div class="edit">
                                   <a type="button" style="position: relative; top:-10px" class="btn btn-sm btn-primary " href="{% url 'leaveBasketAdmin' emp.id %}">Leave Basket</a>
+                              </div>
+                            </td>
+                            <td>  
+                              <div class="edit">
+                                  <a type="button" style="position: relative; top:-10px;background-color: #FFC14E;" class="btn btn-sm btn-primary " href="{% url 'leaveApplicationAdmin' emp.id %}">Add Leave</a>
                               </div>
                             </td>
                             <td>  
