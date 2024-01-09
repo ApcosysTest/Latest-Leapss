@@ -192,7 +192,7 @@
       });
      </script>
 
-     <script language="javascript">
+     {% comment %} <script language="javascript">
       var today = new Date();
       var dd = String(today.getDate()).padStart(2, '0');
       var mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -210,7 +210,7 @@
         let get= document.getElementById("datepicker-to")
         get.disabled = false;
       } 
-    </script>
+    </script> {% endcomment %}
 
 
   <script>
@@ -264,8 +264,8 @@
       if(status=='Full Day'){
         document.getElementById('datepicker-to').readOnly = false;
         var date1 = new Date(From);
-      var date2 = new Date(to);
-      var event_dates = [];
+        var date2 = new Date(to);
+        var event_dates = [];
 
       {% for event in event_list %}
         event_dates.push(new Date("{{ event.isoformat }}"))
