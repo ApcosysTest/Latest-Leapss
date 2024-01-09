@@ -101,7 +101,6 @@ urlpatterns = [
     path('querycomment/<int:id>/', querycomment, name='querycomment'),
    
     
-    # path('update_company/<int:company_id>/', update_company, name='update_company'),
 
 
 
