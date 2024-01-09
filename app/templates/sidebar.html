@@ -85,7 +85,11 @@
                 
                 <div class="logo d-flex">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
-                    <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
+                  {% if dic.com.logo %}
+                  <img src="{{ dic.com.logo.url }}" alt="logo">
+                  {% else %}
+                  <img src="{% static 'assets/img/dummylogo.png' %}" alt="logo" style="width: 43px;">
+                  {% endif %}
                     <span>{{ dic.com }}</span>
                     {% if request.user.employee.level == 'Level 1' or request.user.employee.level == 'Level 2' %}<a class="adminSwitch" href="{% url 'leaveStatus' %}">Admin</a>{% else %} {% endif %}
                     {% if request.user.employee.level == 'Level 0'%}<a class="adminSwitch" href="{% url 'adminDashboard' %}">Admin</a>{% else %} {% endif %}

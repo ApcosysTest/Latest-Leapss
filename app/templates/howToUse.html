@@ -72,7 +72,12 @@
                 
                 <div class="logo d-flex">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
-                    <!-- <img src="{% static 'assets/img/Apcosys.png'%}" alt=""> -->
+                  {% if com.logo %}
+                  <img src="{{ com.logo.url }}" alt="logo">
+                  {% else %}
+                  <img src="{% static 'assets/img/dummylogo.png' %}" alt="logo" style="width: 43px;">
+                  {% endif %}
+
                     <a href="/sidebar" style="text-decoration:none;"><span>{% if com is None %}Your Company Name{% else %}{{ com.name }}{% endif %}</span></a>
                 </div> 
                   <ul class="d-flex">

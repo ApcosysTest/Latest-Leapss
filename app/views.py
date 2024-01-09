@@ -541,25 +541,22 @@ class CalendarView(generic.ListView):
         quotes = {'quote':quote,'form':form}
         return quotes
 
-    def quote(self):    
+    def quote(self):
+    
         com = Company.objects.filter(username=self.request.user.username).first()
         if com is None:
             emp = Employee.objects.filter(office_email=self.request.user.username).first()
-            com = Company.objects.filter(name=emp.com_id).first()
-        if self.request.method == "GET":  
-            current_date = 0 
-            current_date = datetime.now().strftime('%Y-%m-%d')  
-            try:
-                quotedd = Quote.objects.filter(tod_date=current_date, com_id=com).order_by('-id').first()
-                if quotedd is None:
-                    quoted = None
-                else:
-                    quoted = quotedd.quotes
-            except Quote.DoesNotExist:
-                quoted = None
+            com = get_object_or_404(Company, name=emp.com_id)
 
-            if quoted:   
-                return quoted   
+        try:
+           
+            quotedd = Quote.objects.filter(com_id=com).order_by('-id').first()
+            quoted_name = quotedd.quotes if quotedd else None
+        except Quote.DoesNotExist:
+            quoted_name = None
+
+        return quoted_name
+       
             
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -2225,8 +2222,13 @@ def companyfeedback(request):
 
 @login_required(login_url='adminLogin')
 def feedbackEmp(request):
+    com = Company.objects.filter(username=request.user.username).first()
+    feedback = FeedbackModel.objects.filter(company_id=com.id)
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
     feedback_entries = FeedbackModel.objects.filter(company_id__isnull=True, to_devs=False)
-    context = {'feedback_entries': feedback_entries}
+    context = {'feedback_entries': feedback_entries, 'com':com}
     return render(request, 'feedbackEmp.html', context)
 
 
@@ -2270,12 +2272,19 @@ def viewemployeefeedbackClient(request, feedback_id):
 
 @login_required(login_url='adminLogin')
 def viewemployeefeedbackCompany(request, id):
+    com = Company.objects.filter(username=request.user.username).first()
+    feedback = FeedbackModel.objects.filter(company_id=com.id)
+    if com is None:
+        emp = Employee.objects.filter(office_email=request.user.username).first()
+        com = Company.objects.filter(name=emp.com_id).first()
+        
     feedback = FeedbackModel.objects.get(id=id)
     client = get_object_or_404(Employee, pk=feedback.emp_id.id)
 
     context = {
         'feedback': feedback,
         'client': client,
+        'com': com,
     }
     return render(request, 'feedbackEmp.html', context)
 
