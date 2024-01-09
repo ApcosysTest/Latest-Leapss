@@ -76,7 +76,7 @@ urlpatterns = [
     path('<int:id>/editEmployee',editEmployee, name='editEmployee'),
     path('<int:id>/changePassword',changePassword, name='changePassword'),
     path('companySetup', companySetup, name='companySetup'),
-    path('<int:id>/editCompany', editCompany, name='editCompany'),
+    path('editCompany/<int:company_id>/', editCompany, name='editCompany'),
     path('department', department, name='department'),
     path('addDepartment', addDepartment, name='addDepartment'),
     path('<int:id>/editDepartment', editDepartment, name='editDepartment'),
@@ -101,6 +101,7 @@ urlpatterns = [
     path('querycomment/<int:id>/', querycomment, name='querycomment'),
    
     
+    # path('update_company/<int:company_id>/', update_company, name='update_company'),
 
 
 
