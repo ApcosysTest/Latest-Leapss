@@ -47,54 +47,49 @@
         <div class="border-end bg-white border-right position-sticky header" id="sidebar-wrapper">
             <div class="justify-content-center">
                 <div class="leapss"><img src="{% static 'assets/img/logo.png'%}" alt="">
-                  <button class="btn" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button></div>
+                  <button class="btn" id="sidebarClose"><i class="bi bi-x navToggle"></i>  </button>
+                </div>
             </div>
             <ul class="sidebar-nav " id="sidebar-nav">
                 <li class="profile"data-bs-toggle="collapse">
-                  <img src="{{user.employee.image.url}}" alt="Profile_Image" class="img-fluid rounded-circle">
-                  <h6>{{user.employee.name}}</h6>
+                    <img src="{% static 'assets/img/user.png'%}" alt="" class="img-fluid rounded-circle">
+                    <h6>{{com.name}}</h6>
                 </li>
             </ul>
-            <div class="list-group list-group-flush" style="list-style:none; margin-top: 10%;">
-                <!-- <button class="btn" id="sidebarClose"><span class="bi bi-x "></span></button> -->
-                <li ><a class="list-group-item " href="/sidebar"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
-                <li><a class="list-group-item active" href="/leaveSection"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Leave Section</span></a></li>
-                <li><a class="list-group-item " href="/profileSetting"><i class="bi bi-gear" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Profile</span></a></li>
-                <li><a class="list-group-item  " href="/leavePolicy"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
-                <li><a class="list-group-item  " href="/howToUse"><i class="bi bi-book"style="margin-left: 20%;font-size:18px;"></i><span></i><span>How To Use?</span></a></li>
-              </div>
-             
+            <div class="list-group list-group-flush" style="list-style:none; margin-top: 3%;">
+                <li ><a class="list-group-item" href="/adminDashboard"><i class="bi bi-grid" style="margin-left: 20%; font-size:18px;"></i><span></i> <span>Home</span></a></li>
+                <li><a class="list-group-item " href="/leaveApplicationDetails"> <i class="bi bi-clock" style="margin-left: 20%;font-size:18px; "></i><span></i><span>Leave Section</span></a></li>
+                <li><a class="list-group-item active" href="{% url 'activeEmployee' %}"><i class="bi bi-people" style="margin-left: 20%;font-size:18px;"></i><span></i><span>Employee</span></a></li>
+                <li><a class="list-group-item " href="/companySetup"><i class="bi bi-gear"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Company</span></a></li>
+                <li><a class="list-group-item" href="{% url 'department' %}"><i class="bi bi-diagram-3"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Department</span></a></li>
+                <li><a class="list-group-item " href="/leavePolicySetting"><i class="bi bi-receipt"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Leave Policy</span></a></li>
+               
+                <li><a class="list-group-item " href="/report"><i class="bi bi-journal-arrow-down"style="margin-left: 20%;font-size:18px;"></i><span></i><span>Reports & Backup</span></a></li>
+             </div>
+             <div class="logout">
+              <a class="nav-link"href="{% url 'logout' %}"><span class="material-symbols-outlined"style="padding:5%;font-weight: 600; position:relative;top:3px;">
+                logout
+                </span><span style="font-family: 'Segoe UI', sans-serif; position:relative;bottom:3px; ">Log Out</span></a>
+            </div>
             
         </div>
         <!-- Page content wrapper-->
         <div id="page-content-wrapper">
             <!-- Top navigation-->
-            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom position-sticky">
-                <!-- <div class="container">
-                    <button class="btn" id="sidebarToggle"><span class="navbar-toggler-icon"></span></button>
-                </div> -->
-                
-                <div class="logo d-flex">
+            <nav class="navbar navbar-expand-lg  align-items-center justify-content-between border-bottom">                
+                <div class="logo d-flex align-items-center" style="height:58px;">
                   <button class="btn toggle " id="sidebarToggle"><i class="bi bi-list navToggle"></i></button>
                   {% if com.logo %}
                   <img src="{{ com.logo.url }}" alt="logo">
                   {% else %}
                   <img src="{% static 'assets/img/dummylogo.png' %}" alt="logo" style="width: 43px;">
                   {% endif %}
-
-                    <a href="/sidebar" style="text-decoration:none;"><span>{% if com is None %}Your Company Name{% else %}{{ com.name }}{% endif %}</span></a>
-                </div> 
-                  <ul class="d-flex">
-                    <li style="list-style: none;"class="logOut" style="margin:0%;padding:0%;position: relative; top:10px;">
-                        <a type="button" href="{% url 'logout' %}" class="btn "><span class="material-symbols-outlined"style="font-weight: 600; position:relative;top:3px;">
-                            logout
-                            </span> <span style="font-family: 'Segoe UI', sans-serif; position:relative;bottom:3px; ">Log Out</span></a>
-                    </li>
-                  </ul>
+                    <span>{% if com is None %}Your Company Name{% else %}{{  com.name }}{% endif %}</span>
+                  </div>  
             </nav>
             <section class="section container pageClass  bg-white rounded dashboard">
                <br>
-              <a href="/leaveSection" class="back">
+              <a href="/activeEmployee" class="back">
                 <i class="bi bi-arrow-left-short">
                   <span>Back</span>
                 </i>
