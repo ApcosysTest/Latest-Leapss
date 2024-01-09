@@ -1800,9 +1800,14 @@ def leaveApplication(request):
     dic = sorted(dic.items(), key=lambda x:x[1], reverse=True)  
     if request.method == 'POST':
         form = LeaveApplyForm(request.POST, com_id=com.id)
+        status = request.POST.get('status')
+        # print(status)
+        print(form.errors)
         if form.is_valid():
+            print(status)
             obj = form.save(commit = False)
             obj.user = request.user
+            obj.status = status
             obj.save()
             return redirect('approvalStatus')
     else:

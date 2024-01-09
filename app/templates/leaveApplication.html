@@ -127,7 +127,7 @@
                     {% endif %}
             
                 </center> 
-                <form method="post" style="padding: 2%;">
+                <form method="post" style="padding: 2%;" action={% url "leaveApplication" %}>
                   {% csrf_token %}
                     {{form.category}}
                     <div class="row">
@@ -168,7 +168,7 @@
                     </div>
                     {{form.reason}}
                     
-                    <input type="number" name="leave_count" hidden id="id_leave_count"> 
+                    <input type="text" name="leave_count" value="" id="id_leave_count"> 
 
 
                     
@@ -180,7 +180,7 @@
                             <a type='submit'class="btn btn-primary btn-lg  cancelButton" href="{% url 'leaveSection' %}">Cancel</a>
                           </div>
                           <div class="col-md-6">
-                            <button type='submit'class="btn btn-primary btn-lg  submitButton" onclick="disp()">Submit</button>
+                            <button type='submit'class="btn btn-primary btn-lg  submitButton">Submit</button>
                           </div>
                         </div>
                       </div>
